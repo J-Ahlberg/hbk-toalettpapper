@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="sv">
 <head>
@@ -936,7 +935,7 @@
       <div class="payment-text">
         <h4>Betalning via Swish</h4>
         <p>Skicka betalning till spelaren när ni kommit överens om leverans.</p>
-        <div class="payment-swish" id="swish-player-name-1"></div>
+        <div class="payment-swish"> id="order-player-name"</div>
         <p style="margin-top:4px;">Ange ditt namn + "Toapapper" som meddelande</p>
       </div>
     </div>
@@ -957,7 +956,7 @@
     <div class="confirm-summary" id="confirm-summary-lines"></div>
     <div class="confirm-swish">
       <div class="confirm-swish-title">Betalning sker till spelaren vid leverans via Swish till</div>
-      <div class="confirm-swish-num" id="swish-player-name-2"></div>
+      <div class="confirm-swish-num"> id="order-player-name"</div>
       <div class="confirm-swish-note">Ange ditt namn + "Toapapper" som meddelande</div>
     </div>
     <p style="margin-top:18px; font-size:0.82rem; color:#999;">Du kan spara denna sida som bekräftelse.</p>
@@ -1075,8 +1074,6 @@ function openOrderForm(id) {
   if (!p) return;
   currentPlayer = p;
   document.getElementById('order-player-name').textContent = p.fn + ' ' + p.ln;
-  document.getElementById('swish-player-name-1').textContent = p.fn + ' ' + p.ln;
-  document.getElementById('swish-player-name-2').textContent = p.fn + ' ' + p.ln;
   // Reset form
   ['adv','p2h','p2s','p3h','p3s'].forEach(k => {
     document.getElementById('qty-'+k).value = 0;
