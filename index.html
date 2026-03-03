@@ -1026,7 +1026,7 @@ function playerUrl(id) {
 function showView(name) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-' + name).classList.add('active');
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
 }
 
 // ── BUILD ADMIN LIST ──────────────────────────────────────────
@@ -1064,8 +1064,33 @@ function openFlyer(id) {
   const p = PLAYERS.find(x => x.id === id);
   if (!p) return;
   document.getElementById('flyer-player-name').textContent = p.fn + ' ' + p.ln;
-  document.getElementById('flyer-order-btn').onclick = () => openOrderForm(id);
-  showView('flyer');
+
+  // Pre-initialize order form for this player
+  currentPlayer = p;
+  document.getElementById('order-player-name').textContent = p.fn + ' ' + p.ln;
+  document.getElementById('swish-player-name-1').textContent = p.fn + ' ' + p.ln;
+  document.getElementById('swish-player-name-2').textContent = p.fn + ' ' + p.ln;
+  ['adv','p2h','p2s','p3h','p3s'].forEach(k => {
+    document.getElementById('qty-'+k).value = 0;
+    document.getElementById('card-'+k).classList.remove('has-value');
+  });
+  document.getElementById('buyer-name').value = '';
+  document.getElementById('buyer-phone').value = '';
+  document.getElementById('buyer-email').value = '';
+  document.getElementById('buyer-msg').value = '';
+  document.getElementById('empty-warn').style.display = 'none';
+  updateTotals();
+
+  // Show both flyer and order views stacked on page
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-flyer').classList.add('active');
+  document.getElementById('view-order').classList.add('active');
+  window.scrollTo(0, 0);
+
+  // Button scrolls smoothly to the order section below
+  document.getElementById('flyer-order-btn').onclick = () => {
+    document.getElementById('view-order').scrollIntoView({ behavior: 'smooth' });
+  };
 }
 
 // ── ORDER FORM ────────────────────────────────────────────────
