@@ -1088,7 +1088,7 @@ function openOrderForm(id) {
   document.getElementById('empty-warn').style.display = 'none';
   updateTotals();
   showView('order');
-  document.getElementById('view-order').scrollIntoView({ behavior: 'smooth' });
+  setTimeout(function(){ document.getElementById('view-order').scrollIntoView({ behavior: 'smooth' }); }, 50);
 }
 
 function changeQty(key, delta) {
