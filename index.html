@@ -1064,7 +1064,7 @@ function openFlyer(id) {
   const p = PLAYERS.find(x => x.id === id);
   if (!p) return;
   document.getElementById('flyer-player-name').textContent = p.fn + ' ' + p.ln;
-  document.getElementById('flyer-order-btn').onclick = () => { openOrderForm(id); setTimeout(() => { document.getElementById('view-order').scrollIntoView({ behavior: 'smooth' }); }, 50); };
+  document.getElementById('flyer-order-btn').onclick = () => openOrderForm(id);
   showView('flyer');
 }
 
