@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HBK F14 â BestÃ¤llningsÃ¶versikt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:       #0F2A5E;
+      --navy-mid:   #1a3d7c;
+      --navy-light: #2451a0;
+      --blue:       #1a73e8;
+      --bg:         #EEF2F8;
+      --card:       #ffffff;
+      --border:     #dde3ef;
+      --text:       #111827;
+      --muted:      #6b7280;
+      --green-bg:   #dcfce7; --green-text: #166534;
+      --amber-bg:   #fef9c3; --amber-text: #854d0e;
+      --blue-bg:    #dbeafe; --blue-text:  #1e40af;
+      --red-bg:     #fee2e2; --red-text:   #991b1b;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ââ HEADER ââ */
+    .header {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+      color: #fff;
+      padding: 28px 20px 24px;
+      text-align: center;
+    }
+    .header-logo {
+      width: 56px; height: 56px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 14px;
+      font-size: 1.8rem;
+    }
+    .header h1 {
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      line-height: 1.2;
+    }
+    .header p { color: rgba(255,255,255,0.7); margin-top: 6px; font-size: 0.95rem; }
+
+    /* ââ NAV ââ */
+    .nav-bar {
+      background: var(--navy-mid);
+      text-align: center;
+      padding: 9px 16px;
+    }
+    .nav-bar a {
+      color: rgba(255,255,255,0.65);
+      text-decoration: none;
+      font-size: 0.82rem;
+      transition: color .15s;
+    }
+    .nav-bar a:hover { color: #fff; }
+
+    /* ââ MAIN ââ */
+    .main {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 28px 16px 48px;
+    }
+
+    /* ââ SELECTOR CARD ââ */
+    .selector-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px 28px;
+      box-shadow: 0 1px 3px rgba(15,42,94,.07), 0 4px 16px rgba(15,42,94,.06);
+      margin-bottom: 24px;
+    }
+    .selector-card label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 10px;
+    }
+    .select-wrap { position: relative; }
+    .select-wrap::after {
+      content: 'â¾';
+      position: absolute;
+      right: 16px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--navy);
+      pointer-events: none;
+      font-size: 1.1rem;
+    }
+    select {
+      width: 100%;
+      padding: 13px 40px 13px 16px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text);
+      background: var(--bg);
+      appearance: none;
+      cursor: pointer;
+      outline: none;
+      transition: border-color .2s;
+    }
+    select:focus { border-color: var(--navy); }
+
+    /* ââ STATS ââ */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 18px 16px 16px;
+      box-shadow: 0 1px 3px rgba(15,42,94,.07), 0 4px 14px rgba(15,42,94,.05);
+      text-align: center;
+      border-top: 3px solid var(--navy);
+    }
+    .stat-card:nth-child(2) { border-top-color: #059669; }
+    .stat-card:nth-child(3) { border-top-color: #d97706; }
+    .stat-card:nth-child(4) { border-top-color: #6366f1; }
+    .stat-label { font-size: 0.72rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--navy); line-height: 1; }
+    .stat-card:nth-child(2) .stat-value { color: #059669; }
+    .stat-card:nth-child(3) .stat-value { color: #d97706; }
+    .stat-card:nth-child(4) .stat-value { color: #6366f1; }
+    .stat-sub  { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+
+    /* ââ TABLE CARD ââ */
+    .table-card {
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 1px 3px rgba(15,42,94,.07), 0 4px 16px rgba(15,42,94,.06);
+      overflow: hidden;
+    }
+    .table-header {
+      background: var(--navy);
+      color: #fff;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .table-header h2 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin: 0;
+    }
+    .order-count {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    thead th {
+      background: #f1f5fd;
+      color: var(--navy);
+      font-weight: 600;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 11px 14px;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap;
+    }
+    tbody td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: #f7f9ff; }
+    .totals-row td {
+      font-weight: 700;
+      background: #eef2f8;
+      color: var(--navy);
+      border-top: 2px solid var(--border);
+      border-bottom: none;
+    }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.zero { color: #c4cadc; }
+
+    /* ââ BADGE ââ */
+    .badge {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 99px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .badge-pending  { background: var(--amber-bg); color: var(--amber-text); }
+    .badge-paid     { background: var(--green-bg);  color: var(--green-text); }
+    .badge-delivery { background: var(--blue-bg);   color: var(--blue-text);  }
+    .badge-neutral  { background: #f3f4f6;           color: #374151;           }
+
+    /* ââ EMPTY / LOADING ââ */
+    .empty-state {
+      text-align: center;
+      padding: 64px 20px;
+      color: var(--muted);
+    }
+    .empty-state .icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .empty-state p { font-size: 0.95rem; }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid var(--border);
+      border-top-color: var(--navy);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin: 48px auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ââ RESPONSIVE ââ */
+    @media (max-width: 700px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .selector-card { padding: 18px 16px; }
+    }
+    @media (max-width: 380px) {
+      .stats { grid-template-columns: 1fr 1fr; }
+      .stat-value { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-logo">ð</div>
+  <h1>HBK F14 â BestÃ¤llningsÃ¶versikt</h1>
+  <p>VÃ¤lj spelare fÃ¶r att se inkomna bestÃ¤llningar</p>
+</div>
+<div class="nav-bar">
+  <a href="https://j-ahlberg.github.io/hbk-toalettpapper/">â Tillbaka till bestÃ¤llningslÃ¤nkar</a>
+</div>
+
+<div class="main">
+
+  <!-- PLAYER SELECTOR -->
+  <div class="selector-card">
+    <label for="playerSelect">VÃ¤lj spelare</label>
+    <div class="select-wrap">
+      <select id="playerSelect">
+        <option value="">Laddar spelareâ¦</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- STATS (hidden until player chosen) -->
+  <div class="stats" id="stats" style="display:none">
+    <div class="stat-card">
+      <div class="stat-label">BestÃ¤llningar</div>
+      <div class="stat-value" id="statCount">â</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total summa</div>
+      <div class="stat-value" id="statTotal">â</div>
+      <div class="stat-sub">kronor</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">VÃ¤ntar betalning</div>
+      <div class="stat-value" id="statPending">â</div>
+      <div class="stat-sub">bestÃ¤llningar</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Adv-fripack</div>
+      <div class="stat-value" id="statAdv">â</div>
+      <div class="stat-sub">rullar totalt</div>
+    </div>
+  </div>
+
+  <!-- ORDERS TABLE -->
+  <div class="table-card">
+    <div class="table-header">
+      <h2 id="tableTitle">BestÃ¤llningar</h2>
+      <span class="order-count" id="orderCount" style="display:none"></span>
+    </div>
+    <div id="tableContent">
+      <div class="empty-state">
+        <div class="icon">ð</div>
+        <p>VÃ¤lj en spelare ovan fÃ¶r att se bestÃ¤llningar</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbxe_PK8CXaAIHWFtvbvDs-aMk-eVXQ3RE22RcSw8yuD0Rp7XHaBa6-FHgAk-QwKOzhR/exec';
+
+/* ââ helpers ââ */
+function fmt(n)  { return Number(n).toLocaleString('sv-SE'); }
+function badge(text, type) { return `<span class="badge badge-${type}">${text}</span>`; }
+
+function paymentBadge(val) {
+  if (!val) return '';
+  const v = val.toLowerCase();
+  if (v.includes('vÃ¤ntar') || v.includes('vantar')) return badge(val, 'pending');
+  if (v.includes('swish') || v.includes('betald') || v.includes('klar')) return badge(val, 'paid');
+  return badge(val, 'neutral');
+}
+
+function deliveryBadge(val) {
+  if (!val) return '';
+  return badge(val, 'delivery');
+}
+
+/* ââ Load player list ââ */
+async function loadPlayers() {
+  const sel = document.getElementById('playerSelect');
+  try {
+    const res  = await fetch(API + '?action=players');
+    const list = await res.json();
+    if (!Array.isArray(list) || list.length === 0) throw new Error('empty');
+    sel.innerHTML = '<option value="">â VÃ¤lj spelare â</option>';
+    list.forEach(p => {
+      const o = document.createElement('option');
+      o.value = p; o.textContent = p;
+      sel.appendChild(o);
+    });
+  } catch(e) {
+    sel.innerHTML = '<option value="">Kunde inte ladda spelare â kontrollera behÃ¶righet</option>';
+  }
+}
+
+/* ââ Load orders for chosen player ââ */
+async function loadOrders(player) {
+  const content  = document.getElementById('tableContent');
+  const statsEl  = document.getElementById('stats');
+  const titleEl  = document.getElementById('tableTitle');
+  const countEl  = document.getElementById('orderCount');
+
+  if (!player) {
+    titleEl.textContent = 'BestÃ¤llningar';
+    countEl.style.display = 'none';
+    statsEl.style.display = 'none';
+    content.innerHTML = '<div class="empty-state"><div class="icon">ð</div><p>VÃ¤lj en spelare ovan</p></div>';
+    return;
+  }
+
+  titleEl.textContent  = player;
+  countEl.style.display = 'none';
+  content.innerHTML = '<div class="spinner"></div>';
+
+  try {
+    const res    = await fetch(API + '?action=orders&player=' + encodeURIComponent(player));
+    const orders = await res.json();
+
+    if (!Array.isArray(orders) || orders.length === 0) {
+      statsEl.style.display = 'none';
+      content.innerHTML = '<div class="empty-state"><div class="icon">ð½</div><p>Inga bestÃ¤llningar Ã¤nnu</p></div>';
+      return;
+    }
+
+    /* Stats */
+    const total   = orders.reduce((s, o) => s + (o.total || 0), 0);
+    const pending = orders.filter(o => {
+      const v = (o.payment || '').toLowerCase();
+      return v.includes('vÃ¤ntar') || v.includes('vantar');
+    }).length;
+    const totalAdv = orders.reduce((s, o) => s + (o.adv  || 0), 0)
+                   + orders.reduce((s, o) => s + (o.p2   || 0), 0)
+                   + orders.reduce((s, o) => s + (o.p3   || 0), 0);
+
+    document.getElementById('statCount').textContent   = orders.length;
+    document.getElementById('statTotal').textContent   = fmt(total);
+    document.getElementById('statPending').textContent = pending;
+    document.getElementById('statAdv').textContent     = totalAdv;
+    statsEl.style.display = 'grid';
+
+    countEl.textContent    = orders.length + ' st';
+    countEl.style.display  = 'inline-block';
+
+    /* Table columns */
+    const cols = [
+      { key: 'date',     label: 'Datum' },
+      { key: 'buyer',    label: 'KÃ¶pare' },
+      { key: 'phone',    label: 'Telefon' },
+      { key: 'adv',      label: 'Adv (frp)',   num: true },
+      { key: 'p2',       label: 'P2 (frp)',    num: true },
+      { key: 'p2_6',     label: 'P2 6-pack',   num: true },
+      { key: 'p3',       label: 'P3 (frp)',    num: true },
+      { key: 'p3_8',     label: 'P3 8-pack',   num: true },
+      { key: 'total',    label: 'Summa (kr)',   num: true },
+      { key: 'payment',  label: 'Betalning' },
+      { key: 'delivery', label: 'Leverans' },
+    ];
+
+    const sumKeys = ['adv','p2','p2_6','p3','p3_8','total'];
+
+    /* Build header */
+    let html = '<div class="table-wrap"><table><thead><tr>';
+    cols.forEach(c => html += `<th${c.num ? ' style="text-align:right"' : ''}>${c.label}</th>`);
+    html += '</tr></thead><tbody>';
+
+    /* Build rows */
+    orders.forEach(o => {
+      html += '<tr>';
+      cols.forEach(c => {
+        let val = o[c.key] ?? '';
+        let cellClass = c.num ? ' class="num' : '';
+
+        if (c.key === 'total') {
+          val = val ? fmt(val) + ' kr' : '';
+        } else if (c.num) {
+          const n = Number(val) || 0;
+          cellClass += n === 0 ? ' zero"' : '"';
+          html += `<td class="num${n === 0 ? ' zero' : ''}">${n === 0 ? 'â' : n}</td>`;
+          return;
+        } else if (c.key === 'payment')  { val = paymentBadge(val); }
+        else if (c.key === 'delivery') { val = deliveryBadge(val); }
+
+        const cls = c.num ? ' class="num"' : '';
+        html += `<td${cls}>${val}</td>`;
+      });
+      html += '</tr>';
+    });
+
+    /* Totals row */
+    html += '<tr class="totals-row">';
+    cols.forEach(c => {
+      if (c.key === 'date') {
+        html += '<td>TOTALT</td>';
+      } else if (c.key === 'total') {
+        const s = orders.reduce((acc, o) => acc + (o.total || 0), 0);
+        html += `<td class="num">${fmt(s)} kr</td>`;
+      } else if (sumKeys.includes(c.key)) {
+        const s = orders.reduce((acc, o) => acc + (Number(o[c.key]) || 0), 0);
+        html += `<td class="num">${s > 0 ? s : 'â'}</td>`;
+      } else {
+        html += '<td></td>';
+      }
+    });
+    html += '</tr>';
+
+    html += '</tbody></table></div>';
+    content.innerHTML = html;
+
+  } catch(e) {
+    statsEl.style.display = 'none';
+    content.innerHTML = '<div class="empty-state"><div class="icon">â ï¸</div><p>Kunde inte ladda bestÃ¤llningar.<br>Kontrollera att du har behÃ¶righet.</p></div>';
+  }
+}
+
+document.getElementById('playerSelect').addEventListener('change', e => loadOrders(e.target.value));
+loadPlayers();
+</script>
+
+</body>
+</html>
