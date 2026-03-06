@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HBK F14 â BestÃ¤llningsÃ¶versikt</title>
+  <title>HBK F14 – Beställningsöversikt</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
   <style>
@@ -31,7 +31,7 @@
       min-height: 100vh;
     }
 
-    /* ââ HEADER ââ */
+    /* ── HEADER ── */
     .header {
       background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
       color: #fff;
@@ -54,7 +54,7 @@
     }
     .header p { color: rgba(255,255,255,0.7); margin-top: 6px; font-size: 0.95rem; }
 
-    /* ââ NAV ââ */
+    /* ── NAV ── */
     .nav-bar {
       background: var(--navy-mid);
       text-align: center;
@@ -68,14 +68,14 @@
     }
     .nav-bar a:hover { color: #fff; }
 
-    /* ââ MAIN ââ */
+    /* ── MAIN ── */
     .main {
       max-width: 1060px;
       margin: 0 auto;
       padding: 28px 16px 48px;
     }
 
-    /* ââ SELECTOR CARD ââ */
+    /* ── SELECTOR CARD ── */
     .selector-card {
       background: var(--card);
       border-radius: 16px;
@@ -94,7 +94,7 @@
     }
     .select-wrap { position: relative; }
     .select-wrap::after {
-      content: 'â¾';
+      content: '▾';
       position: absolute;
       right: 16px; top: 50%;
       transform: translateY(-50%);
@@ -119,7 +119,7 @@
     }
     select:focus { border-color: var(--navy); }
 
-    /* ââ STATS ââ */
+    /* ── STATS ── */
     .stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -144,7 +144,7 @@
     .stat-card:nth-child(4) .stat-value { color: #6366f1; }
     .stat-sub  { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
 
-    /* ââ TABLE CARD ââ */
+    /* ── TABLE CARD ── */
     .table-card {
       background: var(--card);
       border-radius: 16px;
@@ -207,7 +207,7 @@
     td.num { text-align: right; font-variant-numeric: tabular-nums; }
     td.zero { color: #c4cadc; }
 
-    /* ââ BADGE ââ */
+    /* ── BADGE ── */
     .badge {
       display: inline-block;
       padding: 3px 9px;
@@ -221,7 +221,7 @@
     .badge-delivery { background: var(--blue-bg);   color: var(--blue-text);  }
     .badge-neutral  { background: #f3f4f6;           color: #374151;           }
 
-    /* ââ EMPTY / LOADING ââ */
+    /* ── EMPTY / LOADING ── */
     .empty-state {
       text-align: center;
       padding: 64px 20px;
@@ -239,7 +239,7 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ââ RESPONSIVE ââ */
+    /* ── RESPONSIVE ── */
     @media (max-width: 700px) {
       .stats { grid-template-columns: repeat(2, 1fr); }
       .selector-card { padding: 18px 16px; }
@@ -254,22 +254,22 @@
 
 <!-- HEADER -->
 <div class="header">
-  <div class="header-logo">ð</div>
-  <h1>HBK F14 â BestÃ¤llningsÃ¶versikt</h1>
-  <p>VÃ¤lj spelare fÃ¶r att se inkomna bestÃ¤llningar</p>
+  <div class="header-logo">🏒</div>
+  <h1>HBK F14 – Beställningsöversikt</h1>
+  <p>Välj spelare för att se inkomna beställningar</p>
 </div>
 <div class="nav-bar">
-  <a href="https://j-ahlberg.github.io/hbk-toalettpapper/">â Tillbaka till bestÃ¤llningslÃ¤nkar</a>
+  <a href="https://j-ahlberg.github.io/hbk-toalettpapper/">← Tillbaka till beställningslänkar</a>
 </div>
 
 <div class="main">
 
   <!-- PLAYER SELECTOR -->
   <div class="selector-card">
-    <label for="playerSelect">VÃ¤lj spelare</label>
+    <label for="playerSelect">Välj spelare</label>
     <div class="select-wrap">
       <select id="playerSelect">
-        <option value="">Laddar spelareâ¦</option>
+        <option value="">Laddar spelare…</option>
       </select>
     </div>
   </div>
@@ -277,22 +277,22 @@
   <!-- STATS (hidden until player chosen) -->
   <div class="stats" id="stats" style="display:none">
     <div class="stat-card">
-      <div class="stat-label">BestÃ¤llningar</div>
-      <div class="stat-value" id="statCount">â</div>
+      <div class="stat-label">Beställningar</div>
+      <div class="stat-value" id="statCount">—</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Total summa</div>
-      <div class="stat-value" id="statTotal">â</div>
+      <div class="stat-value" id="statTotal">—</div>
       <div class="stat-sub">kronor</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">VÃ¤ntar betalning</div>
-      <div class="stat-value" id="statPending">â</div>
-      <div class="stat-sub">bestÃ¤llningar</div>
+      <div class="stat-label">Väntar betalning</div>
+      <div class="stat-value" id="statPending">—</div>
+      <div class="stat-sub">beställningar</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Adv-fripack</div>
-      <div class="stat-value" id="statAdv">â</div>
+      <div class="stat-value" id="statAdv">—</div>
       <div class="stat-sub">rullar totalt</div>
     </div>
   </div>
@@ -300,13 +300,13 @@
   <!-- ORDERS TABLE -->
   <div class="table-card">
     <div class="table-header">
-      <h2 id="tableTitle">BestÃ¤llningar</h2>
+      <h2 id="tableTitle">Beställningar</h2>
       <span class="order-count" id="orderCount" style="display:none"></span>
     </div>
     <div id="tableContent">
       <div class="empty-state">
-        <div class="icon">ð</div>
-        <p>VÃ¤lj en spelare ovan fÃ¶r att se bestÃ¤llningar</p>
+        <div class="icon">👆</div>
+        <p>Välj en spelare ovan för att se beställningar</p>
       </div>
     </div>
   </div>
@@ -316,14 +316,14 @@
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbxe_PK8CXaAIHWFtvbvDs-aMk-eVXQ3RE22RcSw8yuD0Rp7XHaBa6-FHgAk-QwKOzhR/exec';
 
-/* ââ helpers ââ */
+/* ── helpers ── */
 function fmt(n)  { return Number(n).toLocaleString('sv-SE'); }
 function badge(text, type) { return `<span class="badge badge-${type}">${text}</span>`; }
 
 function paymentBadge(val) {
   if (!val) return '';
   const v = val.toLowerCase();
-  if (v.includes('vÃ¤ntar') || v.includes('vantar')) return badge(val, 'pending');
+  if (v.includes('väntar') || v.includes('vantar')) return badge(val, 'pending');
   if (v.includes('swish') || v.includes('betald') || v.includes('klar')) return badge(val, 'paid');
   return badge(val, 'neutral');
 }
@@ -333,25 +333,25 @@ function deliveryBadge(val) {
   return badge(val, 'delivery');
 }
 
-/* ââ Load player list ââ */
+/* ── Load player list ── */
 async function loadPlayers() {
   const sel = document.getElementById('playerSelect');
   try {
     const res  = await fetch(API + '?action=players');
     const list = await res.json();
     if (!Array.isArray(list) || list.length === 0) throw new Error('empty');
-    sel.innerHTML = '<option value="">â VÃ¤lj spelare â</option>';
+    sel.innerHTML = '<option value="">— Välj spelare —</option>';
     list.forEach(p => {
       const o = document.createElement('option');
       o.value = p; o.textContent = p;
       sel.appendChild(o);
     });
   } catch(e) {
-    sel.innerHTML = '<option value="">Kunde inte ladda spelare â kontrollera behÃ¶righet</option>';
+    sel.innerHTML = '<option value="">Kunde inte ladda spelare – kontrollera behörighet</option>';
   }
 }
 
-/* ââ Load orders for chosen player ââ */
+/* ── Load orders for chosen player ── */
 async function loadOrders(player) {
   const content  = document.getElementById('tableContent');
   const statsEl  = document.getElementById('stats');
@@ -359,10 +359,10 @@ async function loadOrders(player) {
   const countEl  = document.getElementById('orderCount');
 
   if (!player) {
-    titleEl.textContent = 'BestÃ¤llningar';
+    titleEl.textContent = 'Beställningar';
     countEl.style.display = 'none';
     statsEl.style.display = 'none';
-    content.innerHTML = '<div class="empty-state"><div class="icon">ð</div><p>VÃ¤lj en spelare ovan</p></div>';
+    content.innerHTML = '<div class="empty-state"><div class="icon">👆</div><p>Välj en spelare ovan</p></div>';
     return;
   }
 
@@ -376,7 +376,7 @@ async function loadOrders(player) {
 
     if (!Array.isArray(orders) || orders.length === 0) {
       statsEl.style.display = 'none';
-      content.innerHTML = '<div class="empty-state"><div class="icon">ð½</div><p>Inga bestÃ¤llningar Ã¤nnu</p></div>';
+      content.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>Inga beställningar ännu</p></div>';
       return;
     }
 
@@ -384,7 +384,7 @@ async function loadOrders(player) {
     const total   = orders.reduce((s, o) => s + (o.total || 0), 0);
     const pending = orders.filter(o => {
       const v = (o.payment || '').toLowerCase();
-      return v.includes('vÃ¤ntar') || v.includes('vantar');
+      return v.includes('väntar') || v.includes('vantar');
     }).length;
     const totalAdv = orders.reduce((s, o) => s + (o.adv  || 0), 0)
                    + orders.reduce((s, o) => s + (o.p2   || 0), 0)
@@ -402,7 +402,7 @@ async function loadOrders(player) {
     /* Table columns */
     const cols = [
       { key: 'date',     label: 'Datum' },
-      { key: 'buyer',    label: 'KÃ¶pare' },
+      { key: 'buyer',    label: 'Köpare' },
       { key: 'phone',    label: 'Telefon' },
       { key: 'adv',      label: 'Adv (frp)',   num: true },
       { key: 'p2',       label: 'P2 (frp)',    num: true },
@@ -433,7 +433,7 @@ async function loadOrders(player) {
         } else if (c.num) {
           const n = Number(val) || 0;
           cellClass += n === 0 ? ' zero"' : '"';
-          html += `<td class="num${n === 0 ? ' zero' : ''}">${n === 0 ? 'â' : n}</td>`;
+          html += `<td class="num${n === 0 ? ' zero' : ''}">${n === 0 ? '–' : n}</td>`;
           return;
         } else if (c.key === 'payment')  { val = paymentBadge(val); }
         else if (c.key === 'delivery') { val = deliveryBadge(val); }
@@ -454,7 +454,7 @@ async function loadOrders(player) {
         html += `<td class="num">${fmt(s)} kr</td>`;
       } else if (sumKeys.includes(c.key)) {
         const s = orders.reduce((acc, o) => acc + (Number(o[c.key]) || 0), 0);
-        html += `<td class="num">${s > 0 ? s : 'â'}</td>`;
+        html += `<td class="num">${s > 0 ? s : '–'}</td>`;
       } else {
         html += '<td></td>';
       }
@@ -466,7 +466,7 @@ async function loadOrders(player) {
 
   } catch(e) {
     statsEl.style.display = 'none';
-    content.innerHTML = '<div class="empty-state"><div class="icon">â ï¸</div><p>Kunde inte ladda bestÃ¤llningar.<br>Kontrollera att du har behÃ¶righet.</p></div>';
+    content.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>Kunde inte ladda beställningar.<br>Kontrollera att du har behörighet.</p></div>';
   }
 }
 
