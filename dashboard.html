@@ -254,7 +254,7 @@
 
 <!-- HEADER -->
 <div class="header">
-  <div class="header-logo">&#127954;</div>
+  <div class="header-logo">&#9917;</div>
   <h1>HBK F14 &#8211; Best&#228;llnings&#246;versikt</h1>
   <p>V&#228;lj spelare f&#246;r att se inkomna best&#228;llningar</p>
 </div>
@@ -387,8 +387,8 @@ async function loadOrders(player) {
       return v.includes('v\u00E4ntar') || v.includes('vantar');
     }).length;
     const totalAdv = orders.reduce((s, o) => s + (o.adv  || 0), 0)
-                    + orders.reduce((s, o) => s + (o.p2   || 0), 0)
-                    + orders.reduce((s, o) => s + (o.p3   || 0), 0);
+                   + orders.reduce((s, o) => s + (o.p2   || 0), 0)
+                   + orders.reduce((s, o) => s + (o.p3   || 0), 0);
 
     document.getElementById('statCount').textContent   = orders.length;
     document.getElementById('statTotal').textContent   = fmt(total);
