@@ -410,8 +410,6 @@ async function loadOrders(player) {
       { key: 'p3',       label: 'P3 (frp)',    num: true },
       { key: 'p3_8',     label: 'P3 8-pack',   num: true },
       { key: 'total',    label: 'Summa (kr)',   num: true },
-      { key: 'payment',  label: 'Betalning' },
-      { key: 'delivery', label: 'Leverans' },
     ];
 
     const sumKeys = ['adv','p2','p2_6','p3','p3_8','total'];
@@ -426,7 +424,7 @@ async function loadOrders(player) {
       html += '<tr>';
       cols.forEach(c => {
         let val = o[c.key] ?? '';
-        let cellClass = c.num ? ' class="num' : '';
+        let cellClass = c.num ? ' class="num"' : '';
 
         if (c.key === 'total') {
           val = val ? fmt(val) + ' kr' : '';
