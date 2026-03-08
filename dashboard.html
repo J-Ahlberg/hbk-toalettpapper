@@ -774,6 +774,12 @@ const VINST_PER = {
 /* ── helpers ── */
 function fmt(n) { return Number(n).toLocaleString('sv-SE'); }
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function formatPhone(v) {
+  if (!v) return '';
+  var s = String(v).trim();
+  if (/^\d{9}$/.test(s)) return '0' + s;   // 701234567 → 0701234567
+  return s;
+}
 function initials(name) {
   return (name || '?').split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
 }
@@ -979,7 +985,7 @@ async function loadOrders(player) {
     let listHtml = '<div class="order-list-inner">';
     orders.forEach((o, idx) => {
       const name    = o.buyer || 'Ok\u00E4nd';
-      const phone   = o.phone || '';
+      const phone   = formatPhone(o.phone);
       const msg     = o.note || o.message || o.meddelande || '';
       const total   = o.total ? fmt(o.total) + '\u00A0kr' : '\u2013';
       const init    = initials(name);
@@ -1018,7 +1024,7 @@ function openModal(idx) {
   if (!o) return;
 
   const name  = o.buyer || 'Ok\u00E4nd';
-  const phone = o.phone || '';
+  const phone = formatPhone(o.phone);
   const msg   = o.note || o.message || o.meddelande || '';
   const date  = o.date || '';
 
