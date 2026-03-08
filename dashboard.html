@@ -31,7 +31,7 @@
       min-height: 100vh;
     }
 
-    /* \2500 \2500  HEADER \2500 \2500  */
+    /* ── HEADER ── */
     .header {
       background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
       color: #fff;
@@ -54,7 +54,7 @@
     }
     .header p { color: rgba(255,255,255,0.7); margin-top: 6px; font-size: 0.95rem; }
 
-    /* \2500 \2500  NAV \2500 \2500  */
+    /* ── NAV ── */
     .nav-bar {
       background: var(--navy-mid);
       text-align: center;
@@ -68,14 +68,14 @@
     }
     .nav-bar a:hover { color: #fff; }
 
-    /* \2500 \2500  MAIN \2500 \2500  */
+    /* ── MAIN ── */
     .main {
       max-width: 1060px;
       margin: 0 auto;
       padding: 28px 16px 48px;
     }
 
-    /* \2500 \2500  SELECTOR CARD \2500 \2500  */
+    /* ── SELECTOR CARD ── */
     .selector-card {
       background: var(--card);
       border-radius: 16px;
@@ -94,7 +94,7 @@
     }
     .select-wrap { position: relative; }
     .select-wrap::after {
-      content: '\25BE ';
+      content: '\25BE';
       position: absolute;
       right: 16px; top: 50%;
       transform: translateY(-50%);
@@ -119,11 +119,17 @@
     }
     select:focus { border-color: var(--navy); }
 
-    /* \2500 \2500  STATS \2500 \2500  */
-    .stats {
+    /* ── STATS ── */
+    .stats-top {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 14px;
+      margin-bottom: 14px;
+    }
+    .stats-products {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
       margin-bottom: 24px;
     }
     .stat-card {
@@ -134,17 +140,23 @@
       text-align: center;
       border-top: 3px solid var(--navy);
     }
-    .stat-card:nth-child(2) { border-top-color: #059669; }
-    .stat-card:nth-child(3) { border-top-color: #d97706; }
-    .stat-card:nth-child(4) { border-top-color: #6366f1; }
+    .stat-card.green  { border-top-color: #059669; }
+    .stat-card.amber  { border-top-color: #d97706; }
+    .stat-card.indigo { border-top-color: #6366f1; }
+    .stat-card.teal   { border-top-color: #0891b2; }
+    .stat-card.rose   { border-top-color: #e11d48; }
     .stat-label { font-size: 0.72rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
     .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--navy); line-height: 1; }
-    .stat-card:nth-child(2) .stat-value { color: #059669; }
-    .stat-card:nth-child(3) .stat-value { color: #d97706; }
-    .stat-card:nth-child(4) .stat-value { color: #6366f1; }
+    .stat-card.green  .stat-value { color: #059669; }
+    .stat-card.amber  .stat-value { color: #d97706; }
+    .stat-card.indigo .stat-value { color: #6366f1; }
+    .stat-card.teal   .stat-value { color: #0891b2; }
+    .stat-card.rose   .stat-value { color: #e11d48; }
+    /* Smaller text for product cards */
+    .stats-products .stat-value { font-size: 1.5rem; }
     .stat-sub  { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
 
-    /* \2500 \2500  TABLE CARD \2500 \2500  */
+    /* ── TABLE CARD (desktop) ── */
     .table-card {
       background: var(--card);
       border-radius: 16px;
@@ -207,7 +219,7 @@
     td.num { text-align: right; font-variant-numeric: tabular-nums; }
     td.zero { color: #c4cadc; }
 
-    /* \2500 \2500  BADGE \2500 \2500  */
+    /* ── BADGE ── */
     .badge {
       display: inline-block;
       padding: 3px 9px;
@@ -221,7 +233,7 @@
     .badge-delivery { background: var(--blue-bg);   color: var(--blue-text);  }
     .badge-neutral  { background: #f3f4f6;           color: #374151;           }
 
-    /* \2500 \2500  EMPTY / LOADING \2500 \2500  */
+    /* ── EMPTY / LOADING ── */
     .empty-state {
       text-align: center;
       padding: 64px 20px;
@@ -239,11 +251,260 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* \2500 \2500  RESPONSIVE \2500 \2500  */
+    /* ════════════════════════════════════════
+       MOBILE CARD LIST  (hidden on desktop)
+    ════════════════════════════════════════ */
+    .order-list { display: none; }
+
+    .order-list-inner {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .order-row {
+      background: #fff;
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      border: 1.5px solid var(--border);
+      transition: border-color .15s, box-shadow .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .order-row:active {
+      border-color: var(--navy-light);
+      box-shadow: 0 0 0 3px rgba(15,42,94,.08);
+    }
+
+    .order-avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .order-info { flex: 1; min-width: 0; }
+    .order-name {
+      font-weight: 600;
+      font-size: 0.97rem;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .order-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .order-meta .dot { color: var(--border); }
+
+    .order-total-chip {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--navy);
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 4px 10px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .order-chevron {
+      color: var(--border);
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    /* ════════════════════════════════════════
+       MODAL
+    ════════════════════════════════════════ */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10,20,50,0.55);
+      z-index: 1000;
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      padding: 16px 0 0;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 24px 24px 0 0;
+      width: 100%;
+      max-width: 560px;
+      max-height: 90vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      animation: slideUp .25s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    .modal-handle {
+      width: 40px; height: 4px;
+      background: #dde3ef;
+      border-radius: 4px;
+      margin: 12px auto 0;
+    }
+
+    .modal-header {
+      padding: 20px 24px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-avatar {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .modal-buyer-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .modal-phone-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.9rem;
+      color: var(--blue);
+      text-decoration: none;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+    .modal-close {
+      margin-left: auto;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      border: none;
+      background: var(--bg);
+      color: var(--muted);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .modal-body { padding: 20px 24px 32px; }
+
+    .modal-section { margin-bottom: 20px; }
+    .modal-section-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    /* Message block */
+    .modal-message {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .modal-message.empty { color: var(--muted); font-style: italic; }
+
+    /* Product grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .product-item {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .product-label { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
+    .product-value {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .product-value.zero { color: #c4cadc; font-weight: 400; }
+
+    /* Total row */
+    .modal-total {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--navy);
+      color: #fff;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-top: 16px;
+    }
+    .modal-total-label { font-size: 0.85rem; font-weight: 600; opacity: 0.8; }
+    .modal-total-value { font-size: 1.3rem; font-weight: 700; }
+
+    /* Date row */
+    .modal-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    /* ── RESPONSIVE ── */
     @media (max-width: 700px) {
-      .stats { grid-template-columns: repeat(2, 1fr); }
+      .stats-top     { grid-template-columns: repeat(2, 1fr); }
+      .stats-products { grid-template-columns: repeat(3, 1fr); }
       .selector-card { padding: 18px 16px; }
     }
+    @media (max-width: 480px) {
+      .stats-products { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 640px) {
+      /* Hide desktop table, show mobile list */
+      .desktop-only { display: none !important; }
+      .order-list   { display: block; }
+    }
+
+    @media (min-width: 641px) {
+      /* Hide mobile list on desktop */
+      .order-list { display: none !important; }
+      .modal-backdrop { display: none !important; }
+    }
+
     @media (max-width: 380px) {
       .stats { grid-template-columns: 1fr 1fr; }
       .stat-value { font-size: 1.5rem; }
@@ -274,31 +535,50 @@
     </div>
   </div>
 
-  <!-- STATS (hidden until player chosen) -->
-  <div class="stats" id="stats" style="display:none">
+  <!-- STATS top row -->
+  <div class="stats-top" id="statsTop" style="display:none">
     <div class="stat-card">
       <div class="stat-label">Best&#228;llningar</div>
       <div class="stat-value" id="statCount">&#8212;</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card green">
       <div class="stat-label">Total summa</div>
       <div class="stat-value" id="statTotal">&#8212;</div>
       <div class="stat-sub">kronor</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">V&#228;ntar betalning</div>
-      <div class="stat-value" id="statPending">&#8212;</div>
-      <div class="stat-sub">best&#228;llningar</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Adv-fripack</div>
+  </div>
+
+  <!-- STATS product row -->
+  <div class="stats-products" id="statsProducts" style="display:none">
+    <div class="stat-card amber">
+      <div class="stat-label">Adv</div>
       <div class="stat-value" id="statAdv">&#8212;</div>
-      <div class="stat-sub">rullar totalt</div>
+      <div class="stat-sub">frp</div>
+    </div>
+    <div class="stat-card indigo">
+      <div class="stat-label">P2</div>
+      <div class="stat-value" id="statP2">&#8212;</div>
+      <div class="stat-sub">frp</div>
+    </div>
+    <div class="stat-card teal">
+      <div class="stat-label">P2 6-pack</div>
+      <div class="stat-value" id="statP2_6">&#8212;</div>
+      <div class="stat-sub">6-pack</div>
+    </div>
+    <div class="stat-card rose">
+      <div class="stat-label">P3</div>
+      <div class="stat-value" id="statP3">&#8212;</div>
+      <div class="stat-sub">frp</div>
+    </div>
+    <div class="stat-card" style="border-top-color:#7c3aed">
+      <div class="stat-label">P3 8-pack</div>
+      <div class="stat-value" id="statP3_8" style="color:#7c3aed">&#8212;</div>
+      <div class="stat-sub">8-pack</div>
     </div>
   </div>
 
-  <!-- ORDERS TABLE -->
-  <div class="table-card">
+  <!-- ORDERS TABLE (desktop) -->
+  <div class="table-card desktop-only" id="tableCard">
     <div class="table-header">
       <h2 id="tableTitle">Best&#228;llningar</h2>
       <span class="order-count" id="orderCount" style="display:none"></span>
@@ -311,15 +591,41 @@
     </div>
   </div>
 
+  <!-- ORDERS LIST (mobile) -->
+  <div class="table-card order-list" id="orderListCard">
+    <div class="table-header">
+      <h2 id="listTitle">Best&#228;llningar</h2>
+      <span class="order-count" id="listCount" style="display:none"></span>
+    </div>
+    <div id="orderListContent">
+      <div class="empty-state">
+        <div class="icon">&#128070;</div>
+        <p>V&#228;lj en spelare ovan f&#246;r att se best&#228;llningar</p>
+      </div>
+    </div>
+  </div>
+
 </div><!-- /main -->
+
+<!-- MODAL (mobile) -->
+<div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header" id="modalHeader"></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
 
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbxe_PK8CXaAIHWFtvbvDs-aMk-eVXQ3RE22RcSw8yuD0Rp7XHaBa6-FHgAk-QwKOzhR/exec';
 
-/* \u2500\u2500 helpers \u2500\u2500 */
-function fmt(n)  { return Number(n).toLocaleString('sv-SE'); }
-function badge(text, type) { return `<span class="badge badge-${type}">${text}</span>`; }
-
+/* ── helpers ── */
+function fmt(n) { return Number(n).toLocaleString('sv-SE'); }
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function initials(name) {
+  return (name || '?').split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+}
+function badge(text, type) { return `<span class="badge badge-${type}">${esc(text)}</span>`; }
 function paymentBadge(val) {
   if (!val) return '';
   const v = val.toLowerCase();
@@ -328,12 +634,7 @@ function paymentBadge(val) {
   return badge(val, 'neutral');
 }
 
-function deliveryBadge(val) {
-  if (!val) return '';
-  return badge(val, 'delivery');
-}
-
-/* \u2500\u2500 Load player list \u2500\u2500 */
+/* ── Load player list ── */
 async function loadPlayers() {
   const sel = document.getElementById('playerSelect');
   try {
@@ -351,122 +652,238 @@ async function loadPlayers() {
   }
 }
 
-/* \u2500\u2500 Load orders for chosen player \u2500\u2500 */
+/* ── Load orders ── */
 async function loadOrders(player) {
-  const content  = document.getElementById('tableContent');
-  const statsEl  = document.getElementById('stats');
-  const titleEl  = document.getElementById('tableTitle');
-  const countEl  = document.getElementById('orderCount');
+  const tableContent  = document.getElementById('tableContent');
+  const listContent   = document.getElementById('orderListContent');
+  const statsTop      = document.getElementById('statsTop');
+  const statsProducts = document.getElementById('statsProducts');
+  const tableTitle    = document.getElementById('tableTitle');
+  const listTitle     = document.getElementById('listTitle');
+  const orderCount    = document.getElementById('orderCount');
+  const listCount     = document.getElementById('listCount');
+
+  function hideStats() {
+    statsTop.style.display = statsProducts.style.display = 'none';
+  }
+  function showStats() {
+    statsTop.style.display = 'grid';
+    statsProducts.style.display = 'grid';
+  }
 
   if (!player) {
-    titleEl.textContent = 'Best\u00E4llningar';
-    countEl.style.display = 'none';
-    statsEl.style.display = 'none';
-    content.innerHTML = '<div class="empty-state"><div class="icon">\uD83D\uDC46</div><p>V\u00E4lj en spelare ovan</p></div>';
+    const emptyHtml = '<div class="empty-state"><div class="icon">\uD83D\uDC46</div><p>V\u00E4lj en spelare ovan</p></div>';
+    tableTitle.textContent = 'Best\u00E4llningar';
+    listTitle.textContent  = 'Best\u00E4llningar';
+    orderCount.style.display = listCount.style.display = 'none';
+    hideStats();
+    tableContent.innerHTML = listContent.innerHTML = emptyHtml;
     return;
   }
 
-  titleEl.textContent  = player;
-  countEl.style.display = 'none';
-  content.innerHTML = '<div class="spinner"></div>';
+  tableTitle.textContent = listTitle.textContent = player;
+  orderCount.style.display = listCount.style.display = 'none';
+  const spinnerHtml = '<div class="spinner"></div>';
+  tableContent.innerHTML = listContent.innerHTML = spinnerHtml;
 
   try {
     const res    = await fetch(API + '?action=orders&player=' + encodeURIComponent(player));
     const orders = await res.json();
 
     if (!Array.isArray(orders) || orders.length === 0) {
-      statsEl.style.display = 'none';
-      content.innerHTML = '<div class="empty-state"><div class="icon">\uD83D\uDCED</div><p>Inga best\u00E4llningar \u00E4nnu</p></div>';
+      const noHtml = '<div class="empty-state"><div class="icon">\uD83D\uDCED</div><p>Inga best\u00E4llningar \u00E4nnu</p></div>';
+      hideStats();
+      tableContent.innerHTML = listContent.innerHTML = noHtml;
       return;
     }
 
-    /* Stats */
+    /* ── Stats ── */
     const total   = orders.reduce((s, o) => s + (o.total || 0), 0);
-    const pending = orders.filter(o => {
-      const v = (o.payment || '').toLowerCase();
-      return v.includes('v\u00E4ntar') || v.includes('vantar');
-    }).length;
-    const totalAdv = orders.reduce((s, o) => s + (o.adv  || 0), 0)
-                   + orders.reduce((s, o) => s + (o.p2   || 0), 0)
-                   + orders.reduce((s, o) => s + (o.p3   || 0), 0);
+    const sumAdv  = orders.reduce((s, o) => s + (Number(o.adv)  || 0), 0);
+    const sumP2   = orders.reduce((s, o) => s + (Number(o.p2)   || 0), 0);
+    const sumP2_6 = orders.reduce((s, o) => s + (Number(o.p2_6) || 0), 0);
+    const sumP3   = orders.reduce((s, o) => s + (Number(o.p3)   || 0), 0);
+    const sumP3_8 = orders.reduce((s, o) => s + (Number(o.p3_8) || 0), 0);
 
-    document.getElementById('statCount').textContent   = orders.length;
-    document.getElementById('statTotal').textContent   = fmt(total);
-    document.getElementById('statPending').textContent = pending;
-    document.getElementById('statAdv').textContent     = totalAdv;
-    statsEl.style.display = 'grid';
+    document.getElementById('statCount').textContent = orders.length;
+    document.getElementById('statTotal').textContent = fmt(total);
+    document.getElementById('statAdv').textContent   = sumAdv  || '\u2013';
+    document.getElementById('statP2').textContent    = sumP2   || '\u2013';
+    document.getElementById('statP2_6').textContent  = sumP2_6 || '\u2013';
+    document.getElementById('statP3').textContent    = sumP3   || '\u2013';
+    document.getElementById('statP3_8').textContent  = sumP3_8 || '\u2013';
+    showStats();
 
-    countEl.textContent    = orders.length + ' st';
-    countEl.style.display  = 'inline-block';
+    const countText = orders.length + ' st';
+    orderCount.textContent = listCount.textContent = countText;
+    orderCount.style.display = listCount.style.display = 'inline-block';
 
-    /* Table columns */
+    /* ── Desktop table ── */
     const cols = [
-      { key: 'date',     label: 'Datum' },
-      { key: 'buyer',    label: 'K\u00F6pare' },
-      { key: 'phone',    label: 'Telefon' },
-      { key: 'adv',      label: 'Adv (frp)',   num: true },
-      { key: 'p2',       label: 'P2 (frp)',    num: true },
-      { key: 'p2_6',     label: 'P2 6-pack',   num: true },
-      { key: 'p3',       label: 'P3 (frp)',    num: true },
-      { key: 'p3_8',     label: 'P3 8-pack',   num: true },
-      { key: 'total',    label: 'Summa (kr)',   num: true },
+      { key: 'date',   label: 'Datum' },
+      { key: 'buyer',  label: 'K\u00F6pare' },
+      { key: 'phone',  label: 'Telefon' },
+      { key: 'adv',    label: 'Adv (frp)',  num: true },
+      { key: 'p2',     label: 'P2 (frp)',   num: true },
+      { key: 'p2_6',   label: 'P2 6-pack',  num: true },
+      { key: 'p3',     label: 'P3 (frp)',   num: true },
+      { key: 'p3_8',   label: 'P3 8-pack',  num: true },
+      { key: 'total',  label: 'Summa (kr)', num: true },
     ];
-
     const sumKeys = ['adv','p2','p2_6','p3','p3_8','total'];
 
-    /* Build header */
-    let html = '<div class="table-wrap"><table><thead><tr>';
-    cols.forEach(c => html += `<th${c.num ? ' style="text-align:right"' : ''}>${c.label}</th>`);
-    html += '</tr></thead><tbody>';
+    let tableHtml = '<div class="table-wrap"><table><thead><tr>';
+    cols.forEach(c => tableHtml += `<th${c.num ? ' style="text-align:right"' : ''}>${c.label}</th>`);
+    tableHtml += '</tr></thead><tbody>';
 
-    /* Build rows */
     orders.forEach(o => {
-      html += '<tr>';
+      tableHtml += '<tr>';
       cols.forEach(c => {
         let val = o[c.key] ?? '';
-        let cellClass = c.num ? ' class="num"' : '';
-
         if (c.key === 'total') {
           val = val ? fmt(val) + ' kr' : '';
-        } else if (c.num) {
-          const n = Number(val) || 0;
-          cellClass += n === 0 ? ' zero"' : '"';
-          html += `<td class="num${n === 0 ? ' zero' : ''}">${n === 0 ? '\u2013' : n}</td>`;
+          tableHtml += `<td class="num">${val}</td>`;
           return;
-        } else if (c.key === 'payment')  { val = paymentBadge(val); }
-        else if (c.key === 'delivery') { val = deliveryBadge(val); }
-
-        const cls = c.num ? ' class="num"' : '';
-        html += `<td${cls}>${val}</td>`;
+        }
+        if (c.num) {
+          const n = Number(val) || 0;
+          tableHtml += `<td class="num${n === 0 ? ' zero' : ''}">${n === 0 ? '\u2013' : n}</td>`;
+          return;
+        }
+        tableHtml += `<td>${esc(String(val))}</td>`;
       });
-      html += '</tr>';
+      tableHtml += '</tr>';
     });
 
-    /* Totals row */
-    html += '<tr class="totals-row">';
+    // Totals row
+    tableHtml += '<tr class="totals-row">';
     cols.forEach(c => {
       if (c.key === 'date') {
-        html += '<td>TOTALT</td>';
+        tableHtml += '<td>TOTALT</td>';
       } else if (c.key === 'total') {
         const s = orders.reduce((acc, o) => acc + (o.total || 0), 0);
-        html += `<td class="num">${fmt(s)} kr</td>`;
+        tableHtml += `<td class="num">${fmt(s)} kr</td>`;
       } else if (sumKeys.includes(c.key)) {
         const s = orders.reduce((acc, o) => acc + (Number(o[c.key]) || 0), 0);
-        html += `<td class="num">${s > 0 ? s : '\u2013'}</td>`;
+        tableHtml += `<td class="num">${s > 0 ? s : '\u2013'}</td>`;
       } else {
-        html += '<td></td>';
+        tableHtml += '<td></td>';
       }
     });
-    html += '</tr>';
+    tableHtml += '</tr></tbody></table></div>';
+    tableContent.innerHTML = tableHtml;
 
-    html += '</tbody></table></div>';
-    content.innerHTML = html;
+    /* ── Mobile card list ── */
+    let listHtml = '<div class="order-list-inner">';
+    orders.forEach((o, idx) => {
+      const name    = o.buyer || 'Ok\u00E4nd';
+      const phone   = o.phone || '';
+      const msg     = o.note || o.message || o.meddelande || '';
+      const total   = o.total ? fmt(o.total) + '\u00A0kr' : '\u2013';
+      const init    = initials(name);
+      const metaParts = [];
+      if (phone) metaParts.push(phone);
+      if (msg)   metaParts.push(msg.length > 30 ? msg.slice(0,30) + '\u2026' : msg);
+      const meta = metaParts.join('<span class="dot">&middot;</span>');
+
+      listHtml += `
+        <div class="order-row" onclick="openModal(${idx})" data-idx="${idx}">
+          <div class="order-avatar">${esc(init)}</div>
+          <div class="order-info">
+            <div class="order-name">${esc(name)}</div>
+            <div class="order-meta">${meta || '<span style="font-style:italic">Inget meddelande</span>'}</div>
+          </div>
+          <div class="order-total-chip">${total}</div>
+          <div class="order-chevron">&#8250;</div>
+        </div>`;
+    });
+    listHtml += '</div>';
+    listContent.innerHTML = listHtml;
+
+    /* Store orders globally for modal access */
+    window._orders = orders;
 
   } catch(e) {
-    statsEl.style.display = 'none';
-    content.innerHTML = '<div class="empty-state"><div class="icon">\u26A0\uFE0F</div><p>Kunde inte ladda best\u00E4llningar.<br>Kontrollera att du har beh\u00F6righet.</p></div>';
+    const errHtml = '<div class="empty-state"><div class="icon">\u26A0\uFE0F</div><p>Kunde inte ladda best\u00E4llningar.<br>Kontrollera att du har beh\u00F6righet.</p></div>';
+    hideStats();
+    tableContent.innerHTML = listContent.innerHTML = errHtml;
   }
 }
+
+/* ── Modal ── */
+function openModal(idx) {
+  const o = window._orders[idx];
+  if (!o) return;
+
+  const name  = o.buyer || 'Ok\u00E4nd';
+  const phone = o.phone || '';
+  const msg   = o.note || o.message || o.meddelande || '';
+  const date  = o.date || '';
+
+  /* Header */
+  document.getElementById('modalHeader').innerHTML = `
+    <div class="modal-avatar">${esc(initials(name))}</div>
+    <div>
+      <div class="modal-buyer-name">${esc(name)}</div>
+      ${phone ? `<a class="modal-phone-link" href="tel:${esc(phone)}">&#128222; ${esc(phone)}</a>` : '<div style="font-size:.85rem;color:var(--muted);margin-top:4px">Inget telefonnummer</div>'}
+    </div>
+    <button class="modal-close" onclick="closeModal()">&#215;</button>
+  `;
+
+  /* Body */
+  const products = [
+    { label: 'Adv (frp)',  key: 'adv' },
+    { label: 'P2 (frp)',   key: 'p2' },
+    { label: 'P2 6-pack',  key: 'p2_6' },
+    { label: 'P3 (frp)',   key: 'p3' },
+    { label: 'P3 8-pack',  key: 'p3_8' },
+  ];
+
+  let productGrid = '<div class="product-grid">';
+  products.forEach(p => {
+    const n = Number(o[p.key]) || 0;
+    productGrid += `
+      <div class="product-item">
+        <span class="product-label">${p.label}</span>
+        <span class="product-value${n === 0 ? ' zero' : ''}">${n === 0 ? '\u2013' : n}</span>
+      </div>`;
+  });
+  productGrid += '</div>';
+
+  const totalVal = o.total ? fmt(o.total) + '\u00A0kr' : '\u2013';
+
+  document.getElementById('modalBody').innerHTML = `
+    ${date ? `<div class="modal-meta-row">&#128197; ${esc(date)}</div>` : ''}
+
+    <div class="modal-section">
+      <div class="modal-section-title">Meddelande</div>
+      <div class="modal-message${msg ? '' : ' empty'}">${msg ? esc(msg) : 'Inget meddelande'}</div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Best&#228;llning</div>
+      ${productGrid}
+      <div class="modal-total">
+        <span class="modal-total-label">Totalt</span>
+        <span class="modal-total-value">${totalVal}</span>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('modalBackdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modalBackdrop')) return;
+  document.getElementById('modalBackdrop').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* Close modal on Escape */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
 
 document.getElementById('playerSelect').addEventListener('change', e => loadOrders(e.target.value));
 loadPlayers();
