@@ -1254,10 +1254,10 @@ function init() {
   if (pid) {
     const p = PLAYERS.find(x => x.id === pid);
     if (p) {
-      if (vy === 'flyer') {
-        openFlyer(pid);
-      } else {
+      if (vy === 'order') {
         openOrderForm(pid);
+      } else {
+        openFlyer(pid);  // Flyern är landningssida för alla spelarlänkar
       }
       return;
     }
