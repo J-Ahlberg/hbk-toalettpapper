@@ -757,15 +757,18 @@
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbxe_PK8CXaAIHWFtvbvDs-aMk-eVXQ3RE22RcSw8yuD0Rp7XHaBa6-FHgAk-QwKOzhR/exec';
 
-// ── Vinst per s&#229;ld enhet (justera efter ert avtal med leverant&#246;ren) ──────────
-// Exempel: s&#228;ljer ni Adv frp f&#246;r 150 kr och k&#246;pte in f&#246;r 90 kr → s&#228;tt adv: 60
-// Just nu: full f&#246;rs&#228;ljningspris = all vinst g&#229;r till laget
+// ── Vinst per s&#229;ld enhet (fr&#229;n "Produktinfo & Vinstkalkylator") ──────────────
+// Advanced frp:  s&#228;lj 150 kr &#8722; ink&#246;p 100 kr   = 50 kr/frp
+// P2-lag frp:    s&#228;lj 330 kr &#8722; ink&#246;p 280 kr   = 50 kr/frp
+// P2 6-pack:     s&#228;lj  50 kr &#8722; ink&#246;p  40 kr   = 10 kr/pack
+// P3-lag frp:    s&#228;lj 290 kr &#8722; ink&#246;p 237 kr   = 53 kr/frp
+// P3 8-pack:     s&#228;lj  45 kr &#8722; ink&#246;p 33,86 kr = 11,14 kr/pack
 const VINST_PER = {
-  adv:   150,   // kr vinst per frp Adv-lag
-  p2:    330,   // kr vinst per frp P2-lag
-  p2_6:   50,   // kr vinst per P2 6-pack
-  p3:    290,   // kr vinst per frp P3-lag
-  p3_8:   45,   // kr vinst per P3 8-pack
+  adv:    50,     // kr vinst per frp Adv-lag
+  p2:     50,     // kr vinst per frp P2-lag
+  p2_6:   10,     // kr vinst per P2 6-pack
+  p3:     53,     // kr vinst per frp P3-lag
+  p3_8:   11.14,  // kr vinst per P3 8-pack
 };
 
 /* ── helpers ── */
