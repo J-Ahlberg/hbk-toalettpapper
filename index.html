@@ -630,6 +630,23 @@
   .confirm-summary { text-align: left; margin-top: 20px; }
   .confirm-summary-line { display: flex; justify-content: space-between; font-size: 0.88rem; padding: 6px 0; border-bottom: 1px solid #e8eef8; }
   .confirm-summary-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 1rem; padding-top: 10px; color: var(--green); }
+  .btn-order-more {
+    display: block;
+    width: 100%;
+    margin-top: 24px;
+    padding: 16px 24px;
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .btn-order-more:hover { background: #1a5c3a; }
+  .btn-order-more:active { transform: scale(0.98); }
 
   /* Error msg */
   .error-msg { color: var(--red); font-size: 0.78rem; margin-top: 5px; }
@@ -961,6 +978,7 @@
       <div class="confirm-swish-note">Ange ditt namn + "Toapapper" som meddelande</div>
     </div>
     <p style="margin-top:18px; font-size:0.82rem; color:#999;">Du kan spara denna sida som bekräftelse.</p>
+    <button class="btn-order-more" onclick="openOrderForm(currentPlayer && currentPlayer.id)">🧻 BESTÄLL MER</button>
   </div>
 </div>
 
