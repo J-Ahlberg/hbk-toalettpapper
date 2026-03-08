@@ -978,7 +978,7 @@
       <div class="confirm-swish-note">Ange ditt namn + "Toapapper" som meddelande</div>
     </div>
     <p style="margin-top:18px; font-size:0.82rem; color:#999;">Du kan spara denna sida som bekräftelse.</p>
-    <button class="btn-order-more" onclick="openOrderForm(currentPlayer && currentPlayer.id)">🧻 BESTÄLL MER</button>
+    <button class="btn-order-more" onclick="orderMore()">🧻 BESTÄLL MER</button>
   </div>
 </div>
 
@@ -1088,6 +1088,10 @@ function openFlyer(id) {
 }
 
 // ── ORDER FORM ────────────────────────────────────────────────
+function orderMore() {
+  if (currentPlayer) openOrderForm(currentPlayer.id);
+}
+
 function openOrderForm(id) {
   const p = PLAYERS.find(x => x.id === id);
   if (!p) return;
