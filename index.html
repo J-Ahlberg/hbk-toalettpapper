@@ -27,8 +27,10 @@
   }
 
   /* ── VIEWS ─────────────────────────────────────────────── */
-  .view { display: none; }
-  .view.active { display: block; }
+  .view { display: none !important; }
+  .view.active { display: block !important; }
+  #view-confirm.active { display: flex !important; }
+  #view-flyer.active { display: flex !important; }
 
   /* ── ADMIN / PLAYER LIST VIEW ────────────────────────────── */
   #view-admin {
@@ -1269,7 +1271,8 @@ function init() {
 init();
 
 document.getElementById('btn-order-more').addEventListener('click', function() {
-  if (currentPlayer) openOrderForm(currentPlayer.id);
+  const pid = (currentPlayer && currentPlayer.id) || getUrlPlayer();
+  if (pid) openOrderForm(pid);
 });
 </script>
 </body>
