@@ -509,6 +509,88 @@
       .stats { grid-template-columns: 1fr 1fr; }
       .stat-value { font-size: 1.5rem; }
     }
+
+    /* ── TEAM SUMMARY CARD ── */
+    .team-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px 24px 22px;
+      box-shadow: 0 1px 3px rgba(15,42,94,.07), 0 4px 16px rgba(15,42,94,.06);
+      margin-bottom: 24px;
+      border-top: 4px solid var(--navy);
+    }
+    .team-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .team-card-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--navy);
+    }
+    .team-badge {
+      font-size: 0.73rem;
+      font-weight: 600;
+      padding: 3px 11px;
+      border-radius: 20px;
+      background: #f3f4f6;
+      color: var(--muted);
+      transition: background .3s, color .3s;
+    }
+    .team-badge.loaded {
+      background: var(--green-bg);
+      color: var(--green-text);
+    }
+    .team-main {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .team-products {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+    .team-stat {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 12px 10px;
+      text-align: center;
+    }
+    .team-stat-label {
+      font-size: 0.67rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+    .team-stat-value {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1;
+    }
+    .team-stat-value.c-green  { color: #059669; }
+    .team-stat-value.c-purple { color: #7c3aed; }
+    .team-stat-sub {
+      font-size: 0.69rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+    @media (max-width: 700px) {
+      .team-main     { grid-template-columns: 1fr 1fr; }
+      .team-products { grid-template-columns: repeat(3, 1fr); }
+      .team-card     { padding: 16px 16px 18px; }
+    }
+    @media (max-width: 420px) {
+      .team-products { grid-template-columns: repeat(3, 1fr); }
+    }
   </style>
 </head>
 <body>
@@ -524,6 +606,62 @@
 </div>
 
 <div class="main">
+
+  <!-- TEAM TOTALS -->
+  <div class="team-card" id="teamCard">
+    <div class="team-card-header">
+      <span class="team-card-title">&#127942; Lagtotal</span>
+      <span class="team-badge" id="teamBadge">Laddar&#8230;</span>
+    </div>
+
+    <!-- Huvudrader: best&#228;llningar, intäkter, vinst -->
+    <div class="team-main">
+      <div class="team-stat">
+        <div class="team-stat-label">Best&#228;llningar</div>
+        <div class="team-stat-value" id="tOrd">&#8212;</div>
+        <div class="team-stat-sub">st</div>
+      </div>
+      <div class="team-stat">
+        <div class="team-stat-label">Total int&#228;kt</div>
+        <div class="team-stat-value c-green" id="tRev">&#8212;</div>
+        <div class="team-stat-sub">kronor</div>
+      </div>
+      <div class="team-stat">
+        <div class="team-stat-label">Total vinst&#42;</div>
+        <div class="team-stat-value c-purple" id="tProfit">&#8212;</div>
+        <div class="team-stat-sub">kronor</div>
+      </div>
+    </div>
+
+    <!-- Produktrader -->
+    <div class="team-products">
+      <div class="team-stat">
+        <div class="team-stat-label">Adv</div>
+        <div class="team-stat-value" id="tAdv">&#8212;</div>
+        <div class="team-stat-sub">frp</div>
+      </div>
+      <div class="team-stat">
+        <div class="team-stat-label">P2</div>
+        <div class="team-stat-value" id="tP2">&#8212;</div>
+        <div class="team-stat-sub">frp</div>
+      </div>
+      <div class="team-stat">
+        <div class="team-stat-label">P2 6-pack</div>
+        <div class="team-stat-value" id="tP26">&#8212;</div>
+        <div class="team-stat-sub">6-pack</div>
+      </div>
+      <div class="team-stat">
+        <div class="team-stat-label">P3</div>
+        <div class="team-stat-value" id="tP3">&#8212;</div>
+        <div class="team-stat-sub">frp</div>
+      </div>
+      <div class="team-stat">
+        <div class="team-stat-label">P3 8-pack</div>
+        <div class="team-stat-value" id="tP38">&#8212;</div>
+        <div class="team-stat-sub">8-pack</div>
+      </div>
+    </div>
+  </div>
 
   <!-- PLAYER SELECTOR -->
   <div class="selector-card">
@@ -619,6 +757,17 @@
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbxe_PK8CXaAIHWFtvbvDs-aMk-eVXQ3RE22RcSw8yuD0Rp7XHaBa6-FHgAk-QwKOzhR/exec';
 
+// ── Vinst per s&#229;ld enhet (justera efter ert avtal med leverant&#246;ren) ──────────
+// Exempel: s&#228;ljer ni Adv frp f&#246;r 150 kr och k&#246;pte in f&#246;r 90 kr → s&#228;tt adv: 60
+// Just nu: full f&#246;rs&#228;ljningspris = all vinst g&#229;r till laget
+const VINST_PER = {
+  adv:   150,   // kr vinst per frp Adv-lag
+  p2:    330,   // kr vinst per frp P2-lag
+  p2_6:   50,   // kr vinst per P2 6-pack
+  p3:    290,   // kr vinst per frp P3-lag
+  p3_8:   45,   // kr vinst per P3 8-pack
+};
+
 /* ── helpers ── */
 function fmt(n) { return Number(n).toLocaleString('sv-SE'); }
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -632,6 +781,56 @@ function paymentBadge(val) {
   if (v.includes('v\u00E4ntar') || v.includes('vantar')) return badge(val, 'pending');
   if (v.includes('swish') || v.includes('betald') || v.includes('klar')) return badge(val, 'paid');
   return badge(val, 'neutral');
+}
+
+/* ── Load team totals (all players aggregated) ── */
+async function loadTeamStats() {
+  const badge = document.getElementById('teamBadge');
+  try {
+    const playersRes = await fetch(API + '?action=players');
+    const players    = await playersRes.json();
+    if (!Array.isArray(players) || players.length === 0) {
+      badge.textContent = 'Inga spelare';
+      return;
+    }
+
+    // H&#228;mta alla spelares best&#228;llningar parallellt
+    const allOrdersArr = await Promise.all(
+      players.map(p =>
+        fetch(API + '?action=orders&player=' + encodeURIComponent(p))
+          .then(r => r.json())
+          .catch(() => [])
+      )
+    );
+
+    const allOrders = allOrdersArr.filter(Array.isArray).flat();
+
+    const tAdv  = allOrders.reduce((s, o) => s + (Number(o.adv)  || 0), 0);
+    const tP2   = allOrders.reduce((s, o) => s + (Number(o.p2)   || 0), 0);
+    const tP2_6 = allOrders.reduce((s, o) => s + (Number(o.p2_6) || 0), 0);
+    const tP3   = allOrders.reduce((s, o) => s + (Number(o.p3)   || 0), 0);
+    const tP3_8 = allOrders.reduce((s, o) => s + (Number(o.p3_8) || 0), 0);
+    const tRev  = allOrders.reduce((s, o) => s + (o.total || 0), 0);
+    const tProfit = tAdv   * VINST_PER.adv  +
+                    tP2    * VINST_PER.p2   +
+                    tP2_6  * VINST_PER.p2_6 +
+                    tP3    * VINST_PER.p3   +
+                    tP3_8  * VINST_PER.p3_8;
+
+    document.getElementById('tOrd').textContent    = allOrders.length || '\u2013';
+    document.getElementById('tRev').textContent    = fmt(tRev);
+    document.getElementById('tProfit').textContent = fmt(tProfit);
+    document.getElementById('tAdv').textContent    = tAdv   || '\u2013';
+    document.getElementById('tP2').textContent     = tP2    || '\u2013';
+    document.getElementById('tP26').textContent    = tP2_6  || '\u2013';
+    document.getElementById('tP3').textContent     = tP3    || '\u2013';
+    document.getElementById('tP38').textContent    = tP3_8  || '\u2013';
+
+    badge.textContent = players.length + ' spelare';
+    badge.classList.add('loaded');
+  } catch(e) {
+    badge.textContent = 'Kunde inte ladda';
+  }
 }
 
 /* ── Load player list ── */
@@ -886,7 +1085,8 @@ document.addEventListener('keydown', e => {
 });
 
 document.getElementById('playerSelect').addEventListener('change', e => loadOrders(e.target.value));
-loadPlayers();
+loadTeamStats();   // ladda lagtotal direkt vid sidstart
+loadPlayers();     // ladda spelarlista parallellt
 </script>
 
 </body>
