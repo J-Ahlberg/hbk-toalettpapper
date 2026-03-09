@@ -755,7 +755,7 @@
 </div>
 
 <script>
-const API = 'https://script.google.com/macros/s/AKfycbxe_PK8CXaAIHWFtvbvDs-aMk-eVXQ3RE22RcSw8yuD0Rp7XHaBa6-FHgAk-QwKOzhR/exec';
+const API = 'https://script.google.com/macros/s/AKfycbyTH_xV3PuEMI3EHZAq-1y5dEtci-u-m7uJlCfuNFNdlhiJDEX6CsTEnSi93NB5yKDD/exec';
 
 // ── Vinst per s&#229;ld enhet (fr&#229;n "Produktinfo & Vinstkalkylator") ──────────────
 // Advanced frp:  s&#228;lj 150 kr &#8722; ink&#246;p 100 kr   = 50 kr/frp
@@ -792,12 +792,49 @@ function paymentBadge(val) {
   return badge(val, 'neutral');
 }
 
+/* ── Cache helpers (sessionStorage, 5-min TTL) ─────── */
+const _CACHE_TTL = 5 * 60 * 1000;
+
+function _getCache(key) {
+  try {
+    const raw = sessionStorage.getItem('hbk_' + key);
+    if (!raw) return null;
+    const {d, t} = JSON.parse(raw);
+    return (Date.now() - t < _CACHE_TTL) ? d : null;
+  } catch { return null; }
+}
+function _setCache(key, data) {
+  try {
+    sessionStorage.setItem('hbk_' + key, JSON.stringify({d: data, t: Date.now()}));
+  } catch {}
+}
+function _applyStats(s) {
+  const ids = ['tOrd','tRev','tProfit','tAdv','tP2','tP26','tP3','tP38'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && s[id] !== undefined) el.textContent = s[id];
+  });
+}
+
+let _playersCache = null, _playersCacheTs = 0;
+async function _fetchPlayers() {
+  if (_playersCache && Date.now() - _playersCacheTs < _CACHE_TTL) return _playersCache;
+  const res = await fetch(API + '?action=players');
+  _playersCache = await res.json();
+  _playersCacheTs = Date.now();
+  return _playersCache;
+}
+
 /* ── Load team totals (all players aggregated) ── */
 async function loadTeamStats() {
   const badge = document.getElementById('teamBadge');
+  // Stale-while-revalidate: show cached stats instantly, then refresh in background
+  const _stale = _getCache('team_stats');
+  if (_stale) _applyStats(_stale);
+
   try {
-    const playersRes = await fetch(API + '?action=players');
-    const players    = await playersRes.json();
+    const players = await _fetchPlayers();
+    // (players already resolved above via _fetchPlayers)
     if (!Array.isArray(players) || players.length === 0) {
       badge.textContent = 'Inga spelare';
       return;
@@ -834,6 +871,18 @@ async function loadTeamStats() {
     document.getElementById('tP26').textContent    = tP2_6  || '\u2013';
     document.getElementById('tP3').textContent     = tP3    || '\u2013';
     document.getElementById('tP38').textContent    = tP3_8  || '\u2013';
+
+    // Persist fresh stats for next load (stale-while-revalidate)
+    _setCache('team_stats', {
+      tOrd: document.getElementById('tOrd').textContent,
+      tRev: document.getElementById('tRev').textContent,
+      tProfit: document.getElementById('tProfit').textContent,
+      tAdv: document.getElementById('tAdv').textContent,
+      tP2:  document.getElementById('tP2').textContent,
+      tP26: document.getElementById('tP26').textContent,
+      tP3:  document.getElementById('tP3').textContent,
+      tP38: document.getElementById('tP38').textContent,
+    });
 
     badge.textContent = players.length + ' spelare';
     badge.classList.add('loaded');
