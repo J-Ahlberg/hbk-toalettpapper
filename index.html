@@ -1121,6 +1121,11 @@ function openOrderForm(id) {
   document.getElementById('empty-warn').style.display = 'none';
   updateTotals();
   showView('order');
+  document.getElementById('flyer-order-btn').onclick = () => {
+    const target = document.getElementById('view-order');
+    const top = target.getBoundingClientRect().top + window.pageYOffset;
+    window.scrollTo({ top: top, behavior: 'smooth' });
+  };
 }
 
 function changeQty(key, delta) {
