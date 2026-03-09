@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HBK F14 – Toalettpapper 2026</title>
+<link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
@@ -954,7 +955,7 @@
     </div>
     <div class="form-group">
       <label class="form-label">Telefon *</label>
-      <input class="form-input" id="buyer-phone" type="tel" placeholder="07X XXX XX XX">
+      <input class="form-input" id="buyer-phone" type="tel" placeholder="07X XXX XX XX" inputmode="tel">
       <div class="error-msg" id="err-phone"></div>
     </div>
     <div class="form-group">
@@ -1290,7 +1291,7 @@ function submitOrder() {
 
 // ── BYTA UT URL när Apps Script är driftsatt ──────────────────
 // Extensions → Apps Script → Deploy → New deployment → kopiera URL
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxe_PK8CXaAIHWFtvbvDs-aMk-eVXQ3RE22RcSw8yuD0Rp7XHaBa6-FHgAk-QwKOzhR/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyTH_xV3PuEMI3EHZAq-1y5dEtci-u-m7uJlCfuNFNdlhiJDEX6CsTEnSi93NB5yKDD/exec';
 
   function showConfirmation() {
     document.getElementById('confirm-player').textContent = currentPlayer.fn + ' ' + currentPlayer.ln;
@@ -1314,6 +1315,12 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxe_PK8CXaAIHWF
   btn.textContent = 'SKICKAR…';
 
   if (APPS_SCRIPT_URL && APPS_SCRIPT_URL !== 'KLISTRA_IN_DIN_APPS_SCRIPT_URL_HÄR') {
+    // Spara lokalt direkt (säkerhetsbackup + offline-stöd)
+    const _orders = JSON.parse(localStorage.getItem('hbk_orders') || '[]');
+    _orders.push(order);
+    localStorage.setItem('hbk_orders', JSON.stringify(_orders));
+    clearDraft();
+
     fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors',
@@ -1321,17 +1328,7 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxe_PK8CXaAIHWF
       body: JSON.stringify(order)
     })
     .then(() => showConfirmation())
-    .catch(err => {
-      console.warn('Kunde inte nå Google Sheets, sparar lokalt:', err);
-      const orders = JSON.parse(localStorage.getItem('hbk_orders') || '[]');
-      orders.push(order);
-      localStorage.setItem('hbk_orders', JSON.stringify(orders));
-      showConfirmation();
-    })
-    .finally(() => {
-      btn.disabled = false;
-      btn.textContent = 'SKICKA BESTÄLLNING →';
-    });
+    .catch(() => showConfirmation());
   } else {
     // Innan URL är konfigurerad – spara lokalt
     const orders = JSON.parse(localStorage.getItem('hbk_orders') || '[]');
@@ -1344,8 +1341,27 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxe_PK8CXaAIHWF
 }
 
 // ── INIT ──────────────────────────────────────────────────────
+// --- Draft-save helpers ---
+const DRAFT_FIELDS = ['buyer-name', 'buyer-phone', 'buyer-email', 'buyer-msg'];
+
+function loadDraft() {
+  DRAFT_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const saved = localStorage.getItem('hbk_draft_' + id);
+    if (saved) el.value = saved;
+    el.addEventListener('input', () =>
+      localStorage.setItem('hbk_draft_' + id, el.value));
+  });
+}
+
+function clearDraft() {
+  DRAFT_FIELDS.forEach(id => localStorage.removeItem('hbk_draft_' + id));
+}
+
 function init() {
   buildAdminList();
+  loadDraft();
   const pid = getUrlPlayer();
   const vy  = getUrlView();
 
