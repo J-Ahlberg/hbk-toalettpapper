@@ -201,9 +201,24 @@ td.zero { color: #c4cadc; }
 .delivery-table thead th .col-group { display: block; font-size: 0.59rem; font-weight: 700; letter-spacing: 0.3px; margin-bottom: 2px; opacity: 0.75; }
 .delivery-table thead th.lev  { background: #d1fae5; color: #065f46; }
 .delivery-table thead th.kvar { background: #fef3c7; color: #92400e; }
-/* Tydlig separator mellan levererat och kvar */
-.delivery-table thead th.kvar-first { border-left: 2px solid #d6b87a; }
-.delivery-table tbody td.kvar-first { border-left: 2px solid var(--border); }
+/* Separatorer mellan grupperna */
+.delivery-table thead th.kvar-first  { border-left: 2px solid #d6b87a; }
+.delivery-table tbody td.kvar-first  { border-left: 2px solid var(--border); }
+.delivery-table thead th.split-first { border-left: 2px solid #a78bfa; }
+.delivery-table tbody td.split-first { border-left: 2px solid #ddd6fe; }
+/* Split Levererat: grön nyans (samma tema som hel frp lev) */
+.delivery-table thead th.split-lev  { background: #d1fae5; color: #065f46; }
+.delivery-table td.split-lev-val    { text-align: right; color: #059669; font-weight: 600; }
+.delivery-table td.split-lev-zero   { text-align: right; color: #c4cadc; font-weight: 400; }
+/* Split Kvar: lila/indigo-tema */
+.delivery-table thead th.split-kvar { background: #ede9fe; color: #5b21b6; }
+.delivery-table td.split-val        { text-align: right; color: #6d28d9; font-weight: 600; }
+.delivery-table td.split-zero       { text-align: right; color: #c4cadc; font-weight: 400; }
+/* Separator mellan Split Lev och Split Kvar */
+.delivery-table thead th.split-kvar-first { border-left: 2px solid #a78bfa; }
+.delivery-table tbody td.split-kvar-first { border-left: 2px solid #ddd6fe; }
+.delivery-table .totals-row td.split-lev-val { color: #059669; }
+.delivery-table .totals-row td.split-val     { color: #6d28d9; }
 .delivery-table tbody td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; white-space: nowrap; }
 .delivery-table tbody tr:last-child td { border-bottom: none; }
 .delivery-table tbody tr:hover td { background: #f7f9ff; }
@@ -829,34 +844,48 @@ function openDeliveryModal(idx) {
   `;
 
   function dmRow(label, levVal, kvarVal) {
-    const levCls  = levVal  > 0 ? 'style="color:#059669;font-weight:700"' : 'style="color:#c4cadc"';
-    const kvarCls = kvarVal > 0 ? 'style="color:#d97706;font-weight:700"' : 'style="color:#c4cadc"';
+    const levCls  = levVal  > 0 ? 'color:#059669;font-weight:700' : 'color:#c4cadc';
+    const kvarCls = kvarVal > 0 ? 'color:#d97706;font-weight:700' : 'color:#c4cadc';
     return `
       <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
         <span style="font-size:.9rem;font-weight:500;color:var(--text)">${label}</span>
         <div style="display:flex;gap:20px;text-align:right">
-          <div>
-            <div style="font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:#059669;margin-bottom:2px">Levererat</div>
-            <div ${levCls}>${levVal || '–'}</div>
-          </div>
-          <div>
-            <div style="font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:#d97706;margin-bottom:2px">Kvar</div>
-            <div ${kvarCls}>${kvarVal || '–'}</div>
-          </div>
+          <div><div style="font-size:.6rem;font-weight:700;text-transform:uppercase;color:#059669;margin-bottom:2px">Levererat</div><div style="${levCls}">${levVal || '–'}</div></div>
+          <div><div style="font-size:.6rem;font-weight:700;text-transform:uppercase;color:#d97706;margin-bottom:2px">Kvar</div><div style="${kvarCls}">${kvarVal || '–'}</div></div>
+        </div>
+      </div>`;
+  }
+  function splitDmRow(label, levVal, kvarVal) {
+    const levCls  = levVal  > 0 ? 'color:#059669;font-weight:700' : 'color:#c4cadc';
+    const kvarCls = kvarVal > 0 ? 'color:#6d28d9;font-weight:700' : 'color:#c4cadc';
+    return `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
+        <span style="font-size:.9rem;font-weight:500;color:var(--text)">${label}</span>
+        <div style="display:flex;gap:20px;text-align:right">
+          <div><div style="font-size:.6rem;font-weight:700;text-transform:uppercase;color:#059669;margin-bottom:2px">Levererat</div><div style="${levCls}">${levVal || '–'}</div></div>
+          <div><div style="font-size:.6rem;font-weight:700;text-transform:uppercase;color:#6d28d9;margin-bottom:2px">Kvar</div><div style="${kvarCls}">${kvarVal || '–'}</div></div>
         </div>
       </div>`;
   }
 
+  const hasSplit = (r.lev_6pack || r.kvar_6pack || r.lev_8pack || r.kvar_8pack);
+  const totSplitKvar = (r.kvar_6pack || 0) + (r.kvar_8pack || 0);
   document.getElementById('modalBody').innerHTML = `
     <div class="modal-section">
-      <div class="modal-section-title">Leveransstatus per produkt</div>
-      ${dmRow('Adv (frp)',  r.lev_adv, r.kvar_adv)}
-      ${dmRow('P2 (frp)',   r.lev_p2,  r.kvar_p2)}
-      ${dmRow('P3 (frp)',   r.lev_p3,  r.kvar_p3)}
+      <div class="modal-section-title">Hel förpackning (frp)</div>
+      ${dmRow('Adv', r.lev_adv, r.kvar_adv)}
+      ${dmRow('P2',  r.lev_p2,  r.kvar_p2)}
+      ${dmRow('P3',  r.lev_p3,  r.kvar_p3)}
     </div>
-    <div class="modal-total" style="${totKvar === 0 ? 'background:#059669' : ''}">
-      <span class="modal-total-label">Totalt kvar att leverera</span>
-      <span class="modal-total-value">${totKvar || '0'} frp</span>
+    ${hasSplit ? `
+    <div class="modal-section">
+      <div class="modal-section-title" style="color:#5b21b6">Split-pack</div>
+      ${splitDmRow('P2 6-pack', r.lev_6pack, r.kvar_6pack)}
+      ${splitDmRow('P3 8-pack', r.lev_8pack, r.kvar_8pack)}
+    </div>` : ''}
+    <div class="modal-total" style="${totKvar === 0 && totSplitKvar === 0 ? 'background:#059669' : ''}">
+      <span class="modal-total-label">Totalt kvar (hel frp)</span>
+      <span class="modal-total-value">${totKvar || '0'} frp${totSplitKvar > 0 ? ` · ${totSplitKvar} pack` : ''}</span>
     </div>
   `;
   document.getElementById('modalBackdrop').classList.add('open');
@@ -909,6 +938,10 @@ function _renderDelivery(rows) {
   html += gh('Kvar att leverera', 'Adv (frp)', 'kvar kvar-first');
   html += gh('Kvar att leverera', 'P2 (frp)',  'kvar');
   html += gh('Kvar att leverera', 'P3 (frp)',  'kvar');
+  html += gh('Split Lev', '6-pack', 'split-lev split-first');
+  html += gh('Split Lev', '8-pack', 'split-lev');
+  html += gh('Split Kvar', '6-pack', 'split-kvar split-kvar-first');
+  html += gh('Split Kvar', '8-pack', 'split-kvar');
   html += '</tr></thead><tbody>';
 
   function kvarCell(n, first) {
@@ -923,12 +956,44 @@ function _renderDelivery(rows) {
     const base = first ? 'kvar-first ' : '';
     return `<td class="${base}${n > 0 ? 'kvar-val' : 'kvar-zero'}">${n || '–'}</td>`;
   }
+  // Split Levererat (grön)
+  function splitLevCell(n, first) {
+    const base = first ? 'split-first ' : '';
+    return `<td class="${base}${n > 0 ? 'split-lev-val' : 'split-lev-zero'}">${n || '–'}</td>`;
+  }
+  function splitLevTotCell(n, first) {
+    const base = first ? 'split-first ' : '';
+    if (!n) return `<td class="${base}split-lev-zero">–</td>`;
+    return `<td class="${base}split-lev-val">${n}</td>`;
+  }
+  // Split Kvar (lila) – TOTALT-rad visar ceil(n/7) frp att beställa
+  function splitKvarCell(n, first) {
+    const base = first ? 'split-kvar-first ' : '';
+    return `<td class="${base}${n > 0 ? 'split-val' : 'split-zero'}">${n || '–'}</td>`;
+  }
+  function splitKvarTotCell(n, first) {
+    const base = first ? 'split-kvar-first ' : '';
+    if (!n) return `<td class="${base}split-zero">–</td>`;
+    const frp = Math.ceil(n / 7);
+    return `<td class="${base}split-val" style="line-height:1.4;white-space:nowrap">
+      <div>${n} pack</div>
+      <div style="font-size:.7rem;color:#7c3aed;font-weight:500">${frp} frp</div>
+    </td>`;
+  }
+
+  // Beräkna split-totaler från spelarraderna (rad 35 i arket saknar ofta formler)
+  const sumLev6pack  = players.reduce((s, r) => s + (r.lev_6pack  || 0), 0);
+  const sumLev8pack  = players.reduce((s, r) => s + (r.lev_8pack  || 0), 0);
+  const sumKvar6pack = players.reduce((s, r) => s + (r.kvar_6pack || 0), 0);
+  const sumKvar8pack = players.reduce((s, r) => s + (r.kvar_8pack || 0), 0);
 
   // Totalrad överst
   if (totRow) {
     html += `<tr class="totals-row"><td>TOTALT</td>`;
     html += `<td class="lev-val">${totRow.lev_adv || '–'}</td><td class="lev-val">${totRow.lev_p2 || '–'}</td><td class="lev-val">${totRow.lev_p3 || '–'}</td>`;
     html += totKvarCell(totRow.kvar_adv, true) + totKvarCell(totRow.kvar_p2) + totKvarCell(totRow.kvar_p3);
+    html += splitLevTotCell(sumLev6pack, true) + splitLevTotCell(sumLev8pack);
+    html += splitKvarTotCell(sumKvar6pack, true) + splitKvarTotCell(sumKvar8pack);
     html += '</tr>';
   }
 
@@ -936,6 +1001,8 @@ function _renderDelivery(rows) {
     html += `<tr><td>${esc(r.name)}</td>`;
     html += levCell(r.lev_adv) + levCell(r.lev_p2) + levCell(r.lev_p3);
     html += kvarCell(r.kvar_adv, true) + kvarCell(r.kvar_p2) + kvarCell(r.kvar_p3);
+    html += splitLevCell(r.lev_6pack, true) + splitLevCell(r.lev_8pack);
+    html += splitKvarCell(r.kvar_6pack, true) + splitKvarCell(r.kvar_8pack);
     html += '</tr>';
   });
 
@@ -944,6 +1011,8 @@ function _renderDelivery(rows) {
     html += `<tr class="totals-row"><td>TOTALT</td>`;
     html += `<td class="lev-val">${totRow.lev_adv || '–'}</td><td class="lev-val">${totRow.lev_p2 || '–'}</td><td class="lev-val">${totRow.lev_p3 || '–'}</td>`;
     html += totKvarCell(totRow.kvar_adv, true) + totKvarCell(totRow.kvar_p2) + totKvarCell(totRow.kvar_p3);
+    html += splitLevTotCell(sumLev6pack, true) + splitLevTotCell(sumLev8pack);
+    html += splitKvarTotCell(sumKvar6pack, true) + splitKvarTotCell(sumKvar8pack);
     html += '</tr>';
   }
   html += '</tbody></table>';
@@ -953,8 +1022,12 @@ function _renderDelivery(rows) {
   window._deliveryRows = players; // spara för modal
   function kvarSummary(r) {
     const tot = r.kvar_adv + r.kvar_p2 + r.kvar_p3;
-    if (tot === 0) return '<span style="font-size:.8rem;color:#059669;font-weight:600">✓ Levererat</span>';
-    return `<span style="font-size:.82rem;color:#d97706;font-weight:700">${tot} kvar</span>`;
+    const hasSplit = r.kvar_6pack > 0 || r.kvar_8pack > 0;
+    const parts = [];
+    if (tot > 0)     parts.push(`<span style="color:#d97706;font-weight:700">${tot} frp kvar</span>`);
+    if (hasSplit)    parts.push(`<span style="color:#6d28d9;font-weight:700">${(r.kvar_6pack || 0) + (r.kvar_8pack || 0)} pack kvar</span>`);
+    if (!parts.length) return '<span style="color:#059669;font-weight:600">✓ Levererat</span>';
+    return parts.join('<span style="color:var(--border);margin:0 4px">·</span>');
   }
   let mHtml = '<div class="order-list-inner">';
   players.forEach((r, idx) => {
