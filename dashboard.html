@@ -185,6 +185,61 @@ td.zero { color: #c4cadc; }
 @media (max-width: 420px) {
   .team-products { grid-template-columns: repeat(3, 1fr); }
 }
+/* ── DELIVERY VIEW ── */
+.delivery-card { background: var(--card); border-radius: 16px; box-shadow: 0 2px 6px rgba(15,42,94,.08), 0 8px 24px rgba(15,42,94,.08); border: 1px solid var(--border); overflow: hidden; display: none; }
+.delivery-card.visible { display: block; }
+.delivery-header { background: var(--navy); color: #fff; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.delivery-header h2 { font-size: 0.95rem; font-weight: 600; margin: 0; }
+.delivery-badge { background: rgba(255,255,255,0.15); color: #fff; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; }
+/* Desktop table */
+.delivery-table-wrap { overflow-x: auto; overflow-y: auto; max-height: 560px; -webkit-overflow-scrolling: touch; }
+/* border-separate krävs för att sticky thead ska fungera utan transparens */
+.delivery-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.875rem; }
+/* En enda sticky headerrad — inga gap-problem */
+.delivery-table thead th { position: sticky; top: 0; z-index: 3; background: #f1f5fd; color: var(--navy); font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px 10px; text-align: left; white-space: nowrap; border-bottom: 2px solid var(--border); }
+/* Liten grupptext ovanför kolumnnamnet */
+.delivery-table thead th .col-group { display: block; font-size: 0.59rem; font-weight: 700; letter-spacing: 0.3px; margin-bottom: 2px; opacity: 0.75; }
+.delivery-table thead th.lev  { background: #d1fae5; color: #065f46; }
+.delivery-table thead th.kvar { background: #fef3c7; color: #92400e; }
+/* Tydlig separator mellan levererat och kvar */
+.delivery-table thead th.kvar-first { border-left: 2px solid #d6b87a; }
+.delivery-table tbody td.kvar-first { border-left: 2px solid var(--border); }
+.delivery-table tbody td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; white-space: nowrap; }
+.delivery-table tbody tr:last-child td { border-bottom: none; }
+.delivery-table tbody tr:hover td { background: #f7f9ff; }
+.delivery-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.delivery-table td.lev-val { text-align: right; color: #059669; font-weight: 600; }
+.delivery-table td.kvar-val { text-align: right; color: #d97706; font-weight: 600; }
+.delivery-table td.kvar-zero { text-align: right; color: #c4cadc; font-weight: 400; }
+.delivery-table .totals-row td { font-weight: 700; background: #eef2f8; color: var(--navy); border-top: 2px solid var(--border); border-bottom: none; }
+.delivery-table .totals-row td.lev-val { color: #059669; }
+.delivery-table .totals-row td.kvar-val { color: #d97706; }
+/* Mobile delivery cards */
+.delivery-list { display: none; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+.delivery-player-card { background: #fff; border-radius: 12px; border: 1.5px solid var(--border); padding: 14px 16px; }
+.delivery-player-name { font-weight: 700; font-size: 0.97rem; color: var(--text); margin-bottom: 10px; }
+.delivery-player-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.delivery-mini { background: var(--bg); border-radius: 8px; padding: 8px 10px; text-align: center; }
+.delivery-mini-label { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); margin-bottom: 3px; }
+.delivery-mini-val { font-size: 1.1rem; font-weight: 700; color: var(--navy); }
+.delivery-mini-val.lev { color: #059669; }
+.delivery-mini-val.kvar { color: #d97706; }
+.delivery-mini-val.zero { color: #c4cadc; font-weight: 400; }
+.delivery-section-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); margin-bottom: 4px; }
+.delivery-totals-card { background: var(--navy); color: #fff; border-radius: 12px; border: none; padding: 14px 16px; margin-top: 4px; }
+.delivery-totals-card .delivery-player-name { color: #fff; }
+.delivery-totals-card .delivery-mini { background: rgba(255,255,255,0.12); }
+.delivery-totals-card .delivery-mini-label { color: rgba(255,255,255,0.65); }
+.delivery-totals-card .delivery-mini-val { color: #fff; }
+.delivery-totals-card .delivery-mini-val.lev { color: #6ee7b7; }
+.delivery-totals-card .delivery-mini-val.kvar { color: #fcd34d; }
+@media (max-width: 640px) {
+  .delivery-desktop { display: none !important; }
+  .delivery-list { display: flex; }
+}
+@media (min-width: 641px) {
+  .delivery-list { display: none !important; }
+}
 </style>
 </head>
 <body>
@@ -337,6 +392,23 @@ td.zero { color: #c4cadc; }
     </div>
   </div>
 
+  <!-- DELIVERY VIEW (visas när TOTALT väljs) -->
+  <div class="section-divider" id="deliveryDivider" style="display:none"><div class="section-divider-line"></div><span class="section-divider-label">Leveransstatus per spelare</span><div class="section-divider-line"></div></div>
+  <div class="delivery-card" id="deliveryCard">
+    <div class="delivery-header">
+      <h2>&#128666; Kvar att leverera</h2>
+      <span class="delivery-badge" id="deliveryBadge"></span>
+    </div>
+    <!-- Desktop tabell -->
+    <div class="delivery-table-wrap delivery-desktop" id="deliveryTableWrap">
+      <div class="spinner"></div>
+    </div>
+    <!-- Mobile kortlista -->
+    <div class="delivery-list" id="deliveryList">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
 </div><!-- /main -->
 
 <!-- MODAL (mobile) -->
@@ -473,7 +545,8 @@ function _renderPlayerSelect(sel, list) {
   sel.innerHTML = '<option value="">— Välj spelare —</option>';
   list.forEach(p => {
     const o = document.createElement('option');
-    o.value = p; o.textContent = p;
+    o.value = p;
+    o.textContent = p === 'TOTALT' ? '📦 Leverans' : p;
     if (p === current) o.selected = true;
     sel.appendChild(o);
   });
@@ -624,6 +697,24 @@ async function loadOrders(player) {
 
   function hideStats() { statsTop.style.display = statsProducts.style.display = 'none'; document.getElementById('ordersDivider').style.display = 'none'; }
 
+  // TOTALT → visa leveransvyn istället för beställningsvyn
+  if (player === 'TOTALT') {
+    hideStats();
+    // Dölj beställningssektionen
+    tableContent.innerHTML = listContent.innerHTML = '';
+    orderCount.style.display = listCount.style.display = 'none';
+    document.getElementById('ordersDivider').style.display = 'none';
+    document.getElementById('tableCard').style.display = 'none';
+    document.getElementById('orderListCard').style.display = 'none';
+    loadDelivery();
+    return;
+  }
+
+  // Dölj leveransvyn när en annan spelare väljs
+  _showDeliverySection(false);
+  document.getElementById('tableCard').style.display = '';
+  document.getElementById('orderListCard').style.display = '';
+
   if (!player) {
     const emptyHtml = '<div class="empty-state"><div class="icon">👆</div><p>Välj en spelare ovan</p></div>';
     tableTitle.textContent = listTitle.textContent = 'Beställningar';
@@ -719,8 +810,191 @@ function closeModal(e) {
   document.body.style.overflow = '';
 }
 
+/* ── Delivery modal (mobil) ── */
+function openDeliveryModal(idx) {
+  const r = window._deliveryRows[idx];
+  if (!r) return;
+  const totKvar = r.kvar_adv + r.kvar_p2 + r.kvar_p3;
+  const statusHtml = totKvar === 0
+    ? '<span class="badge badge-paid">✓ Allt levererat</span>'
+    : `<span class="badge badge-pending">${totKvar} kvar att leverera</span>`;
+
+  document.getElementById('modalHeader').innerHTML = `
+    <div class="modal-avatar">${esc(initials(r.name))}</div>
+    <div>
+      <div class="modal-buyer-name">${esc(r.name)}</div>
+      <div style="margin-top:5px">${statusHtml}</div>
+    </div>
+    <button class="modal-close" onclick="closeModal()">&#215;</button>
+  `;
+
+  function dmRow(label, levVal, kvarVal) {
+    const levCls  = levVal  > 0 ? 'style="color:#059669;font-weight:700"' : 'style="color:#c4cadc"';
+    const kvarCls = kvarVal > 0 ? 'style="color:#d97706;font-weight:700"' : 'style="color:#c4cadc"';
+    return `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
+        <span style="font-size:.9rem;font-weight:500;color:var(--text)">${label}</span>
+        <div style="display:flex;gap:20px;text-align:right">
+          <div>
+            <div style="font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:#059669;margin-bottom:2px">Levererat</div>
+            <div ${levCls}>${levVal || '–'}</div>
+          </div>
+          <div>
+            <div style="font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:#d97706;margin-bottom:2px">Kvar</div>
+            <div ${kvarCls}>${kvarVal || '–'}</div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-section">
+      <div class="modal-section-title">Leveransstatus per produkt</div>
+      ${dmRow('Adv (frp)',  r.lev_adv, r.kvar_adv)}
+      ${dmRow('P2 (frp)',   r.lev_p2,  r.kvar_p2)}
+      ${dmRow('P3 (frp)',   r.lev_p3,  r.kvar_p3)}
+    </div>
+    <div class="modal-total" style="${totKvar === 0 ? 'background:#059669' : ''}">
+      <span class="modal-total-label">Totalt kvar att leverera</span>
+      <span class="modal-total-value">${totKvar || '0'} frp</span>
+    </div>
+  `;
+  document.getElementById('modalBackdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
 /* Close modal on Escape */
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+/* ── Delivery view helpers ── */
+function _showDeliverySection(show) {
+  const card    = document.getElementById('deliveryCard');
+  const divider = document.getElementById('deliveryDivider');
+  if (show) {
+    card.classList.add('visible');
+    divider.style.display = 'flex';
+  } else {
+    card.classList.remove('visible');
+    divider.style.display = 'none';
+  }
+}
+
+function _renderDelivery(rows) {
+  const tableWrap = document.getElementById('deliveryTableWrap');
+  const listWrap  = document.getElementById('deliveryList');
+  const badge     = document.getElementById('deliveryBadge');
+
+  if (!Array.isArray(rows) || rows.length === 0) {
+    tableWrap.innerHTML = listWrap.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>Ingen leveransdata hittades</p></div>';
+    return;
+  }
+
+  // Separera spelare från totalrad
+  const players = rows.filter(r => r.name !== 'TOTALT');
+  const totRow  = rows.find(r => r.name === 'TOTALT');
+
+  const totKvar = (totRow ? (totRow.kvar_adv + totRow.kvar_p2 + totRow.kvar_p3) : 0);
+  badge.textContent = totKvar > 0 ? totKvar + ' kvar att leverera' : 'Allt levererat ✓';
+
+  /* ── Desktop tabell ── */
+  function gh(group, label, extra) {
+    return `<th class="${extra || ''}"><span class="col-group">${group}</span>${label}</th>`;
+  }
+  let html = '<table class="delivery-table">';
+  html += '<thead><tr>';
+  html += '<th>Spelare</th>';
+  html += gh('Levererat', 'Adv (frp)', 'lev');
+  html += gh('Levererat', 'P2 (frp)',  'lev');
+  html += gh('Levererat', 'P3 (frp)',  'lev');
+  html += gh('Kvar att leverera', 'Adv (frp)', 'kvar kvar-first');
+  html += gh('Kvar att leverera', 'P2 (frp)',  'kvar');
+  html += gh('Kvar att leverera', 'P3 (frp)',  'kvar');
+  html += '</tr></thead><tbody>';
+
+  function kvarCell(n, first) {
+    const cls = (first ? 'kvar-first ' : '') + (n === 0 ? 'kvar-zero' : 'kvar-val');
+    return `<td class="${cls}">${n === 0 ? '–' : n}</td>`;
+  }
+  function levCell(n) {
+    if (n === 0) return '<td style="text-align:right;color:var(--border)">–</td>';
+    return `<td class="lev-val">${n}</td>`;
+  }
+  function totKvarCell(n, first) {
+    const base = first ? 'kvar-first ' : '';
+    return `<td class="${base}${n > 0 ? 'kvar-val' : 'kvar-zero'}">${n || '–'}</td>`;
+  }
+
+  // Totalrad överst
+  if (totRow) {
+    html += `<tr class="totals-row"><td>TOTALT</td>`;
+    html += `<td class="lev-val">${totRow.lev_adv || '–'}</td><td class="lev-val">${totRow.lev_p2 || '–'}</td><td class="lev-val">${totRow.lev_p3 || '–'}</td>`;
+    html += totKvarCell(totRow.kvar_adv, true) + totKvarCell(totRow.kvar_p2) + totKvarCell(totRow.kvar_p3);
+    html += '</tr>';
+  }
+
+  players.forEach(r => {
+    html += `<tr><td>${esc(r.name)}</td>`;
+    html += levCell(r.lev_adv) + levCell(r.lev_p2) + levCell(r.lev_p3);
+    html += kvarCell(r.kvar_adv, true) + kvarCell(r.kvar_p2) + kvarCell(r.kvar_p3);
+    html += '</tr>';
+  });
+
+  // Totalrad nederst
+  if (totRow) {
+    html += `<tr class="totals-row"><td>TOTALT</td>`;
+    html += `<td class="lev-val">${totRow.lev_adv || '–'}</td><td class="lev-val">${totRow.lev_p2 || '–'}</td><td class="lev-val">${totRow.lev_p3 || '–'}</td>`;
+    html += totKvarCell(totRow.kvar_adv, true) + totKvarCell(totRow.kvar_p2) + totKvarCell(totRow.kvar_p3);
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  tableWrap.innerHTML = html;
+
+  /* ── Mobile klickbara rader (samma stil som beställningslistan) ── */
+  window._deliveryRows = players; // spara för modal
+  function kvarSummary(r) {
+    const tot = r.kvar_adv + r.kvar_p2 + r.kvar_p3;
+    if (tot === 0) return '<span style="font-size:.8rem;color:#059669;font-weight:600">✓ Levererat</span>';
+    return `<span style="font-size:.82rem;color:#d97706;font-weight:700">${tot} kvar</span>`;
+  }
+  let mHtml = '<div class="order-list-inner">';
+  players.forEach((r, idx) => {
+    mHtml += `
+      <div class="order-row" onclick="openDeliveryModal(${idx})" style="-webkit-tap-highlight-color:transparent">
+        <div class="order-avatar">${esc(initials(r.name))}</div>
+        <div class="order-info">
+          <div class="order-name">${esc(r.name)}</div>
+          <div class="order-meta">${kvarSummary(r)}</div>
+        </div>
+        <div class="order-chevron">›</div>
+      </div>`;
+  });
+  mHtml += '</div>';
+  listWrap.innerHTML = mHtml;
+}
+
+async function loadDelivery() {
+  _showDeliverySection(true);
+  // Visa stale cache direkt
+  const stale = _getCache('delivery');
+  if (stale) {
+    _renderDelivery(stale);
+  } else {
+    document.getElementById('deliveryTableWrap').innerHTML = '<div class="spinner"></div>';
+    document.getElementById('deliveryList').innerHTML      = '<div class="spinner"></div>';
+  }
+  try {
+    const res  = await fetch(API + '?action=delivery');
+    const data = await res.json();
+    _setCache('delivery', data);
+    _renderDelivery(data);
+  } catch(e) {
+    if (!stale) {
+      const errHtml = '<div class="empty-state"><div class="icon">⚠️</div><p>Kunde inte ladda leveransdata.</p></div>';
+      document.getElementById('deliveryTableWrap').innerHTML = errHtml;
+      document.getElementById('deliveryList').innerHTML      = errHtml;
+    }
+  }
+}
 
 document.getElementById('playerSelect').addEventListener('change', e => loadOrders(e.target.value));
 
