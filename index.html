@@ -718,8 +718,8 @@
 <!-- ══════════════════════════════════════════════════════════ -->
 <!-- VIEW: ADMIN – Lista alla spelare med sina unika länkar    -->
 <!-- ══════════════════════════════════════════════════════════ -->
-<div id="view-admin" class="view active">
-  <div class="admin-header">
+<div id="view-admin" class="view">
+<div class="admin-header">
     <img src="hbk-logo.png" class="logo-img-admin" alt="HBK emblem" style="margin-bottom:12px;"><br>
     <h1>HBK F14 – Beställningslänkar</h1>
     <p>Klicka "Kopiera" vid din spelare och dela länken, eller öppna din flyer att dela på sociala medier</p>
@@ -729,7 +729,7 @@
 
 <!-- ══════════════════════════════════════════════════════════ -->
 <!-- VIEW: FLYER – Delbar säljflyer per spelare               -->
-<!-- ══════════════════════════════════════════════════════════ -->
+<!-- ═════════════════════════════════════════════ -->
 <div id="view-flyer" class="view">
   <div class="flyer-card">
     <div class="flyer-top">
@@ -817,7 +817,7 @@
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════════ -->
 <!-- VIEW: ORDER FORM                                          -->
 <!-- ══════════════════════════════════════════════════════════ -->
 <div id="view-order" class="view">
@@ -850,7 +850,7 @@
         <div class="qty-row">
           <button class="qty-btn" onclick="changeQty('adv',-1)">−</button>
           <input class="qty-input" type="number" id="qty-adv" value="0" min="0" oninput="updateTotals()">
-          <button class="qty-btn" onclick="changeQty('adv',1)">+</button>
+        <button class="qty-btn" onclick="changeQty('adv',1)">+</button>
         </div>
         <div class="product-subtotal" id="sub-adv">0 kr</div>
       </div>
@@ -992,7 +992,7 @@
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════ -->
 <!-- VIEW: CONFIRMATION                                        -->
 <!-- ══════════════════════════════════════════════════════════ -->
 <div id="view-confirm" class="view">
@@ -1131,7 +1131,7 @@ function copyLink(id) {
   });
 }
 
-// ── FLYER ─────────────────────────────────────────────────────
+// ── FLYER ────────────────────────────────────────────────────
 function openFlyer(id) {
   const p = PLAYERS.find(x => x.id === id);
   if (!p) return;

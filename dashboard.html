@@ -1,597 +1,191 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HBK F14 &#8211; Best&#228;llnings&#246;versikt</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --navy:       #0F2A5E;
-      --navy-mid:   #1a3d7c;
-      --navy-light: #2451a0;
-      --blue:       #1a73e8;
-      --bg:         #EEF2F8;
-      --card:       #ffffff
-      --border:     #dde3ef;
-      --text:       #111827;
-      --muted:      #6b7280;
-      --green-bg:   #dcfce7; --green-text: #166534;
-      --amber-bg:   #fef9c3; --amber-text: #854d0e;
-      --blue-bg:    #dbeafe; --blue-text:  #1e40af;
-      --red-bg:     #fee2e2; --red-text:   #991b1b;
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    /* ── HEADER ── */
-    .header {
-      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
-      color: #fff;
-      padding: 28px 20px 24px;
-      text-align: center;
-    }
-    .header-logo {
-      width: 56px; height: 56px;
-      background: rgba(255,255,255,0.15);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 14px;
-      font-size: 1.8rem;
-    }
-    .header h1 {
-      font-size: clamp(1.4rem, 4vw, 2rem);
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      line-height: 1.2;
-    }
-    .header p { color: rgba(255,255,255,0.7); margin-top: 6px; font-size: 0.95rem; }
-
-    /* ── NAV ── */
-    .nav-bar {
-      background: var(--navy-mid);
-      text-align: center;
-      padding: 9px 16px;
-    }
-    .nav-bar a {
-      color: rgba(255,255,255,0.65);
-      text-decoration: none;
-      font-size: 0.82rem;
-      transition: color .15s;
-    }
-    .nav-bar a:hover { color: #fff; }
-
-    /* ── MAIN ── */
-    .main {
-      max-width: 1060px;
-      margin: 0 auto;
-      padding: 28px 16px 48px;
-    }
-
-    /* ── SELECTOR CARD ── */
-    .selector-card {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 24px 28px;
-      box-shadow: 0 1px 3px rgba(15,42,94,.07), 0 4px 16px rgba(15,42,94,.06);
-      margin-bottom: 24px;
-    }
-    .selector-card label {
-      display: block;
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      margin-bottom: 10px;
-    }
-    .select-wrap { position: relative; }
-    .select-wrap::after {
-      content: '\25BE';
-      position: absolute;
-      right: 16px; top: 50%;
-      transform: translateY(-50%);
-      color: var(--navy);
-      pointer-events: none;
-      font-size: 1.1rem;
-    }
-    select {
-      width: 100%;
-      padding: 13px 40px 13px 16px;
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      font-family: inherit;
-      font-size: 1rem;
-      font-weight: 500;
-      color: var(--text);
-      background: var(--bg);
-      appearance: none;
-      cursor: pointer;
-      outline: none;
-      transition: border-color .2s;
-    }
-    select:focus { border-color: var(--navy); }
-
-    /* ── STATS ── */
-    .stats-top {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-    .stats-products {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
-      margin-bottom: 24px;
-    }
-    .stat-card {
-      background: var(--card);
-      border-radius: 14px;
-      padding: 18px 16px 16px;
-      box-shadow: 0 1px 3px rgba(15,42,94,.07), 0 4px 14px rgba(15,42,94,.05);
-      text-align: center;
-      border-top: 3px solid var(--navy);
-    }
-    .stat-card.green  { border-top-color: #059669; }
-    .stat-card.amber  { border-top-color: #d97706; }
-    .stat-card.indigo { border-top-color: #6366f1; }
-    .stat-card.teal   { border-top-color: #0891b2; }
-    .stat-card.rose   { border-top-color: #e11d48; }
-    .stat-label { font-size: 0.72rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-    .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--navy); line-height: 1; }
-    .stat-card.green  .stat-value { color: #059669; }
-    .stat-card.amber  .stat-value { color: #d97706; }
-    .stat-card.indigo .stat-value { color: #6366f1; }
-    .stat-card.teal   .stat-value { color: #0891b2; }
-    .stat-card.rose   .stat-value { color: #e11d48; }
-    /* Smaller text for product cards */
-    .stats-products .stat-value { font-size: 1.5rem; }
-    .stat-sub  { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
-
-    /* ── TABLE CARD (desktop) ── */
-    .table-card {
-      background: var(--card);
-      border-radius: 16px;
-      box-shadow: 0 1px 3px rgba(15,42,94,.07), 0 4px 16px rgba(15,42,94,.06);
-      overflow: hidden;
-    }
-    .table-header {
-      background: var(--navy);
-      color: #fff;
-      padding: 16px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .table-header h2 {
-      font-size: 0.95rem;
-      font-weight: 600;
-      margin: 0;
-    }
-    .order-count {
-      background: rgba(255,255,255,0.15);
-      color: #fff;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 0.78rem;
-      font-weight: 600;
-    }
-
-    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
-    thead th {
-      background: #f1f5fd;
-      color: var(--navy);
-      font-weight: 600;
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      padding: 11px 14px;
-      text-align: left;
-      border-bottom: 2px solid var(--border);
-      white-space: nowrap;
-    }
-    tbody td {
-      padding: 11px 14px;
-      border-bottom: 1px solid var(--border);
-      vertical-align: middle;
-      white-space: nowrap;
-    }
-    tbody tr:last-child td { border-bottom: none; }
-    tbody tr:hover { background: #f7f9ff; }
-    .totals-row td {
-      font-weight: 700;
-      background: #eef2f8;
-      color: var(--navy);
-      border-top: 2px solid var(--border);
-      border-bottom: none;
-    }
-    td.num { text-align: right; font-variant-numeric: tabular-nums; }
-    td.zero { color: #c4cadc; }
-
-    /* ── BADGE ── */
-    .badge {
-      display: inline-block;
-      padding: 3px 9px;
-      border-radius: 99px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-    .badge-pending  { background: var(--amber-bg); color: var(--amber-text); }
-    .badge-paid     { background: var(--green-bg);  color: var(--green-text); }
-    .badge-delivery { background: var(--blue-bg);   color: var(--blue-text);  }
-    .badge-neutral  { background: #f3f4f6;           color: #374151;           }
-
-    /* ── EMPTY / LOADING ── */
-    .empty-state {
-      text-align: center;
-      padding: 64px 20px;
-      color: var(--muted);
-    }
-    .empty-state .icon { font-size: 2.5rem; margin-bottom: 12px; }
-    .empty-state p { font-size: 0.95rem; }
-    .spinner {
-      width: 36px; height: 36px;
-      border: 3px solid var(--border);
-      border-top-color: var(--navy);
-      border-radius: 50%;
-      animation: spin .7s linear infinite;
-      margin: 48px auto;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ════════════════════════════════════════
-       MOBILE CARD LIST  (hidden on desktop)
-    ════════════════════════════════════════ */
-    .order-list { display: none; }
-
-    .order-list-inner {
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .order-row {
-      background: #fff;
-      border-radius: 12px;
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      cursor: pointer;
-      border: 1.5px solid var(--border);
-      transition: border-color .15s, box-shadow .15s;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .order-row:active {
-      border-color: var(--navy-light);
-      box-shadow: 0 0 0 3px rgba(15,42,94,.08);
-    }
-
-    .order-avatar {
-      width: 42px; height: 42px;
-      border-radius: 50%;
-      background: var(--navy);
-      color: #fff;
-      font-size: 1rem;
-      font-weight: 700;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .order-info { flex: 1; min-width: 0; }
-    .order-name {
-      font-weight: 600;
-      font-size: 0.97rem;
-      color: var(--text);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .order-meta {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-top: 2px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .order-meta .dot { color: var(--border); }
-
-    .order-total-chip {
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: var(--navy);
-      background: var(--bg);
-      border-radius: 8px;
-      padding: 4px 10px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .order-chevron {
-      color: var(--border);
-      font-size: 1rem;
-      flex-shrink: 0;
-    }
-
-    /* ════════════════════════════════════════
-       MODAL
-    ════════════════════════════════════════ */
-    .modal-backdrop {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(10,20,50,0.55);
-      z-index: 1000;
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
-      padding: 16px 0 0;
-      align-items: flex-end;
-      justify-content: center;
-    }
-    .modal-backdrop.open {
-      display: flex;
-    }
-
-    .modal {
-      background: #fff;
-      border-radius: 24px 24px 0 0;
-      width: 100%;
-      max-width: 560px;
-      max-height: 90vh;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      animation: slideUp .25s ease;
-    }
-    @keyframes slideUp {
-      from { transform: translateY(40px); opacity: 0; }
-      to   { transform: translateY(0);    opacity: 1; }
-    }
-
-    .modal-handle {
-      width: 40px; height: 4px;
-      background: #dde3ef;
-      border-radius: 4px;
-      margin: 12px auto 0;
-    }
-
-    .modal-header {
-      padding: 20px 24px 16px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      border-bottom: 1px solid var(--border);
-    }
-    .modal-avatar {
-      width: 52px; height: 52px;
-      border-radius: 50%;
-      background: var(--navy);
-      color: #fff;
-      font-size: 1.2rem;
-      font-weight: 700;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    .modal-buyer-name {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--text);
-      line-height: 1.2;
-    }
-    .modal-phone-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.9rem;
-      color: var(--blue);
-      text-decoration: none;
-      margin-top: 4px;
-      font-weight: 500;
-    }
-    .modal-close {
-      margin-left: auto;
-      width: 34px; height: 34px;
-      border-radius: 50%;
-      border: none;
-      background: var(--bg);
-      color: var(--muted);
-      font-size: 1.1rem;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .modal-body { padding: 20px 24px 32px; }
-
-    .modal-section { margin-bottom: 20px; }
-    .modal-section-title {
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.7px;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    /* Message block */
-    .modal-message {
-      background: var(--bg);
-      border-radius: 10px;
-      padding: 12px 14px;
-      font-size: 0.9rem;
-      color: var(--text);
-      line-height: 1.5;
-    }
-    .modal-message.empty { color: var(--muted); font-style: italic; }
-
-    /* Product grid */
-    .product-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-    .product-item {
-      background: var(--bg);
-      border-radius: 10px;
-      padding: 10px 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .product-label { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
-    .product-value {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--navy);
-    }
-    .product-value.zero { color: #c4cadc; font-weight: 400; }
-
-    /* Total row */
-    .modal-total {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--navy);
-      color: #fff;
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-top: 16px;
-    }
-    .modal-total-label { font-size: 0.85rem; font-weight: 600; opacity: 0.8; }
-    .modal-total-value { font-size: 1.3rem; font-weight: 700; }
-
-    /* Date row */
-    .modal-meta-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 700px) {
-      .stats-top     { grid-template-columns: repeat(2, 1fr); }
-      .stats-products { grid-template-columns: repeat(3, 1fr); }
-      .selector-card { padding: 18px 16px; }
-    }
-    @media (max-width: 480px) {
-      .stats-products { grid-template-columns: repeat(3, 1fr); }
-    }
-
-    @media (max-width: 640px) {
-      /* Hide desktop table, show mobile list */
-      .desktop-only { display: none !important; }
-      .order-list   { display: block; }
-    }
-
-    @media (min-width: 641px) {
-      /* Hide mobile list on desktop */
-      .order-list { display: none !important; }
-      .modal-backdrop { display: none !important; }
-    }
-
-    @media (max-width: 380px) {
-      .stats { grid-template-columns: 1fr 1fr; }
-      .stat-value { font-size: 1.5rem; }
-    }
-
-    /* ── TEAM SUMMARY CARD ── */
-    .team-card {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 20px 24px 22px;
-      box-shadow: 0 1px 3px rgba(15,42,94,.07), 0 4px 16px rgba(15,42,94,.06);
-      margin-bottom: 24px;
-      border-top: 4px solid var(--navy);
-    }
-    .team-card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-    .team-card-title {
-      font-size: 0.82rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.7px;
-      color: var(--navy);
-    }
-    .team-badge {
-      font-size: 0.73rem;
-      font-weight: 600;
-      padding: 3px 11px;
-      border-radius: 20px;
-      background: #f3f4f6;
-      color: var(--muted);
-      transition: background .3s, color .3s;
-    }
-    .team-badge.loaded {
-      background: var(--green-bg);
-      color: var(--green-text);
-    }
-    .team-main {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-    .team-products {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
-    }
-    .team-stat {
-      background: var(--bg);
-      border-radius: 10px;
-      padding: 12px 10px;
-      text-align: center;
-    }
-    .team-stat-label {
-      font-size: 0.67rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--muted);
-      margin-bottom: 5px;
-    }
-    .team-stat-value {
-      font-size: 1.45rem;
-      font-weight: 700;
-      color: var(--navy);
-      line-height: 1;
-    }
-    .team-stat-value.c-green  { color: #059669; }
-    .team-stat-value.c-purple { color: #7c3aed; }
-    .team-stat-sub {
-      font-size: 0.69rem;
-      color: var(--muted);
-      margin-top: 3px;
-    }
-    @media (max-width: 700px) {
-      .team-main     { grid-template-columns: 1fr 1fr; }
-      .team-products { grid-template-columns: repeat(3, 1fr); }
-      .team-card     { padding: 16px 16px 18px; }
-    }
-    @media (max-width: 420px) {
-      .team-products { grid-template-columns: repeat(3, 1fr); }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HBK F14 &#8211; Best&#228;llnings&#246;versikt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0F2A5E;
+  --navy-mid: #1a3d7c;
+  --navy-light: #2451a0;
+  --blue: #1a73e8;
+  --bg: #EEF2F8;
+  --card: #ffffff;
+  --border: #dde3ef;
+  --text: #111827;
+  --muted: #6b7280;
+  --green-bg: #dcfce7;
+  --green-text: #166534;
+  --amber-bg: #fef9c3;
+  --amber-text: #854d0e;
+  --blue-bg: #dbeafe;
+  --blue-text: #1e40af;
+  --red-bg: #fee2e2;
+  --red-text: #991b1b;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+/* ── HEADER ── */
+.header { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); color: #fff; padding: 28px 20px 24px; text-align: center; }
+.header-logo { width: 56px; height: 56px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; font-size: 1.8rem; }
+.header h1 { font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 700; letter-spacing: 0.3px; line-height: 1.2; }
+.header p { color: rgba(255,255,255,0.7); margin-top: 6px; font-size: 0.95rem; }
+/* ── NAV ── */
+.nav-bar { background: var(--navy-mid); text-align: center; padding: 9px 16px; }
+.nav-bar a { color: rgba(255,255,255,0.65); text-decoration: none; font-size: 0.82rem; transition: color .15s; }
+.nav-bar a:hover { color: #fff; }
+/* ── MAIN ── */
+.main { max-width: 1060px; margin: 0 auto; padding: 28px 16px 48px; }
+/* ── SECTION DIVIDER ── */
+.section-divider { display: flex; align-items: center; gap: 12px; margin: 28px 0 16px; }
+.section-divider-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); white-space: nowrap; }
+.section-divider-line { flex: 1; height: 1px; background: var(--border); }
+/* ── SELECTOR CARD ── */
+.selector-card { background: var(--card); border-radius: 16px; padding: 24px 28px; box-shadow: 0 2px 6px rgba(15,42,94,.08), 0 6px 20px rgba(15,42,94,.07); border: 1px solid var(--border); margin-bottom: 24px; }
+.selector-card label { display: block; font-weight: 600; font-size: 0.9rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px; }
+.select-wrap { position: relative; }
+.select-wrap::after { content: '\25BE'; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--navy); pointer-events: none; font-size: 1.1rem; }
+select { width: 100%; padding: 13px 40px 13px 16px; border: 2px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 1rem; font-weight: 500; color: var(--text); background: var(--bg); appearance: none; cursor: pointer; outline: none; transition: border-color .2s; }
+select:focus { border-color: var(--navy); }
+/* ── STATS ── */
+.stats-top { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 14px; }
+.stats-products { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 24px; }
+.stat-card { background: var(--card); border-radius: 14px; padding: 18px 16px 16px; box-shadow: 0 2px 6px rgba(15,42,94,.08), 0 6px 20px rgba(15,42,94,.07); border: 1px solid var(--border); border-top: 3px solid var(--navy); text-align: center; }
+.stat-card.green { border-top-color: #059669; }
+.stat-card.amber { border-top-color: #d97706; }
+.stat-card.indigo { border-top-color: #6366f1; }
+.stat-card.teal { border-top-color: #0891b2; }
+.stat-card.rose { border-top-color: #e11d48; }
+.stat-label { font-size: 0.72rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.stat-value { font-size: 1.8rem; font-weight: 700; color: var(--navy); line-height: 1; }
+.stat-card.green .stat-value { color: #059669; }
+.stat-card.amber .stat-value { color: #d97706; }
+.stat-card.indigo .stat-value { color: #6366f1; }
+.stat-card.teal .stat-value { color: #0891b2; }
+.stat-card.rose .stat-value { color: #e11d48; }
+/* Smaller text for product cards */
+.stats-products .stat-value { font-size: 1.5rem; }
+.stat-sub { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+/* ── TABLE CARD (desktop) ── */
+.table-card { background: var(--card); border-radius: 16px; box-shadow: 0 2px 6px rgba(15,42,94,.08), 0 8px 24px rgba(15,42,94,.08); border: 1px solid var(--border); overflow: hidden; }
+.table-header { background: var(--navy); color: #fff; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.table-header h2 { font-size: 0.95rem; font-weight: 600; margin: 0; }
+.order-count { background: rgba(255,255,255,0.15); color: #fff; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; }
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+thead th { background: #f1f5fd; color: var(--navy); font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; padding: 11px 14px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+tbody td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; white-space: nowrap; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: #f7f9ff; }
+.totals-row td { font-weight: 700; background: #eef2f8; color: var(--navy); border-top: 2px solid var(--border); border-bottom: none; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+td.zero { color: #c4cadc; }
+/* ── BADGE ── */
+.badge { display: inline-block; padding: 3px 9px; border-radius: 99px; font-size: 0.72rem; font-weight: 600; white-space: nowrap; }
+.badge-pending { background: var(--amber-bg); color: var(--amber-text); }
+.badge-paid { background: var(--green-bg); color: var(--green-text); }
+.badge-delivery { background: var(--blue-bg); color: var(--blue-text); }
+.badge-neutral { background: #f3f4f6; color: #374151; }
+/* ── EMPTY / LOADING ── */
+.empty-state { text-align: center; padding: 64px 20px; color: var(--muted); }
+.empty-state .icon { font-size: 2.5rem; margin-bottom: 12px; }
+.empty-state p { font-size: 0.95rem; }
+.spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--navy); border-radius: 50%; animation: spin .7s linear infinite; margin: 48px auto; }
+@keyframes spin { to { transform: rotate(360deg); } }
+/* ════════════════════════════════════════
+   MOBILE CARD LIST (hidden on desktop)
+════════════════════════════════════════ */
+.order-list { display: none; }
+.order-list-inner { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.order-row { background: #fff; border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; cursor: pointer; border: 1.5px solid var(--border); transition: border-color .15s, box-shadow .15s; -webkit-tap-highlight-color: transparent; }
+.order-row:active { border-color: var(--navy-light); box-shadow: 0 0 0 3px rgba(15,42,94,.08); }
+.order-avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 1rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.order-info { flex: 1; min-width: 0; }
+.order-name { font-weight: 600; font-size: 0.97rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.order-meta { font-size: 0.8rem; color: var(--muted); margin-top: 2px; display: flex; align-items: center; gap: 6px; }
+.order-meta .dot { color: var(--border); }
+.order-total-chip { font-size: 0.82rem; font-weight: 700; color: var(--navy); background: var(--bg); border-radius: 8px; padding: 4px 10px; white-space: nowrap; flex-shrink: 0; }
+.order-chevron { color: var(--border); font-size: 1rem; flex-shrink: 0; }
+/* ════════════════════════════════════════
+   MODAL
+════════════════════════════════════════ */
+.modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(10,20,50,0.55); z-index: 1000; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); padding: 16px 0 0; align-items: flex-end; justify-content: center; }
+.modal-backdrop.open { display: flex; }
+.modal { background: #fff; border-radius: 24px 24px 0 0; width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; -webkit-overflow-scrolling: touch; animation: slideUp .25s ease; }
+@keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.modal-handle { width: 40px; height: 4px; background: #dde3ef; border-radius: 4px; margin: 12px auto 0; }
+.modal-header { padding: 20px 24px 16px; display: flex; align-items: center; gap: 14px; border-bottom: 1px solid var(--border); }
+.modal-avatar { width: 52px; height: 52px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.modal-buyer-name { font-size: 1.15rem; font-weight: 700; color: var(--text); line-height: 1.2; }
+.modal-phone-link { display: inline-flex; align-items: center; gap: 5px; font-size: 0.9rem; color: var(--blue); text-decoration: none; margin-top: 4px; font-weight: 500; }
+.modal-close { margin-left: auto; width: 34px; height: 34px; border-radius: 50%; border: none; background: var(--bg); color: var(--muted); font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.modal-body { padding: 20px 24px 32px; }
+.modal-section { margin-bottom: 20px; }
+.modal-section-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--muted); margin-bottom: 10px; }
+/* Message block */
+.modal-message { background: var(--bg); border-radius: 10px; padding: 12px 14px; font-size: 0.9rem; color: var(--text); line-height: 1.5; }
+.modal-message.empty { color: var(--muted); font-style: italic; }
+/* Product grid */
+.product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.product-item { background: var(--bg); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; }
+.product-label { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
+.product-value { font-size: 1.05rem; font-weight: 700; color: var(--navy); }
+.product-value.zero { color: #c4cadc; font-weight: 400; }
+/* Total row */
+.modal-total { display: flex; align-items: center; justify-content: space-between; background: var(--navy); color: #fff; border-radius: 12px; padding: 14px 16px; margin-top: 16px; }
+.modal-total-label { font-size: 0.85rem; font-weight: 600; opacity: 0.8; }
+.modal-total-value { font-size: 1.3rem; font-weight: 700; }
+/* Date row */
+.modal-meta-row { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--muted); margin-bottom: 16px; }
+/* ── RESPONSIVE ── */
+@media (max-width: 700px) {
+  .stats-top { grid-template-columns: repeat(2, 1fr); }
+  .stats-products { grid-template-columns: repeat(3, 1fr); }
+  .selector-card { padding: 18px 16px; }
+}
+@media (max-width: 480px) {
+  .stats-products { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 640px) {
+  /* Hide desktop table, show mobile list */
+  .desktop-only { display: none !important; }
+  .order-list { display: block; }
+}
+@media (min-width: 641px) {
+  /* Hide mobile list on desktop */
+  .order-list { display: none !important; }
+  .modal-backdrop { display: none !important; }
+}
+@media (max-width: 380px) {
+  .stats { grid-template-columns: 1fr 1fr; }
+  .stat-value { font-size: 1.5rem; }
+}
+/* ── TEAM SUMMARY CARD ── */
+.team-card { background: var(--card); border-radius: 16px; padding: 20px 24px 22px; box-shadow: 0 2px 8px rgba(15,42,94,.1), 0 8px 28px rgba(15,42,94,.09); border: 1px solid var(--border); border-top: 4px solid var(--navy); margin-bottom: 24px; }
+.team-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.team-card-title { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--navy); }
+.team-badge { font-size: 0.73rem; font-weight: 600; padding: 3px 11px; border-radius: 20px; background: #f3f4f6; color: var(--muted); transition: background .3s, color .3s; }
+.team-badge.loaded { background: var(--green-bg); color: var(--green-text); }
+.team-main { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.team-products { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.team-stat { background: var(--bg); border-radius: 10px; padding: 12px 10px; text-align: center; }
+.team-stat-label { font-size: 0.67rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 5px; }
+.team-stat-value { font-size: 1.45rem; font-weight: 700; color: var(--navy); line-height: 1; }
+.team-stat-value.c-green { color: #059669; }
+.team-stat-value.c-purple { color: #7c3aed; }
+.team-stat-sub { font-size: 0.69rem; color: var(--muted); margin-top: 3px; }
+@media (max-width: 700px) {
+  .team-main { grid-template-columns: 1fr 1fr; }
+  .team-products { grid-template-columns: repeat(3, 1fr); }
+  .team-card { padding: 16px 16px 18px; }
+}
+@media (max-width: 420px) {
+  .team-products { grid-template-columns: repeat(3, 1fr); }
+}
+</style>
 </head>
 <body>
 
@@ -613,8 +207,7 @@
       <span class="team-card-title">&#127942; Lagtotal</span>
       <span class="team-badge" id="teamBadge">Laddar&#8230;</span>
     </div>
-
-    <!-- Huvudrader: best&#228;llningar, intäkter, vinst -->
+    <!-- Huvudrader: beställningar, intäkter, vinst -->
     <div class="team-main">
       <div class="team-stat">
         <div class="team-stat-label">Best&#228;llningar</div>
@@ -632,7 +225,6 @@
         <div class="team-stat-sub">kronor</div>
       </div>
     </div>
-
     <!-- Produktrader -->
     <div class="team-products">
       <div class="team-stat">
@@ -664,6 +256,7 @@
   </div>
 
   <!-- PLAYER SELECTOR -->
+  <div class="section-divider"><div class="section-divider-line"></div><span class="section-divider-label">Visa per spelare</span><div class="section-divider-line"></div></div>
   <div class="selector-card">
     <label for="playerSelect">V&#228;lj spelare</label>
     <div class="select-wrap">
@@ -716,6 +309,7 @@
   </div>
 
   <!-- ORDERS TABLE (desktop) -->
+  <div class="section-divider" id="ordersDivider" style="display:none"><div class="section-divider-line"></div><span class="section-divider-label">Beställningar</span><div class="section-divider-line"></div></div>
   <div class="table-card desktop-only" id="tableCard">
     <div class="table-header">
       <h2 id="tableTitle">Best&#228;llningar</h2>
@@ -757,18 +351,18 @@
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbwtUDMA1oc2aRJA30D4pDCUs0J-mBgU0ka6eM0LEEYNaeuur9WYjfYatQT3H-i7HtnQ/exec';
 
-// ── Vinst per s&#229;ld enhet (fr&#229;n "Produktinfo & Vinstkalkylator") ──────────────
-// Advanced frp:  s&#228;lj 150 kr &#8722; ink&#246;p 100 kr   = 50 kr/frp
-// P2-lag frp:    s&#228;lj 330 kr &#8722; ink&#246;p 280 kr   = 50 kr/frp
-// P2 6-pack:     s&#228;lj  50 kr &#8722; ink&#246;p  40 kr   = 10 kr/pack
-// P3-lag frp:    s&#228;lj 290 kr &#8722; ink&#246;p 237 kr   = 53 kr/frp
-// P3 8-pack:     s&#228;lj  45 kr &#8722; ink&#246;p 33,86 kr = 11,14 kr/pack
+// ── Vinst per såld enhet (från "Produktinfo & Vinstkalkylator") ──────────────
+// Advanced frp: sälj 150 kr − inköp 100 kr = 50 kr/frp
+// P2-lag frp: sälj 330 kr − inköp 280 kr = 50 kr/frp
+// P2 6-pack: sälj 50 kr − inköp 40 kr = 10 kr/pack
+// P3-lag frp: sälj 290 kr − inköp 237 kr = 53 kr/frp
+// P3 8-pack: sälj 45 kr − inköp 33,86 kr = 11,14 kr/pack
 const VINST_PER = {
-  adv:    50,     // kr vinst per frp Adv-lag
-  p2:     50,     // kr vinst per frp P2-lag
-  p2_6:   10,     // kr vinst per P2 6-pack
-  p3:     53,     // kr vinst per frp P3-lag
-  p3_8:   11.14,  // kr vinst per P3 8-pack
+  adv:  50,    // kr vinst per frp Adv-lag
+  p2:   50,    // kr vinst per frp P2-lag
+  p2_6: 10,    // kr vinst per P2 6-pack
+  p3:   53,    // kr vinst per frp P3-lag
+  p3_8: 11.14, // kr vinst per P3 8-pack
 };
 
 /* ── helpers ── */
@@ -777,24 +371,21 @@ function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').re
 function formatPhone(v) {
   if (!v) return '';
   var s = String(v).trim();
-  if (/^\d{9}$/.test(s)) return '0' + s;   // 701234567 → 0701234567
+  if (/^\d{9}$/.test(s)) return '0' + s; // 701234567 → 0701234567
   return s;
 }
-function initials(name) {
-  return (name || '?').split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
-}
+function initials(name) { return (name || '?').split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase(); }
 function badge(text, type) { return `<span class="badge badge-${type}">${esc(text)}</span>`; }
 function paymentBadge(val) {
   if (!val) return '';
   const v = val.toLowerCase();
-  if (v.includes('v\u00E4ntar') || v.includes('vantar')) return badge(val, 'pending');
+  if (v.includes('väntar') || v.includes('vantar')) return badge(val, 'pending');
   if (v.includes('swish') || v.includes('betald') || v.includes('klar')) return badge(val, 'paid');
   return badge(val, 'neutral');
 }
 
 /* ── Cache helpers (sessionStorage, 5-min TTL) ─────── */
 const _CACHE_TTL = 5 * 60 * 1000;
-
 function _getCache(key) {
   try {
     const raw = sessionStorage.getItem('hbk_' + key);
@@ -804,16 +395,11 @@ function _getCache(key) {
   } catch { return null; }
 }
 function _setCache(key, data) {
-  try {
-    sessionStorage.setItem('hbk_' + key, JSON.stringify({d: data, t: Date.now()}));
-  } catch {}
+  try { sessionStorage.setItem('hbk_' + key, JSON.stringify({d: data, t: Date.now()})); } catch {}
 }
 function _applyStats(s) {
   const ids = ['tOrd','tRev','tProfit','tAdv','tP2','tP26','tP3','tP38'];
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (el && s[id] !== undefined) el.textContent = s[id];
-  });
+  ids.forEach(id => { const el = document.getElementById(id); if (el && s[id] !== undefined) el.textContent = s[id]; });
 }
 
 let _playersCache = null, _playersCacheTs = 0;
@@ -831,59 +417,49 @@ async function loadTeamStats() {
   // Stale-while-revalidate: show cached stats instantly, then refresh in background
   const _stale = _getCache('team_stats');
   if (_stale) _applyStats(_stale);
-
   try {
-    const players = await _fetchPlayers();
-    // (players already resolved above via _fetchPlayers)
-    if (!Array.isArray(players) || players.length === 0) {
-      badge.textContent = 'Inga spelare';
-      return;
+    // Ett enda anrop — all_orders innehåller redan alla spelares beställningar grupperade
+    // Spelarlistan extraheras direkt från svaret (Object.keys), inget extra players-anrop behövs
+    const batchRes  = await fetch(API + '?action=all_orders');
+    const batchData = await batchRes.json();
+    if (!batchData || typeof batchData !== 'object' || Array.isArray(batchData)) {
+      badge.textContent = 'Inga beställningar'; return;
     }
 
-    // H&#228;mta alla spelares best&#228;llningar parallellt
-    const allOrdersArr = await Promise.all(
-      players.map(p =>
-        fetch(API + '?action=orders&player=' + encodeURIComponent(p))
-          .then(r => r.json())
-          .catch(() => [])
-      )
-    );
+    const players = Object.keys(batchData);
+    if (players.length === 0) { badge.textContent = 'Inga spelare'; return; }
 
-    const allOrders = allOrdersArr.filter(Array.isArray).flat();
-
-    const tAdv  = allOrders.reduce((s, o) => s + (Number(o.adv)  || 0), 0);
-    const tP2   = allOrders.reduce((s, o) => s + (Number(o.p2)   || 0), 0);
-    const tP2_6 = allOrders.reduce((s, o) => s + (Number(o.p2_6) || 0), 0);
-    const tP3   = allOrders.reduce((s, o) => s + (Number(o.p3)   || 0), 0);
-    const tP3_8 = allOrders.reduce((s, o) => s + (Number(o.p3_8) || 0), 0);
-    const tRev  = allOrders.reduce((s, o) => s + (o.total || 0), 0);
-    const tProfit = tAdv   * VINST_PER.adv  +
-                    tP2    * VINST_PER.p2   +
-                    tP2_6  * VINST_PER.p2_6 +
-                    tP3    * VINST_PER.p3   +
-                    tP3_8  * VINST_PER.p3_8;
-
-    document.getElementById('tOrd').textContent    = allOrders.length || '\u2013';
-    document.getElementById('tRev').textContent    = fmt(tRev);
-    document.getElementById('tProfit').textContent = fmt(tProfit);
-    document.getElementById('tAdv').textContent    = tAdv   || '\u2013';
-    document.getElementById('tP2').textContent     = tP2    || '\u2013';
-    document.getElementById('tP26').textContent    = tP2_6  || '\u2013';
-    document.getElementById('tP3').textContent     = tP3    || '\u2013';
-    document.getElementById('tP38').textContent    = tP3_8  || '\u2013';
-
-    // Persist fresh stats for next load (stale-while-revalidate)
-    _setCache('team_stats', {
-      tOrd: document.getElementById('tOrd').textContent,
-      tRev: document.getElementById('tRev').textContent,
-      tProfit: document.getElementById('tProfit').textContent,
-      tAdv: document.getElementById('tAdv').textContent,
-      tP2:  document.getElementById('tP2').textContent,
-      tP26: document.getElementById('tP26').textContent,
-      tP3:  document.getElementById('tP3').textContent,
-      tP38: document.getElementById('tP38').textContent,
+    // Cacha per spelare så dropdown-valet visas direkt efter lagtotalen laddats
+    players.forEach(p => {
+      if (Array.isArray(batchData[p])) _setCache('orders_' + p, batchData[p]);
     });
 
+    const allOrders = players.flatMap(p => batchData[p] || []);
+    const tAdv   = allOrders.reduce((s, o) => s + (Number(o.adv)   || 0), 0);
+    const tP2    = allOrders.reduce((s, o) => s + (Number(o.p2)    || 0), 0);
+    const tP2_6  = allOrders.reduce((s, o) => s + (Number(o.p2_6)  || 0), 0);
+    const tP3    = allOrders.reduce((s, o) => s + (Number(o.p3)    || 0), 0);
+    const tP3_8  = allOrders.reduce((s, o) => s + (Number(o.p3_8)  || 0), 0);
+    const tRev   = allOrders.reduce((s, o) => s + (o.total || 0), 0);
+    const tProfit = tAdv * VINST_PER.adv + tP2 * VINST_PER.p2 + tP2_6 * VINST_PER.p2_6 + tP3 * VINST_PER.p3 + tP3_8 * VINST_PER.p3_8;
+    document.getElementById('tOrd').textContent    = allOrders.length || '–';
+    document.getElementById('tRev').textContent    = fmt(tRev);
+    document.getElementById('tProfit').textContent = fmt(tProfit);
+    document.getElementById('tAdv').textContent    = tAdv  || '–';
+    document.getElementById('tP2').textContent     = tP2   || '–';
+    document.getElementById('tP26').textContent    = tP2_6 || '–';
+    document.getElementById('tP3').textContent     = tP3   || '–';
+    document.getElementById('tP38').textContent    = tP3_8 || '–';
+    _setCache('team_stats', {
+      tOrd:    document.getElementById('tOrd').textContent,
+      tRev:    document.getElementById('tRev').textContent,
+      tProfit: document.getElementById('tProfit').textContent,
+      tAdv:    document.getElementById('tAdv').textContent,
+      tP2:     document.getElementById('tP2').textContent,
+      tP26:    document.getElementById('tP26').textContent,
+      tP3:     document.getElementById('tP3').textContent,
+      tP38:    document.getElementById('tP38').textContent,
+    });
     badge.textContent = players.length + ' spelare';
     badge.classList.add('loaded');
   } catch(e) {
@@ -891,47 +467,166 @@ async function loadTeamStats() {
   }
 }
 
-/* ── Load player list ── */
+/* ── Render helper: populate player select from a list ── */
+function _renderPlayerSelect(sel, list) {
+  const current = sel.value; // bevara eventuellt valt värde
+  sel.innerHTML = '<option value="">— Välj spelare —</option>';
+  list.forEach(p => {
+    const o = document.createElement('option');
+    o.value = p; o.textContent = p;
+    if (p === current) o.selected = true;
+    sel.appendChild(o);
+  });
+}
+
+/* ── Load player list (stale-while-revalidate från allPlayers-endpoint) ── */
 async function loadPlayers() {
   const sel = document.getElementById('playerSelect');
+
+  // Visa cachat data direkt om det finns
+  const stale = _getCache('all_players');
+  if (stale && Array.isArray(stale) && stale.length > 0) {
+    _renderPlayerSelect(sel, stale);
+  }
+
   try {
-    const res  = await fetch(API + '?action=players');
-    const list = await res.json();
+    // Försök allPlayers (full spelarlista) — faller tillbaka på players (bara de med beställningar)
+    let list;
+    try {
+      const res = await fetch(API + '?action=allPlayers');
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) list = data;
+    } catch(_) {}
+    if (!list) {
+      const res = await fetch(API + '?action=players');
+      list = await res.json();
+    }
     if (!Array.isArray(list) || list.length === 0) throw new Error('empty');
-    sel.innerHTML = '<option value="">\u2014 V\u00E4lj spelare \u2014</option>';
-    list.forEach(p => {
-      const o = document.createElement('option');
-      o.value = p; o.textContent = p;
-      sel.appendChild(o);
-    });
+    _setCache('all_players', list);
+    _renderPlayerSelect(sel, list);
   } catch(e) {
-    sel.innerHTML = '<option value="">Kunde inte ladda spelare \u2013 kontrollera beh\u00F6righet</option>';
+    if (!stale) {
+      sel.innerHTML = '<option value="">Kunde inte ladda spelare – kontrollera behörighet</option>';
+    }
   }
 }
 
-/* ── Load orders ── */
-async function loadOrders(player) {
-  const tableContent  = document.getElementById('tableContent');
-  const listContent   = document.getElementById('orderListContent');
-  const statsTop      = document.getElementById('statsTop');
-  const statsProducts = document.getElementById('statsProducts');
-  const tableTitle    = document.getElementById('tableTitle');
-  const listTitle     = document.getElementById('listTitle');
-  const orderCount    = document.getElementById('orderCount');
-  const listCount     = document.getElementById('listCount');
+/* ── Render orders into the page (shared by cache-path and live-path) ── */
+function _renderOrders(orders, tableContent, listContent, statsTop, statsProducts, tableTitle, listTitle, orderCount, listCount) {
+  function hideStats() { statsTop.style.display = statsProducts.style.display = 'none'; document.getElementById('ordersDivider').style.display = 'none'; }
+  function showStats() { statsTop.style.display = 'grid'; statsProducts.style.display = 'grid'; document.getElementById('ordersDivider').style.display = 'flex'; }
+  if (!Array.isArray(orders) || orders.length === 0) {
+    const noHtml = '<div class="empty-state"><div class="icon">📭</div><p>Inga beställningar ännu</p></div>';
+    hideStats();
+    tableContent.innerHTML = listContent.innerHTML = noHtml;
+    return;
+  }
+  const total    = orders.reduce((s, o) => s + (o.total || 0), 0);
+  const sumAdv   = orders.reduce((s, o) => s + (Number(o.adv)   || 0), 0);
+  const sumP2    = orders.reduce((s, o) => s + (Number(o.p2)    || 0), 0);
+  const sumP2_6  = orders.reduce((s, o) => s + (Number(o.p2_6)  || 0), 0);
+  const sumP3    = orders.reduce((s, o) => s + (Number(o.p3)    || 0), 0);
+  const sumP3_8  = orders.reduce((s, o) => s + (Number(o.p3_8)  || 0), 0);
+  document.getElementById('statCount').textContent  = orders.length;
+  document.getElementById('statTotal').textContent  = fmt(total);
+  document.getElementById('statAdv').textContent    = sumAdv   || '–';
+  document.getElementById('statP2').textContent     = sumP2    || '–';
+  document.getElementById('statP2_6').textContent   = sumP2_6  || '–';
+  document.getElementById('statP3').textContent     = sumP3    || '–';
+  document.getElementById('statP3_8').textContent   = sumP3_8  || '–';
+  showStats();
+  const countText = orders.length + ' st';
+  orderCount.textContent = listCount.textContent = countText;
+  orderCount.style.display = listCount.style.display = 'inline-block';
+  /* ── Desktop table ── */
+  const cols = [
+    { key: 'date',   label: 'Datum' },
+    { key: 'buyer',  label: 'Köpare' },
+    { key: 'phone',  label: 'Telefon' },
+    { key: 'adv',    label: 'Adv (frp)',  num: true },
+    { key: 'p2',     label: 'P2 (frp)',   num: true },
+    { key: 'p2_6',   label: 'P2 6-pack',  num: true },
+    { key: 'p3',     label: 'P3 (frp)',   num: true },
+    { key: 'p3_8',   label: 'P3 8-pack',  num: true },
+    { key: 'total',  label: 'Summa (kr)', num: true },
+  ];
+  const sumKeys = ['adv','p2','p2_6','p3','p3_8','total'];
+  let tableHtml = '<div class="table-wrap"><table><thead><tr>';
+  cols.forEach(c => tableHtml += `<th${c.num ? ' style="text-align:right"' : ''}>${c.label}</th>`);
+  tableHtml += '</tr></thead><tbody>';
+  orders.forEach(o => {
+    tableHtml += '<tr>';
+    cols.forEach(c => {
+      let val = o[c.key] ?? '';
+      if (c.key === 'total') {
+        val = val ? fmt(val) + ' kr' : '';
+        tableHtml += `<td class="num">${val}</td>`; return;
+      }
+      if (c.num) {
+        const n = Number(val) || 0;
+        tableHtml += `<td class="num${n === 0 ? ' zero' : ''}">${n === 0 ? '–' : n}</td>`; return;
+      }
+      tableHtml += `<td>${esc(String(val))}</td>`;
+    });
+    tableHtml += '</tr>';
+  });
+  tableHtml += '<tr class="totals-row">';
+  cols.forEach(c => {
+    if (c.key === 'date') { tableHtml += '<td>TOTALT</td>'; }
+    else if (c.key === 'total') {
+      const s = orders.reduce((acc, o) => acc + (o.total || 0), 0);
+      tableHtml += `<td class="num">${fmt(s)} kr</td>`;
+    } else if (sumKeys.includes(c.key)) {
+      const s = orders.reduce((acc, o) => acc + (Number(o[c.key]) || 0), 0);
+      tableHtml += `<td class="num">${s > 0 ? s : '–'}</td>`;
+    } else { tableHtml += '<td></td>'; }
+  });
+  tableHtml += '</tr></tbody></table></div>';
+  tableContent.innerHTML = tableHtml;
+  /* ── Mobile card list ── */
+  let listHtml = '<div class="order-list-inner">';
+  orders.forEach((o, idx) => {
+    const name  = o.buyer || 'Okänd';
+    const phone = formatPhone(o.phone);
+    const msg   = o.note || o.message || o.meddelande || '';
+    const total = o.total ? fmt(o.total) + '\u00A0kr' : '–';
+    const init  = initials(name);
+    const metaParts = [];
+    if (phone) metaParts.push(phone);
+    if (msg)   metaParts.push(msg.length > 30 ? msg.slice(0,30) + '…' : msg);
+    const meta = metaParts.join('<span class="dot">&middot;</span>');
+    listHtml += `
+      <div class="order-row" onclick="openModal(${idx})" data-idx="${idx}">
+        <div class="order-avatar">${esc(init)}</div>
+        <div class="order-info">
+          <div class="order-name">${esc(name)}</div>
+          <div class="order-meta">${meta || '<span style="font-style:italic">Inget meddelande</span>'}</div>
+        </div>
+        <div class="order-total-chip">${total}</div>
+        <div class="order-chevron">›</div>
+      </div>`;
+  });
+  listHtml += '</div>';
+  listContent.innerHTML = listHtml;
+  window._orders = orders;
+}
 
-  function hideStats() {
-    statsTop.style.display = statsProducts.style.display = 'none';
-  }
-  function showStats() {
-    statsTop.style.display = 'grid';
-    statsProducts.style.display = 'grid';
-  }
+/* ── Load orders (stale-while-revalidate) ── */
+async function loadOrders(player) {
+  const tableContent   = document.getElementById('tableContent');
+  const listContent    = document.getElementById('orderListContent');
+  const statsTop       = document.getElementById('statsTop');
+  const statsProducts  = document.getElementById('statsProducts');
+  const tableTitle     = document.getElementById('tableTitle');
+  const listTitle      = document.getElementById('listTitle');
+  const orderCount     = document.getElementById('orderCount');
+  const listCount      = document.getElementById('listCount');
+
+  function hideStats() { statsTop.style.display = statsProducts.style.display = 'none'; document.getElementById('ordersDivider').style.display = 'none'; }
 
   if (!player) {
-    const emptyHtml = '<div class="empty-state"><div class="icon">\uD83D\uDC46</div><p>V\u00E4lj en spelare ovan</p></div>';
-    tableTitle.textContent = 'Best\u00E4llningar';
-    listTitle.textContent  = 'Best\u00E4llningar';
+    const emptyHtml = '<div class="empty-state"><div class="icon">👆</div><p>Välj en spelare ovan</p></div>';
+    tableTitle.textContent = listTitle.textContent = 'Beställningar';
     orderCount.style.display = listCount.style.display = 'none';
     hideStats();
     tableContent.innerHTML = listContent.innerHTML = emptyHtml;
@@ -940,128 +635,23 @@ async function loadOrders(player) {
 
   tableTitle.textContent = listTitle.textContent = player;
   orderCount.style.display = listCount.style.display = 'none';
-  const spinnerHtml = '<div class="spinner"></div>';
-  tableContent.innerHTML = listContent.innerHTML = spinnerHtml;
+
+  // Show stale cached data instantly while fetching fresh in background
+  const stale = _getCache('orders_' + player);
+  if (stale) {
+    _renderOrders(stale, tableContent, listContent, statsTop, statsProducts, tableTitle, listTitle, orderCount, listCount);
+  } else {
+    const spinnerHtml = '<div class="spinner"></div>';
+    tableContent.innerHTML = listContent.innerHTML = spinnerHtml;
+  }
 
   try {
-    const res    = await fetch(API + '?action=orders&player=' + encodeURIComponent(player));
+    const res = await fetch(API + '?action=orders&player=' + encodeURIComponent(player));
     const orders = await res.json();
-
-    if (!Array.isArray(orders) || orders.length === 0) {
-      const noHtml = '<div class="empty-state"><div class="icon">\uD83D\uDCED</div><p>Inga best\u00E4llningar \u00E4nnu</p></div>';
-      hideStats();
-      tableContent.innerHTML = listContent.innerHTML = noHtml;
-      return;
-    }
-
-    /* ── Stats ── */
-    const total   = orders.reduce((s, o) => s + (o.total || 0), 0);
-    const sumAdv  = orders.reduce((s, o) => s + (Number(o.adv)  || 0), 0);
-    const sumP2   = orders.reduce((s, o) => s + (Number(o.p2)   || 0), 0);
-    const sumP2_6 = orders.reduce((s, o) => s + (Number(o.p2_6) || 0), 0);
-    const sumP3   = orders.reduce((s, o) => s + (Number(o.p3)   || 0), 0);
-    const sumP3_8 = orders.reduce((s, o) => s + (Number(o.p3_8) || 0), 0);
-
-    document.getElementById('statCount').textContent = orders.length;
-    document.getElementById('statTotal').textContent = fmt(total);
-    document.getElementById('statAdv').textContent   = sumAdv  || '\u2013';
-    document.getElementById('statP2').textContent    = sumP2   || '\u2013';
-    document.getElementById('statP2_6').textContent  = sumP2_6 || '\u2013';
-    document.getElementById('statP3').textContent    = sumP3   || '\u2013';
-    document.getElementById('statP3_8').textContent  = sumP3_8 || '\u2013';
-    showStats();
-
-    const countText = orders.length + ' st';
-    orderCount.textContent = listCount.textContent = countText;
-    orderCount.style.display = listCount.style.display = 'inline-block';
-
-    /* ── Desktop table ── */
-    const cols = [
-      { key: 'date',   label: 'Datum' },
-      { key: 'buyer',  label: 'K\u00F6pare' },
-      { key: 'phone',  label: 'Telefon' },
-      { key: 'adv',    label: 'Adv (frp)',  num: true },
-      { key: 'p2',     label: 'P2 (frp)',   num: true },
-      { key: 'p2_6',   label: 'P2 6-pack',  num: true },
-      { key: 'p3',     label: 'P3 (frp)',   num: true },
-      { key: 'p3_8',   label: 'P3 8-pack',  num: true },
-      { key: 'total',  label: 'Summa (kr)', num: true },
-    ];
-    const sumKeys = ['adv','p2','p2_6','p3','p3_8','total'];
-
-    let tableHtml = '<div class="table-wrap"><table><thead><tr>';
-    cols.forEach(c => tableHtml += `<th${c.num ? ' style="text-align:right"' : ''}>${c.label}</th>`);
-    tableHtml += '</tr></thead><tbody>';
-
-    orders.forEach(o => {
-      tableHtml += '<tr>';
-      cols.forEach(c => {
-        let val = o[c.key] ?? '';
-        if (c.key === 'total') {
-          val = val ? fmt(val) + ' kr' : '';
-          tableHtml += `<td class="num">${val}</td>`;
-          return;
-        }
-        if (c.num) {
-          const n = Number(val) || 0;
-          tableHtml += `<td class="num${n === 0 ? ' zero' : ''}">${n === 0 ? '\u2013' : n}</td>`;
-          return;
-        }
-        tableHtml += `<td>${esc(String(val))}</td>`;
-      });
-      tableHtml += '</tr>';
-    });
-
-    // Totals row
-    tableHtml += '<tr class="totals-row">';
-    cols.forEach(c => {
-      if (c.key === 'date') {
-        tableHtml += '<td>TOTALT</td>';
-      } else if (c.key === 'total') {
-        const s = orders.reduce((acc, o) => acc + (o.total || 0), 0);
-        tableHtml += `<td class="num">${fmt(s)} kr</td>`;
-      } else if (sumKeys.includes(c.key)) {
-        const s = orders.reduce((acc, o) => acc + (Number(o[c.key]) || 0), 0);
-        tableHtml += `<td class="num">${s > 0 ? s : '\u2013'}</td>`;
-      } else {
-        tableHtml += '<td></td>';
-      }
-    });
-    tableHtml += '</tr></tbody></table></div>';
-    tableContent.innerHTML = tableHtml;
-
-    /* ── Mobile card list ── */
-    let listHtml = '<div class="order-list-inner">';
-    orders.forEach((o, idx) => {
-      const name    = o.buyer || 'Ok\u00E4nd';
-      const phone   = formatPhone(o.phone);
-      const msg     = o.note || o.message || o.meddelande || '';
-      const total   = o.total ? fmt(o.total) + '\u00A0kr' : '\u2013';
-      const init    = initials(name);
-      const metaParts = [];
-      if (phone) metaParts.push(phone);
-      if (msg)   metaParts.push(msg.length > 30 ? msg.slice(0,30) + '\u2026' : msg);
-      const meta = metaParts.join('<span class="dot">&middot;</span>');
-
-      listHtml += `
-        <div class="order-row" onclick="openModal(${idx})" data-idx="${idx}">
-          <div class="order-avatar">${esc(init)}</div>
-          <div class="order-info">
-            <div class="order-name">${esc(name)}</div>
-            <div class="order-meta">${meta || '<span style="font-style:italic">Inget meddelande</span>'}</div>
-          </div>
-          <div class="order-total-chip">${total}</div>
-          <div class="order-chevron">&#8250;</div>
-        </div>`;
-    });
-    listHtml += '</div>';
-    listContent.innerHTML = listHtml;
-
-    /* Store orders globally for modal access */
-    window._orders = orders;
-
+    _setCache('orders_' + player, orders);
+    _renderOrders(orders, tableContent, listContent, statsTop, statsProducts, tableTitle, listTitle, orderCount, listCount);
   } catch(e) {
-    const errHtml = '<div class="empty-state"><div class="icon">\u26A0\uFE0F</div><p>Kunde inte ladda best\u00E4llningar.<br>Kontrollera att du har beh\u00F6righet.</p></div>';
+    const errHtml = '<div class="empty-state"><div class="icon">⚠️</div><p>Kunde inte ladda beställningar.<br>Kontrollera att du har behörighet.</p></div>';
     hideStats();
     tableContent.innerHTML = listContent.innerHTML = errHtml;
   }
@@ -1071,8 +661,7 @@ async function loadOrders(player) {
 function openModal(idx) {
   const o = window._orders[idx];
   if (!o) return;
-
-  const name  = o.buyer || 'Ok\u00E4nd';
+  const name  = o.buyer || 'Okänd';
   const phone = formatPhone(o.phone);
   const msg   = o.note || o.message || o.meddelande || '';
   const date  = o.date || '';
@@ -1082,43 +671,37 @@ function openModal(idx) {
     <div class="modal-avatar">${esc(initials(name))}</div>
     <div>
       <div class="modal-buyer-name">${esc(name)}</div>
-      ${phone ? `<a class="modal-phone-link" href="tel:${esc(phone)}">&#128222; ${esc(phone)}</a>` : '<div style="font-size:.85rem;color:var(--muted);margin-top:4px">Inget telefonnummer</div>'}
+      ${phone ? `<a class="modal-phone-link" href="tel:${esc(phone)}">📞 ${esc(phone)}</a>` : '<div style="font-size:.85rem;color:var(--muted);margin-top:4px">Inget telefonnummer</div>'}
     </div>
     <button class="modal-close" onclick="closeModal()">&#215;</button>
   `;
-
   /* Body */
   const products = [
-    { label: 'Adv (frp)',  key: 'adv' },
-    { label: 'P2 (frp)',   key: 'p2' },
-    { label: 'P2 6-pack',  key: 'p2_6' },
-    { label: 'P3 (frp)',   key: 'p3' },
-    { label: 'P3 8-pack',  key: 'p3_8' },
+    { label: 'Adv (frp)',  key: 'adv'   },
+    { label: 'P2 (frp)',   key: 'p2'    },
+    { label: 'P2 6-pack',  key: 'p2_6'  },
+    { label: 'P3 (frp)',   key: 'p3'    },
+    { label: 'P3 8-pack',  key: 'p3_8'  },
   ];
-
   let productGrid = '<div class="product-grid">';
   products.forEach(p => {
     const n = Number(o[p.key]) || 0;
     productGrid += `
       <div class="product-item">
         <span class="product-label">${p.label}</span>
-        <span class="product-value${n === 0 ? ' zero' : ''}">${n === 0 ? '\u2013' : n}</span>
+        <span class="product-value${n === 0 ? ' zero' : ''}">${n === 0 ? '–' : n}</span>
       </div>`;
   });
   productGrid += '</div>';
-
-  const totalVal = o.total ? fmt(o.total) + '\u00A0kr' : '\u2013';
-
+  const totalVal = o.total ? fmt(o.total) + '\u00A0kr' : '–';
   document.getElementById('modalBody').innerHTML = `
-    ${date ? `<div class="modal-meta-row">&#128197; ${esc(date)}</div>` : ''}
-
+    ${date ? `<div class="modal-meta-row">📅 ${esc(date)}</div>` : ''}
     <div class="modal-section">
       <div class="modal-section-title">Meddelande</div>
       <div class="modal-message${msg ? '' : ' empty'}">${msg ? esc(msg) : 'Inget meddelande'}</div>
     </div>
-
     <div class="modal-section">
-      <div class="modal-section-title">Best&#228;llning</div>
+      <div class="modal-section-title">Beställning</div>
       ${productGrid}
       <div class="modal-total">
         <span class="modal-total-label">Totalt</span>
@@ -1126,7 +709,6 @@ function openModal(idx) {
       </div>
     </div>
   `;
-
   document.getElementById('modalBackdrop').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -1138,14 +720,12 @@ function closeModal(e) {
 }
 
 /* Close modal on Escape */
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
-});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 document.getElementById('playerSelect').addEventListener('change', e => loadOrders(e.target.value));
+
 loadTeamStats();   // ladda lagtotal direkt vid sidstart
 loadPlayers();     // ladda spelarlista parallellt
 </script>
-
 </body>
 </html>
