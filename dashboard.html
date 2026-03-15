@@ -191,6 +191,12 @@ td.zero { color: #c4cadc; }
 .delivery-header { background: var(--navy); color: #fff; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .delivery-header h2 { font-size: 0.95rem; font-weight: 600; margin: 0; }
 .delivery-badge { background: rgba(255,255,255,0.15); color: #fff; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; }
+/* Pallberäkning */
+.pall-section { display: flex; gap: 8px; padding: 12px 16px; background: #f8faff; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.pall-card { flex: 1; min-width: 130px; background: #fff; border-radius: 10px; padding: 10px 14px; border: 1px solid var(--border); }
+.pall-card-label { font-size: .63rem; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); margin-bottom: 4px; white-space: nowrap; }
+.pall-card-pallar { font-size: 1.35rem; font-weight: 700; color: var(--navy); line-height: 1; }
+.pall-card-sub { font-size: .72rem; color: var(--muted); margin-top: 3px; }
 /* Desktop table */
 .delivery-table-wrap { overflow-x: auto; overflow-y: auto; max-height: 560px; -webkit-overflow-scrolling: touch; }
 /* border-separate krävs för att sticky thead ska fungera utan transparens */
@@ -298,29 +304,29 @@ td.zero { color: #c4cadc; }
     <!-- Produktrader -->
     <div class="team-products">
       <div class="team-stat">
-        <div class="team-stat-label">Adv</div>
+        <div class="team-stat-label">Advance 2-lag</div>
         <div class="team-stat-value" id="tAdv">&#8212;</div>
         <div class="team-stat-sub">frp</div>
       </div>
       <div class="team-stat">
-        <div class="team-stat-label">P2</div>
+        <div class="team-stat-label">Premium 2-lag</div>
         <div class="team-stat-value" id="tP2">&#8212;</div>
         <div class="team-stat-sub">frp</div>
       </div>
       <div class="team-stat">
-        <div class="team-stat-label">P2 6-pack</div>
+        <div class="team-stat-label">Premium 2-lag infrp</div>
         <div class="team-stat-value" id="tP26">&#8212;</div>
-        <div class="team-stat-sub">6-pack</div>
+        <div class="team-stat-sub">infrp</div>
       </div>
       <div class="team-stat">
-        <div class="team-stat-label">P3</div>
+        <div class="team-stat-label">Premium 3-lag</div>
         <div class="team-stat-value" id="tP3">&#8212;</div>
         <div class="team-stat-sub">frp</div>
       </div>
       <div class="team-stat">
-        <div class="team-stat-label">P3 8-pack</div>
+        <div class="team-stat-label">Premium 3-lag infrp</div>
         <div class="team-stat-value" id="tP38">&#8212;</div>
-        <div class="team-stat-sub">8-pack</div>
+        <div class="team-stat-sub">infrp</div>
       </div>
     </div>
   </div>
@@ -352,29 +358,29 @@ td.zero { color: #c4cadc; }
   <!-- STATS product row -->
   <div class="stats-products" id="statsProducts" style="display:none">
     <div class="stat-card amber">
-      <div class="stat-label">Adv</div>
+      <div class="stat-label">Advance 2-lag</div>
       <div class="stat-value" id="statAdv">&#8212;</div>
       <div class="stat-sub">frp</div>
     </div>
     <div class="stat-card indigo">
-      <div class="stat-label">P2</div>
+      <div class="stat-label">Premium 2-lag</div>
       <div class="stat-value" id="statP2">&#8212;</div>
       <div class="stat-sub">frp</div>
     </div>
     <div class="stat-card teal">
-      <div class="stat-label">P2 6-pack</div>
+      <div class="stat-label">Premium 2-lag infrp</div>
       <div class="stat-value" id="statP2_6">&#8212;</div>
-      <div class="stat-sub">6-pack</div>
+      <div class="stat-sub">infrp</div>
     </div>
     <div class="stat-card rose">
-      <div class="stat-label">P3</div>
+      <div class="stat-label">Premium 3-lag</div>
       <div class="stat-value" id="statP3">&#8212;</div>
       <div class="stat-sub">frp</div>
     </div>
     <div class="stat-card" style="border-top-color:#7c3aed">
-      <div class="stat-label">P3 8-pack</div>
+      <div class="stat-label">Premium 3-lag infrp</div>
       <div class="stat-value" id="statP3_8" style="color:#7c3aed">&#8212;</div>
-      <div class="stat-sub">8-pack</div>
+      <div class="stat-sub">infrp</div>
     </div>
   </div>
 
@@ -414,6 +420,8 @@ td.zero { color: #c4cadc; }
       <h2>&#128666; Kvar att leverera</h2>
       <span class="delivery-badge" id="deliveryBadge"></span>
     </div>
+    <!-- Pallberäkning -->
+    <div id="deliveryPallCalc" style="display:none"></div>
     <!-- Desktop tabell -->
     <div class="delivery-table-wrap delivery-desktop" id="deliveryTableWrap">
       <div class="spinner"></div>
@@ -631,11 +639,11 @@ function _renderOrders(orders, tableContent, listContent, statsTop, statsProduct
     { key: 'date',   label: 'Datum' },
     { key: 'buyer',  label: 'Köpare' },
     { key: 'phone',  label: 'Telefon' },
-    { key: 'adv',    label: 'Adv (frp)',  num: true },
-    { key: 'p2',     label: 'P2 (frp)',   num: true },
-    { key: 'p2_6',   label: 'P2 6-pack',  num: true },
-    { key: 'p3',     label: 'P3 (frp)',   num: true },
-    { key: 'p3_8',   label: 'P3 8-pack',  num: true },
+    { key: 'adv',    label: 'Advance 2-lag (frp)',      num: true },
+    { key: 'p2',     label: 'Premium 2-lag (frp)',     num: true },
+    { key: 'p2_6',   label: 'Premium 2-lag infrp',     num: true },
+    { key: 'p3',     label: 'Premium 3-lag (frp)',     num: true },
+    { key: 'p3_8',   label: 'Premium 3-lag infrp',     num: true },
     { key: 'total',  label: 'Summa (kr)', num: true },
   ];
   const sumKeys = ['adv','p2','p2_6','p3','p3_8','total'];
@@ -783,11 +791,11 @@ function openModal(idx) {
   `;
   /* Body */
   const products = [
-    { label: 'Adv (frp)',  key: 'adv'   },
-    { label: 'P2 (frp)',   key: 'p2'    },
-    { label: 'P2 6-pack',  key: 'p2_6'  },
-    { label: 'P3 (frp)',   key: 'p3'    },
-    { label: 'P3 8-pack',  key: 'p3_8'  },
+    { label: 'Advance 2-lag (frp)',  key: 'adv'   },
+    { label: 'Premium 2-lag (frp)', key: 'p2'    },
+    { label: 'Premium 2-lag infrp', key: 'p2_6'  },
+    { label: 'Premium 3-lag (frp)', key: 'p3'    },
+    { label: 'Premium 3-lag infrp', key: 'p3_8'  },
   ];
   let productGrid = '<div class="product-grid">';
   products.forEach(p => {
@@ -873,15 +881,15 @@ function openDeliveryModal(idx) {
   document.getElementById('modalBody').innerHTML = `
     <div class="modal-section">
       <div class="modal-section-title">Hel förpackning (frp)</div>
-      ${dmRow('Adv', r.lev_adv, r.kvar_adv)}
-      ${dmRow('P2',  r.lev_p2,  r.kvar_p2)}
-      ${dmRow('P3',  r.lev_p3,  r.kvar_p3)}
+      ${dmRow('Advance 2-lag',  r.lev_adv, r.kvar_adv)}
+      ${dmRow('Premium 2-lag', r.lev_p2,  r.kvar_p2)}
+      ${dmRow('Premium 3-lag', r.lev_p3,  r.kvar_p3)}
     </div>
     ${hasSplit ? `
     <div class="modal-section">
       <div class="modal-section-title" style="color:#5b21b6">Split-pack</div>
-      ${splitDmRow('P2 6-pack', r.lev_6pack, r.kvar_6pack)}
-      ${splitDmRow('P3 8-pack', r.lev_8pack, r.kvar_8pack)}
+      ${splitDmRow('Premium 2-lag infrp', r.lev_6pack, r.kvar_6pack)}
+      ${splitDmRow('Premium 3-lag infrp', r.lev_8pack, r.kvar_8pack)}
     </div>` : ''}
     <div class="modal-total" style="${totKvar === 0 && totSplitKvar === 0 ? 'background:#059669' : ''}">
       <span class="modal-total-label">Totalt kvar (hel frp)</span>
@@ -925,6 +933,30 @@ function _renderDelivery(rows) {
   const totKvar = (totRow ? (totRow.kvar_adv + totRow.kvar_p2 + totRow.kvar_p3) : 0);
   badge.textContent = totKvar > 0 ? totKvar + ' kvar att leverera' : 'Allt levererat ✓';
 
+  /* ── Pallberäkning ── */
+  const pallSection = document.getElementById('deliveryPallCalc');
+  if (pallSection) {
+    const pallData = [
+      { label: 'Advance 2-lag',  kvar: totRow ? (totRow.kvar_adv || 0) : 0, kap: 72 },
+      { label: 'Premium 2-lag',  kvar: totRow ? (totRow.kvar_p2  || 0) : 0, kap: 27 },
+      { label: 'Premium 3-lag',  kvar: totRow ? (totRow.kvar_p3  || 0) : 0, kap: 27 },
+    ];
+    pallSection.className = 'pall-section';
+    pallSection.style.display = '';
+    pallSection.innerHTML = pallData.map(p => {
+      const pallar = p.kvar > 0 ? Math.ceil(p.kvar / p.kap) : 0;
+      const pallColor = pallar > 0 ? 'var(--navy)' : '#c4cadc';
+      const pallText  = pallar > 0 ? pallar + (pallar === 1 ? ' pall' : ' pallar') : '–';
+      const subText   = p.kvar > 0 ? `${p.kvar} frp kvar · ${p.kap} frp/pall` : `Allt levererat · ${p.kap} frp/pall`;
+      return `
+        <div class="pall-card">
+          <div class="pall-card-label">${p.label}</div>
+          <div class="pall-card-pallar" style="color:${pallColor}">${pallText}</div>
+          <div class="pall-card-sub">${subText}</div>
+        </div>`;
+    }).join('');
+  }
+
   /* ── Desktop tabell ── */
   function gh(group, label, extra) {
     return `<th class="${extra || ''}"><span class="col-group">${group}</span>${label}</th>`;
@@ -932,16 +964,16 @@ function _renderDelivery(rows) {
   let html = '<table class="delivery-table">';
   html += '<thead><tr>';
   html += '<th>Spelare</th>';
-  html += gh('Levererat', 'Adv (frp)', 'lev');
-  html += gh('Levererat', 'P2 (frp)',  'lev');
-  html += gh('Levererat', 'P3 (frp)',  'lev');
-  html += gh('Kvar att leverera', 'Adv (frp)', 'kvar kvar-first');
-  html += gh('Kvar att leverera', 'P2 (frp)',  'kvar');
-  html += gh('Kvar att leverera', 'P3 (frp)',  'kvar');
-  html += gh('Split Lev', '6-pack', 'split-lev split-first');
-  html += gh('Split Lev', '8-pack', 'split-lev');
-  html += gh('Split Kvar', '6-pack', 'split-kvar split-kvar-first');
-  html += gh('Split Kvar', '8-pack', 'split-kvar');
+  html += gh('Levererat', 'Adv 2-lag',  'lev');
+  html += gh('Levererat', 'Prem 2-lag', 'lev');
+  html += gh('Levererat', 'Prem 3-lag', 'lev');
+  html += gh('Kvar att leverera', 'Adv 2-lag',  'kvar kvar-first');
+  html += gh('Kvar att leverera', 'Prem 2-lag', 'kvar');
+  html += gh('Kvar att leverera', 'Prem 3-lag', 'kvar');
+  html += gh('Split Lev', 'Prem 2-lag', 'split-lev split-first');
+  html += gh('Split Lev', 'Prem 3-lag', 'split-lev');
+  html += gh('Split Kvar', 'Prem 2-lag', 'split-kvar split-kvar-first');
+  html += gh('Split Kvar', 'Prem 3-lag', 'split-kvar');
   html += '</tr></thead><tbody>';
 
   function kvarCell(n, first) {
