@@ -191,6 +191,18 @@ td.zero { color: #c4cadc; }
 .delivery-header { background: var(--navy); color: #fff; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .delivery-header h2 { font-size: 0.95rem; font-weight: 600; margin: 0; }
 .delivery-badge { background: rgba(255,255,255,0.15); color: #fff; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; }
+/* Lagersaldo */
+.inv-section { padding: 14px 16px; background: #f8faff; border-bottom: 1px solid var(--border); }
+.inv-section-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--muted); margin-bottom: 10px; }
+.inv-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+.inv-card { flex: 1; min-width: 150px; background: #fff; border-radius: 12px; padding: 12px 14px; border: 1px solid var(--border); }
+.inv-card-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 8px; }
+.inv-row { display: flex; justify-content: space-between; font-size: 0.78rem; margin-bottom: 3px; }
+.inv-row-label { color: var(--muted); }
+.inv-row-val { font-weight: 600; color: var(--text); }
+.inv-bar-bg { background: #e5e7eb; border-radius: 99px; height: 6px; margin: 8px 0 6px; overflow: hidden; }
+.inv-bar { height: 6px; border-radius: 99px; transition: width .4s; }
+.inv-kvar { font-size: 0.85rem; font-weight: 700; margin-top: 2px; }
 /* Pallberäkning */
 .pall-section { display: flex; gap: 8px; padding: 12px 16px; background: #f8faff; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
 .pall-card { flex: 1; min-width: 130px; background: #fff; border-radius: 10px; padding: 10px 14px; border: 1px solid var(--border); }
@@ -420,6 +432,8 @@ td.zero { color: #c4cadc; }
       <h2>&#128666; Kvar att leverera</h2>
       <span class="delivery-badge" id="deliveryBadge"></span>
     </div>
+    <!-- Lagersaldo -->
+    <div id="inventorySection" style="display:none"></div>
     <!-- Pallberäkning -->
     <div id="deliveryPallCalc" style="display:none"></div>
     <!-- Desktop tabell -->
@@ -458,6 +472,14 @@ const VINST_PER = {
   p2_6: 10,    // kr vinst per P2 6-pack
   p3:   53,    // kr vinst per frp P3-lag
   p3_8: 11.14, // kr vinst per P3 8-pack
+};
+
+// ── Pallorder från leverantör (uppdatera vid ny order) ──────────────────────
+// Källa: Beställning 2026 W3:Y3
+const PALL_ORDER = {
+  adv: { pallar: 2, frpPerPall: 72 },  // Advance 2-lag:  2 pall × 72 frp
+  p2:  { pallar: 4, frpPerPall: 27 },  // Premium 2-lag:  4 pall × 27 frp
+  p3:  { pallar: 1, frpPerPall: 27 },  // Premium 3-lag:  1 pall × 27 frp
 };
 
 /* ── helpers ── */
@@ -903,6 +925,47 @@ function openDeliveryModal(idx) {
 /* Close modal on Escape */
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
+/* ── Inventory / Lagersaldo ── */
+function _renderInventory(totRow) {
+  const section = document.getElementById('inventorySection');
+  if (!section) return;
+
+  const products = [
+    { label: 'Advance 2-lag',  lev: totRow.lev_adv || 0, kvar: totRow.kvar_adv || 0, ...PALL_ORDER.adv },
+    { label: 'Premium 2-lag',  lev: totRow.lev_p2  || 0, kvar: totRow.kvar_p2  || 0, ...PALL_ORDER.p2  },
+    { label: 'Premium 3-lag',  lev: totRow.lev_p3  || 0, kvar: totRow.kvar_p3  || 0, ...PALL_ORDER.p3  },
+  ];
+
+  section.style.display = '';
+  section.innerHTML = `
+    <div class="inv-section">
+      <div class="inv-section-title">📦 Lagersaldo – vad finns kvar</div>
+      <div class="inv-grid">
+        ${products.map(p => {
+          const totalt    = p.pallar * p.frpPerPall;
+          const sält      = p.lev + p.kvar;           // alla kundorders (lev + ej lev)
+          const kvar      = totalt - sält;             // kvar att sälja
+          const pct       = totalt > 0 ? Math.min(100, Math.round(sält / totalt * 100)) : 0;
+          const isNeg     = kvar < 0;
+          const kvarColor = isNeg ? 'var(--red-text)' : kvar === 0 ? '#059669' : 'var(--navy)';
+          const barColor  = isNeg ? 'var(--red-text)' : pct >= 90 ? '#d97706' : '#059669';
+          const kvarText  = isNeg
+            ? `⚠️ ${Math.abs(kvar)} frp underskott`
+            : kvar === 0 ? '✓ Slutsålt' : `${kvar} frp kvar i lager`;
+          return `
+            <div class="inv-card">
+              <div class="inv-card-label">${p.label}</div>
+              <div class="inv-row"><span class="inv-row-label">Beställt</span><span class="inv-row-val">${p.pallar} pall · ${totalt} frp</span></div>
+              <div class="inv-row"><span class="inv-row-label">Sålt till kunder</span><span class="inv-row-val">${sält} frp</span></div>
+              <div class="inv-row"><span class="inv-row-label">Levererat</span><span class="inv-row-val" style="color:#059669">${p.lev} frp</span></div>
+              <div class="inv-bar-bg"><div class="inv-bar" style="width:${pct}%;background:${barColor}"></div></div>
+              <div class="inv-kvar" style="color:${kvarColor}">${kvarText}</div>
+            </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
 /* ── Delivery view helpers ── */
 function _showDeliverySection(show) {
   const card    = document.getElementById('deliveryCard');
@@ -933,6 +996,9 @@ function _renderDelivery(rows) {
   const totKvar = (totRow ? (totRow.kvar_adv + totRow.kvar_p2 + totRow.kvar_p3) : 0);
   badge.textContent = totKvar > 0 ? totKvar + ' kvar att leverera' : 'Allt levererat ✓';
 
+  /* ── Lagersaldo ── */
+  if (totRow) _renderInventory(totRow);
+
   /* ── Pallberäkning ── */
   const pallSection = document.getElementById('deliveryPallCalc');
   if (pallSection) {
@@ -944,14 +1010,14 @@ function _renderDelivery(rows) {
     pallSection.className = 'pall-section';
     pallSection.style.display = '';
     pallSection.innerHTML = pallData.map(p => {
-      const pallar = p.kvar > 0 ? Math.ceil(p.kvar / p.kap) : 0;
-      const pallColor = pallar > 0 ? 'var(--navy)' : '#c4cadc';
-      const pallText  = pallar > 0 ? pallar + (pallar === 1 ? ' pall' : ' pallar') : '–';
-      const subText   = p.kvar > 0 ? `${p.kvar} frp kvar · ${p.kap} frp/pall` : `Allt levererat · ${p.kap} frp/pall`;
+      const pallar   = p.kvar > 0 ? Math.ceil(p.kvar / p.kap) : 0;
+      const frpColor = p.kvar > 0 ? 'var(--navy)' : '#c4cadc';
+      const frpText  = p.kvar > 0 ? `${p.kvar} frp` : 'Allt levererat';
+      const subText  = p.kvar > 0 ? `${pallar} ${pallar === 1 ? 'pall' : 'pallar'} kvar · ${p.kap} frp/pall` : `${p.kap} frp/pall`;
       return `
         <div class="pall-card">
           <div class="pall-card-label">${p.label}</div>
-          <div class="pall-card-pallar" style="color:${pallColor}">${pallText}</div>
+          <div class="pall-card-pallar" style="color:${frpColor}">${frpText}</div>
           <div class="pall-card-sub">${subText}</div>
         </div>`;
     }).join('');
