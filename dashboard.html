@@ -38,7 +38,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .nav-bar a { color: rgba(255,255,255,0.65); text-decoration: none; font-size: 0.82rem; transition: color .15s; }
 .nav-bar a:hover { color: #fff; }
 /* ── MAIN ── */
-.main { max-width: 1060px; margin: 0 auto; padding: 28px 16px 48px; }
+.main { max-width: 1400px; margin: 0 auto; padding: 28px 16px 48px; }
 /* ── SECTION DIVIDER ── */
 .section-divider { display: flex; align-items: center; gap: 12px; margin: 28px 0 16px; }
 .section-divider-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); white-space: nowrap; }
@@ -188,6 +188,20 @@ td.zero { color: #c4cadc; }
 /* ── DELIVERY VIEW ── */
 .delivery-card { background: var(--card); border-radius: 16px; box-shadow: 0 2px 6px rgba(15,42,94,.08), 0 8px 24px rgba(15,42,94,.08); border: 1px solid var(--border); overflow: hidden; display: none; }
 .delivery-card.visible { display: block; }
+/* ── OVERVIEW VIEW ── */
+.overview-card { background: var(--card); border-radius: 16px; box-shadow: 0 2px 6px rgba(15,42,94,.08), 0 8px 24px rgba(15,42,94,.08); border: 1px solid var(--border); overflow: hidden; display: none; }
+.overview-card.visible { display: block; }
+.overview-header { background: var(--navy); color: #fff; padding: 16px 24px; display: flex; align-items: center; gap: 12px; }
+.overview-header h2 { font-size: 0.95rem; font-weight: 600; margin: 0; }
+.overview-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.overview-table-wrap table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.overview-table-wrap thead th { background: #f1f5fd; color: var(--navy); font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; padding: 11px 14px; text-align: right; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.overview-table-wrap thead th:first-child { text-align: left; }
+.overview-table-wrap tbody td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; white-space: nowrap; text-align: right; }
+.overview-table-wrap tbody td:first-child { text-align: left; font-weight: 500; }
+.overview-table-wrap tbody tr:last-child td { border-bottom: none; }
+.overview-table-wrap .totals-row td { font-weight: 700; background: #f8fafc; border-top: 2px solid var(--border); }
+.overview-table-wrap .zero { color: var(--muted); }
 .delivery-header { background: var(--navy); color: #fff; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .delivery-header h2 { font-size: 0.95rem; font-weight: 600; margin: 0; }
 .delivery-badge { background: rgba(255,255,255,0.15); color: #fff; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; }
@@ -446,6 +460,17 @@ td.zero { color: #c4cadc; }
     </div>
   </div>
 
+  <!-- OVERVIEW VIEW (visas när Beställningsöversikt väljs) -->
+  <div class="section-divider" id="overviewDivider" style="display:none"><div class="section-divider-line"></div><span class="section-divider-label">Beställningsöversikt per spelare</span><div class="section-divider-line"></div></div>
+  <div class="overview-card" id="overviewCard">
+    <div class="overview-header">
+      <h2>📋 Beställningsöversikt</h2>
+    </div>
+    <div class="overview-table-wrap" id="overviewTableWrap">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
 </div><!-- /main -->
 
 <!-- MODAL (mobile) -->
@@ -567,6 +592,28 @@ async function loadTeamStats() {
     document.getElementById('tP26').textContent    = tP2_6 || '–';
     document.getElementById('tP3').textContent     = tP3   || '–';
     document.getElementById('tP38').textContent    = tP3_8 || '–';
+    badge.textContent = players.length + ' spelare';
+    badge.classList.add('loaded');
+
+    // Uppdatera adv/p2/p3 med auktoritativa siffror från Beställning 2026
+    // (inkluderar manuellt inlagda orders som inte kom via webbformuläret)
+    try {
+      const staleDelivery = _getCache('delivery');
+      const deliveryRows  = staleDelivery || await fetch(API + '?action=delivery').then(r => r.json());
+      if (Array.isArray(deliveryRows)) {
+        const tot = deliveryRows.find(r => r.name === 'TOTALT');
+        if (tot) {
+          const authAdv = (tot.lev_adv || 0) + (tot.kvar_adv || 0);
+          const authP2  = (tot.lev_p2  || 0) + (tot.kvar_p2  || 0);
+          const authP3  = (tot.lev_p3  || 0) + (tot.kvar_p3  || 0);
+          document.getElementById('tAdv').textContent = authAdv || '–';
+          document.getElementById('tP2').textContent  = authP2  || '–';
+          document.getElementById('tP3').textContent  = authP3  || '–';
+          if (!staleDelivery) _setCache('delivery', deliveryRows);
+        }
+      }
+    } catch(_) {}
+
     _setCache('team_stats', {
       tOrd:    document.getElementById('tOrd').textContent,
       tRev:    document.getElementById('tRev').textContent,
@@ -577,8 +624,6 @@ async function loadTeamStats() {
       tP3:     document.getElementById('tP3').textContent,
       tP38:    document.getElementById('tP38').textContent,
     });
-    badge.textContent = players.length + ' spelare';
-    badge.classList.add('loaded');
   } catch(e) {
     badge.textContent = 'Kunde inte ladda';
   }
@@ -595,6 +640,12 @@ function _renderPlayerSelect(sel, list) {
     if (p === current) o.selected = true;
     sel.appendChild(o);
   });
+  // Lägg till Beställningsöversikt som extra alternativ sist
+  const oOv = document.createElement('option');
+  oOv.value = 'BESTALLNING_OVERSIKT';
+  oOv.textContent = '📋 Beställningsöversikt';
+  if (current === 'BESTALLNING_OVERSIKT') oOv.selected = true;
+  sel.appendChild(oOv);
 }
 
 /* ── Load player list (stale-while-revalidate från allPlayers-endpoint) ── */
@@ -742,6 +793,19 @@ async function loadOrders(player) {
 
   function hideStats() { statsTop.style.display = statsProducts.style.display = 'none'; document.getElementById('ordersDivider').style.display = 'none'; }
 
+  // BESTALLNING_OVERSIKT → visa beställningsöversikt
+  if (player === 'BESTALLNING_OVERSIKT') {
+    hideStats();
+    tableContent.innerHTML = listContent.innerHTML = '';
+    orderCount.style.display = listCount.style.display = 'none';
+    document.getElementById('ordersDivider').style.display = 'none';
+    document.getElementById('tableCard').style.display = 'none';
+    document.getElementById('orderListCard').style.display = 'none';
+    _showDeliverySection(false);
+    loadPlayerOverview();
+    return;
+  }
+
   // TOTALT → visa leveransvyn istället för beställningsvyn
   if (player === 'TOTALT') {
     hideStats();
@@ -751,12 +815,14 @@ async function loadOrders(player) {
     document.getElementById('ordersDivider').style.display = 'none';
     document.getElementById('tableCard').style.display = 'none';
     document.getElementById('orderListCard').style.display = 'none';
+    _showOverviewSection(false);
     loadDelivery();
     return;
   }
 
-  // Dölj leveransvyn när en annan spelare väljs
+  // Dölj leverans- och översiktsvyn när en annan spelare väljs
   _showDeliverySection(false);
+  _showOverviewSection(false);
   document.getElementById('tableCard').style.display = '';
   document.getElementById('orderListCard').style.display = '';
 
@@ -977,6 +1043,61 @@ function _showDeliverySection(show) {
     card.classList.remove('visible');
     divider.style.display = 'none';
   }
+}
+
+/* ── Overview view helpers ── */
+function _showOverviewSection(show) {
+  const card    = document.getElementById('overviewCard');
+  const divider = document.getElementById('overviewDivider');
+  if (show) {
+    card.classList.add('visible');
+    divider.style.display = 'flex';
+  } else {
+    card.classList.remove('visible');
+    divider.style.display = 'none';
+  }
+}
+
+async function loadPlayerOverview() {
+  _showOverviewSection(true);
+  const wrap = document.getElementById('overviewTableWrap');
+  const stale = _getCache('player_overview');
+  if (stale) _renderPlayerOverview(stale);
+  else wrap.innerHTML = '<div class="spinner"></div>';
+  try {
+    const res  = await fetch(API + '?action=playerOverview');
+    const rows = await res.json();
+    _setCache('player_overview', rows);
+    _renderPlayerOverview(rows);
+  } catch(e) {
+    if (!stale) wrap.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>Kunde inte ladda översikt.</p></div>';
+  }
+}
+
+function _renderPlayerOverview(rows) {
+  const wrap = document.getElementById('overviewTableWrap');
+  if (!Array.isArray(rows) || rows.length === 0) {
+    wrap.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>Ingen data</p></div>';
+    return;
+  }
+  const players = rows.filter(r => r.name !== 'TOTALT');
+  const tot     = rows.find(r => r.name === 'TOTALT');
+  function cell(n) { return `<td class="${n ? '' : 'zero'}">${n || '–'}</td>`; }
+  let html = `<table>
+    <thead><tr>
+      <th>Spelare</th>
+      <th>Adv 2026</th><th>P2 2026</th><th>P3 2026</th>
+      <th>P2 6-pack</th><th>P3 8-pack</th>
+      <th>Adv 2025</th>
+    </tr></thead><tbody>`;
+  players.forEach(r => {
+    html += `<tr><td>${r.name}</td>${cell(r.adv)}${cell(r.p2)}${cell(r.p3)}${cell(r.p2_6)}${cell(r.p3_8)}${cell(r.adv_2025)}</tr>`;
+  });
+  if (tot) {
+    html += `<tr class="totals-row"><td>TOTALT</td>${cell(tot.adv)}${cell(tot.p2)}${cell(tot.p3)}${cell(tot.p2_6)}${cell(tot.p3_8)}${cell(tot.adv_2025)}</tr>`;
+  }
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
 }
 
 function _renderDelivery(rows) {
