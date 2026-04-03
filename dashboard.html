@@ -1148,7 +1148,7 @@ function openVinstModal(idx) {
       ${vRow('Till lagkassan (40%)', p.laget,   '#6d28d9')}
     </div>
     <div class="modal-total" style="background:${gothiaColor}">
-      <span class="modal-total-label">⛳ Gothia Cup (${fmt(GOTHIA_COST)} kr)</span>
+      <span class="modal-total-label">Gothia Cup (${fmt(GOTHIA_COST)} kr)</span>
       <span class="modal-total-value">${gothiaText}</span>
     </div>`;
   document.getElementById('modalBackdrop').classList.add('open');
@@ -1464,7 +1464,7 @@ function _renderVinstFordelning(rows) {
           </div>
         </div>
         <div class="gothia-chip ${gothiaCls}">
-          <span>⛳ Gothia Cup (${fmt(GOTHIA_COST)} kr)</span>
+          <span>Gothia Cup (${fmt(GOTHIA_COST)} kr)</span>
           <strong>${gothiaText}</strong>
         </div>
       </div>`;
@@ -1660,10 +1660,45 @@ async function loadDelivery() {
   }
 }
 
-document.getElementById('playerSelect').addEventListener('change', e => loadOrders(e.target.value));
+/* ── URL-synk: uppdatera ?spelare= och läs av vid sidladdning ── */
+function _setUrlPlayer(val) {
+  const url = new URL(location.href);
+  if (val) url.searchParams.set('spelare', val);
+  else url.searchParams.delete('spelare');
+  history.replaceState(null, '', url);
+}
+function _getUrlPlayer() {
+  return new URLSearchParams(location.search).get('spelare') || '';
+}
+
+document.getElementById('playerSelect').addEventListener('change', e => {
+  _setUrlPlayer(e.target.value);
+  loadOrders(e.target.value);
+});
 
 loadTeamStats();   // ladda lagtotal direkt vid sidstart
-loadPlayers();     // ladda spelarlista parallellt
+
+// Ladda spelarlista och välj eventuell spelare från URL
+(async () => {
+  await loadPlayers();
+  const pre = _getUrlPlayer();
+  if (pre) {
+    const sel = document.getElementById('playerSelect');
+    // Sätt värdet och trigga laddning (spelarlistan kan ha hunnit populeras av loadPlayers)
+    if ([...sel.options].some(o => o.value === pre)) {
+      sel.value = pre;
+      loadOrders(pre);
+    } else {
+      // Annars vänta lite och försök igen (allPlayers-anropet kan vara lite sent)
+      setTimeout(() => {
+        if ([...sel.options].some(o => o.value === pre)) {
+          sel.value = pre;
+          loadOrders(pre);
+        }
+      }, 1500);
+    }
+  }
+})();
 </script>
 </body>
 </html>
