@@ -303,6 +303,44 @@ td.zero { color: #c4cadc; }
 @media (min-width: 641px) {
   .delivery-list { display: none !important; }
 }
+/* ── Mobile cards: Beställningsöversikt ── */
+.overview-list { display: none; padding: 12px; flex-direction: column; gap: 8px; }
+.overview-row { background: #fff; border-radius: 12px; border: 1.5px solid var(--border); padding: 14px 16px; cursor: pointer; transition: border-color .15s, box-shadow .15s; -webkit-tap-highlight-color: transparent; }
+.overview-row:active { border-color: var(--navy-light); box-shadow: 0 0 0 3px rgba(15,42,94,.08); }
+.overview-row-name { font-weight: 700; font-size: 0.97rem; color: var(--text); margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+.overview-row-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.ov-chip { display: inline-flex; flex-direction: column; align-items: center; background: var(--bg); border-radius: 8px; padding: 5px 9px; min-width: 52px; }
+.ov-chip-label { font-size: 0.58rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; color: var(--muted); margin-bottom: 2px; }
+.ov-chip-val { font-size: 1rem; font-weight: 700; color: var(--navy); }
+.ov-chip-val.c26 { color: #059669; }
+.ov-chip-val.csplit { color: #6d28d9; }
+.ov-chip-val.c25 { color: #1e40af; }
+.ov-chip-val.zero { color: #c4cadc; font-weight: 400; font-size: 0.85rem; }
+/* ── Mobile cards: Vinstfördelning ── */
+.vinst-list { display: none; padding: 12px; flex-direction: column; gap: 8px; }
+.vinst-row { background: #fff; border-radius: 12px; border: 1.5px solid var(--border); padding: 14px 16px; cursor: pointer; transition: border-color .15s; -webkit-tap-highlight-color: transparent; }
+.vinst-row:active { border-color: var(--navy-light); }
+.vinst-row-name { font-weight: 700; font-size: 0.97rem; color: var(--text); margin-bottom: 10px; }
+.vinst-main { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+.vinst-mini { background: var(--bg); border-radius: 8px; padding: 8px 10px; }
+.vinst-mini-label { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); margin-bottom: 3px; }
+.vinst-mini-val { font-size: 1rem; font-weight: 700; color: var(--navy); white-space: nowrap; }
+.vinst-mini-val.c-green { color: #059669; }
+.vinst-mini-val.c-purple { color: #6d28d9; }
+.vinst-mini-val.c-blue { color: #1e40af; }
+.gothia-chip { border-radius: 8px; padding: 8px 12px; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
+.gothia-chip.paid { background: #dcfce7; color: #166534; }
+.gothia-chip.owing { background: #fef9c3; color: #854d0e; }
+@media (max-width: 640px) {
+  .overview-desktop { display: none !important; }
+  .overview-list { display: flex; }
+  .vinst-desktop { display: none !important; }
+  .vinst-list { display: flex; }
+}
+@media (min-width: 641px) {
+  .overview-list { display: none !important; }
+  .vinst-list { display: none !important; }
+}
 </style>
 </head>
 <body>
@@ -482,7 +520,10 @@ td.zero { color: #c4cadc; }
     <div class="overview-header">
       <h2>📋 Beställningsöversikt</h2>
     </div>
-    <div class="overview-table-wrap" id="overviewTableWrap">
+    <div class="overview-table-wrap overview-desktop" id="overviewTableWrap">
+      <div class="spinner"></div>
+    </div>
+    <div class="overview-list" id="overviewList">
       <div class="spinner"></div>
     </div>
   </div>
@@ -497,7 +538,8 @@ td.zero { color: #c4cadc; }
     <div class="vinst-note">
       60% av vinsten tillfaller spelaren · 40% till lagkassan. Baserat på 2025 Advance (50 kr/frp) och 2026 försäljning per sort.
     </div>
-    <div class="delivery-table-wrap delivery-desktop" id="vinstTableWrap"><div class="spinner"></div></div>
+    <div class="delivery-table-wrap vinst-desktop" id="vinstTableWrap"><div class="spinner"></div></div>
+    <div class="vinst-list" id="vinstList"><div class="spinner"></div></div>
   </div>
 
 </div><!-- /main -->
@@ -1040,6 +1082,79 @@ function openDeliveryModal(idx) {
   document.body.style.overflow = 'hidden';
 }
 
+/* ── Overview modal ── */
+function openOverviewModal(idx) {
+  const r = (window._overviewRows || [])[idx];
+  if (!r) return;
+  document.getElementById('modalHeader').innerHTML = `
+    <div class="modal-avatar">${esc(initials(r.name))}</div>
+    <div><div class="modal-buyer-name">${esc(r.name)}</div>
+    <div style="font-size:.85rem;color:var(--muted);margin-top:4px">Beställningsöversikt</div></div>
+    <button class="modal-close" onclick="closeModal()">&#215;</button>`;
+  function mRow(label, val, col) {
+    const c = col || 'var(--navy)';
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:.9rem;color:var(--muted)">${label}</span>
+      <span style="font-size:1rem;font-weight:700;color:${val ? c : '#c4cadc'}">${val || '–'}</span></div>`;
+  }
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-section">
+      <div class="modal-section-title" style="color:#059669">2026 Beställningar</div>
+      ${mRow('Advance 2-lag (frp)', r.adv,   '#059669')}
+      ${mRow('Premium 2-lag (frp)', r.p2,    '#059669')}
+      ${mRow('Premium 3-lag (frp)', r.p3,    '#059669')}
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title" style="color:#6d28d9">Split-pack 2026</div>
+      ${mRow('Premium 2-lag 6-pack', r.p2_6, '#6d28d9')}
+      ${mRow('Premium 3-lag 8-pack', r.p3_8, '#6d28d9')}
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title" style="color:#1e40af">2025</div>
+      ${mRow('Advance 2-lag (frp)', r.adv_2025, '#1e40af')}
+    </div>`;
+  document.getElementById('modalBackdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+/* ── Vinst modal ── */
+function openVinstModal(idx) {
+  const p = (window._vinstRows || [])[idx];
+  if (!p) return;
+  const gothiaText = p.tot === 0 ? '–'
+    : p.gothia === 0 ? (p.surplus > 0 ? `✓ Täckt  (+${fmt(p.surplus)} kr kvar)` : '✓ Täckt')
+    : `${fmt(p.gothia)} kr att betala`;
+  const gothiaColor = p.gothia === 0 ? '#059669' : '#d97706';
+  document.getElementById('modalHeader').innerHTML = `
+    <div class="modal-avatar" style="background:#6d28d9">${esc(initials(p.name))}</div>
+    <div><div class="modal-buyer-name">${esc(p.name)}</div>
+    <div style="font-size:.85rem;color:var(--muted);margin-top:4px">Vinstfördelning</div></div>
+    <button class="modal-close" onclick="closeModal()">&#215;</button>`;
+  function vRow(label, val, col) {
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:.9rem;color:var(--muted)">${label}</span>
+      <span style="font-size:1rem;font-weight:700;color:${val ? col : '#c4cadc'}">${val ? fmt(val) + ' kr' : '–'}</span></div>`;
+  }
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-section">
+      <div class="modal-section-title">Vinst</div>
+      ${vRow('Vinst 2025 (Advance)', p.v25, '#1e40af')}
+      ${vRow('Vinst 2026',           p.v26, '#059669')}
+      ${vRow('Total vinst',          p.tot, 'var(--navy)')}
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Fördelning</div>
+      ${vRow('Till spelaren (60%)',  p.spelare, '#059669')}
+      ${vRow('Till lagkassan (40%)', p.laget,   '#6d28d9')}
+    </div>
+    <div class="modal-total" style="background:${gothiaColor}">
+      <span class="modal-total-label">⛳ Gothia Cup (${fmt(GOTHIA_COST)} kr)</span>
+      <span class="modal-total-value">${gothiaText}</span>
+    </div>`;
+  document.getElementById('modalBackdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
 /* Close modal on Escape */
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
@@ -1140,13 +1255,17 @@ async function loadPlayerOverview() {
 }
 
 function _renderPlayerOverview(rows) {
-  const wrap = document.getElementById('overviewTableWrap');
+  const wrap     = document.getElementById('overviewTableWrap');
+  const listWrap = document.getElementById('overviewList');
   if (!Array.isArray(rows) || rows.length === 0) {
-    wrap.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>Ingen data</p></div>';
+    const msg = '<div class="empty-state"><div class="icon">📭</div><p>Ingen data</p></div>';
+    wrap.innerHTML = listWrap.innerHTML = msg;
     return;
   }
   const players = rows.filter(r => r.name !== 'TOTALT');
   const tot     = rows.find(r => r.name === 'TOTALT');
+  window._overviewRows = players; // för modal
+
   function gh(group, label, cls) {
     return `<th class="${cls}"><span class="col-group">${group}</span>${label}</th>`;
   }
@@ -1156,18 +1275,14 @@ function _renderPlayerOverview(rows) {
   function totCell(n, cls) {
     return `<td class="${cls}${n ? '' : ' zero'}" style="font-weight:700">${n || '–'}</td>`;
   }
+  /* ── Desktop tabell ── */
   let html = '<table class="overview-table">'
     + '<colgroup><col style="width:24%"><col style="width:11%"><col style="width:11%"><col style="width:11%"><col style="width:11%"><col style="width:11%"><col style="width:11%"></colgroup>'
-    + '<thead><tr>'
-    + '<th>Spelare</th>'
-    + gh('2026', 'Adv', 'ov-26')
-    + gh('2026', 'Prem 2', 'ov-26')
-    + gh('2026', 'Prem 3', 'ov-26')
-    + gh('Split', 'P2 6-pack', 'ov-split ov-split-first')
-    + gh('Split', 'P3 8-pack', 'ov-split')
+    + '<thead><tr><th>Spelare</th>'
+    + gh('2026', 'Adv', 'ov-26') + gh('2026', 'Prem 2', 'ov-26') + gh('2026', 'Prem 3', 'ov-26')
+    + gh('Split', 'P2 6-pack', 'ov-split ov-split-first') + gh('Split', 'P3 8-pack', 'ov-split')
     + gh('2025', 'Adv', 'ov-25 ov-25-first')
     + '</tr></thead><tbody>';
-  // Totalrad överst
   if (tot) {
     html += `<tr class="totals-row"><td>TOTALT</td>`
       + totCell(tot.adv,'ov-26-val') + totCell(tot.p2,'ov-26-val') + totCell(tot.p3,'ov-26-val')
@@ -1180,7 +1295,6 @@ function _renderPlayerOverview(rows) {
       + cell(r.p2_6,'ov-split-val ov-split-first') + cell(r.p3_8,'ov-split-val')
       + cell(r.adv_2025,'ov-25-val ov-25-first') + '</tr>';
   });
-  // Totalrad nederst
   if (tot) {
     html += `<tr class="totals-row"><td>TOTALT</td>`
       + totCell(tot.adv,'ov-26-val') + totCell(tot.p2,'ov-26-val') + totCell(tot.p3,'ov-26-val')
@@ -1189,6 +1303,29 @@ function _renderPlayerOverview(rows) {
   }
   html += '</tbody></table>';
   wrap.innerHTML = html;
+
+  /* ── Mobilkort ── */
+  function chip(label, val, cls) {
+    const vcls = val ? cls : 'zero';
+    return `<div class="ov-chip"><span class="ov-chip-label">${label}</span><span class="ov-chip-val ${vcls}">${val || '–'}</span></div>`;
+  }
+  let mHtml = '';
+  players.forEach((r, idx) => {
+    const hasSomething = r.adv || r.p2 || r.p3 || r.p2_6 || r.p3_8 || r.adv_2025;
+    mHtml += `
+      <div class="overview-row" onclick="openOverviewModal(${idx})">
+        <div class="overview-row-name">${esc(r.name)}<span class="order-chevron">›</span></div>
+        <div class="overview-row-chips">
+          ${chip('Adv 26',   r.adv,     'c26')}
+          ${chip('P2 26',    r.p2,      'c26')}
+          ${chip('P3 26',    r.p3,      'c26')}
+          ${chip('P2 6-pk',  r.p2_6,    'csplit')}
+          ${chip('P3 8-pk',  r.p3_8,    'csplit')}
+          ${chip('Adv 25',   r.adv_2025,'c25')}
+        </div>
+      </div>`;
+  });
+  listWrap.innerHTML = mHtml || '<div class="empty-state"><div class="icon">📭</div><p>Inga spelare</p></div>';
 }
 
 async function loadVinstFordelning() {
@@ -1207,15 +1344,18 @@ async function loadVinstFordelning() {
   }
 }
 
+const GOTHIA_COST = 3500;
+
 function _renderVinstFordelning(rows) {
-  const wrap  = document.getElementById('vinstTableWrap');
-  const badge = document.getElementById('vinstBadge');
+  const wrap     = document.getElementById('vinstTableWrap');
+  const listWrap = document.getElementById('vinstList');
+  const badge    = document.getElementById('vinstBadge');
   if (!Array.isArray(rows) || rows.length === 0) {
-    wrap.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>Ingen data</p></div>';
+    const msg = '<div class="empty-state"><div class="icon">📭</div><p>Ingen data</p></div>';
+    wrap.innerHTML = listWrap.innerHTML = msg;
     return;
   }
   const players = rows.filter(r => r.name !== 'TOTALT');
-  // Beräkna vinst per spelare
   const data = players.map(r => {
     const v25  = (r.adv_2025 || 0) * 50;
     const v26  = (r.adv   || 0) * VINST_PER.adv
@@ -1223,15 +1363,20 @@ function _renderVinstFordelning(rows) {
                + (r.p2_6  || 0) * VINST_PER.p2_6
                + (r.p3    || 0) * VINST_PER.p3
                + (r.p3_8  || 0) * VINST_PER.p3_8;
-    const tot  = v25 + v26;
-    return { name: r.name, v25, v26, tot,
-             spelare: Math.round(tot * 0.60),
-             laget:   Math.round(tot * 0.40) };
+    const tot      = v25 + v26;
+    const spelare  = Math.round(tot * 0.60);
+    const laget    = Math.round(tot * 0.40);
+    const gothia   = Math.max(0, GOTHIA_COST - spelare);   // kr att betala
+    const surplus  = Math.max(0, spelare - GOTHIA_COST);   // kr över efter Gothia
+    return { name: r.name, v25, v26, tot, spelare, laget, gothia, surplus };
   });
+  window._vinstRows = data; // för modal
   const sumTot      = data.reduce((s, p) => s + p.tot,     0);
   const sumSpelarna = data.reduce((s, p) => s + p.spelare, 0);
   const sumLaget    = data.reduce((s, p) => s + p.laget,   0);
+  const sumGothia   = data.reduce((s, p) => s + p.gothia,  0);
   badge.textContent = fmt(sumTot) + ' kr total vinst';
+
   function gh(group, label, cls) {
     return `<th class="${cls}"><span class="col-group">${group}</span>${label}</th>`;
   }
@@ -1239,44 +1384,92 @@ function _renderVinstFordelning(rows) {
     return n ? `<td class="${cls}" style="text-align:right">${fmt(n)}&nbsp;kr</td>`
              : `<td style="text-align:right;color:#c4cadc">–</td>`;
   }
-  let html = '<table class="delivery-table">';
-  html += '<thead><tr>';
+  function gothiaCell(p) {
+    if (!p.tot) return `<td style="text-align:right;color:#c4cadc">–</td>`;
+    if (p.gothia === 0) {
+      const s = p.surplus > 0 ? `+${fmt(p.surplus)} kr` : '✓ Täckt';
+      return `<td style="text-align:right;color:#059669;font-weight:600">${s}</td>`;
+    }
+    return `<td style="text-align:right;color:#d97706;font-weight:600">${fmt(p.gothia)}&nbsp;kr</td>`;
+  }
+
+  /* ── Desktop tabell ── */
+  let html = '<table class="delivery-table"><thead><tr>';
   html += '<th>Spelare</th>';
   html += gh('2025', 'Adv-vinst', 'split-kvar');
   html += gh('2026', 'Vinst 2026', 'lev');
   html += gh('Totalt', 'Total vinst', 'kvar kvar-first');
   html += gh('60% → Spelare', 'Till spelaren', 'lev');
   html += gh('40% → Laget', 'Till lagkassan', 'split-lev split-first');
+  html += gh('Gothia Cup', `Att betala (${fmt(GOTHIA_COST)} kr)`, 'kvar split-kvar-first');
   html += '</tr></thead><tbody>';
   // Totalrad överst
+  const totGothiaHtml = sumGothia > 0
+    ? `<td class="split-kvar-first kvar-val" style="text-align:right;font-weight:700">${fmt(sumGothia)}&nbsp;kr</td>`
+    : `<td class="split-kvar-first" style="text-align:right;color:#059669;font-weight:700">✓ Täckt</td>`;
   html += `<tr class="totals-row"><td>TOTALT</td>`
-    + `<td style="text-align:right;color:#c4cadc">–</td>`
-    + `<td style="text-align:right;color:#c4cadc">–</td>`
+    + `<td style="text-align:right;color:#c4cadc">–</td><td style="text-align:right;color:#c4cadc">–</td>`
     + `<td class="kvar-first kvar-val" style="text-align:right;font-weight:700">${fmt(sumTot)}&nbsp;kr</td>`
     + `<td class="lev-val" style="text-align:right;font-weight:700">${fmt(sumSpelarna)}&nbsp;kr</td>`
     + `<td class="split-first split-lev-val" style="text-align:right;font-weight:700">${fmt(sumLaget)}&nbsp;kr</td>`
-    + '</tr>';
+    + totGothiaHtml + '</tr>';
   data.forEach(p => {
     html += `<tr><td>${esc(p.name)}</td>`
-      + krCell(p.v25,     'split-val')
-      + krCell(p.v26,     'lev-val')
+      + krCell(p.v25, 'split-val')
+      + krCell(p.v26, 'lev-val')
       + (p.tot ? `<td class="kvar-first kvar-val" style="text-align:right">${fmt(p.tot)}&nbsp;kr</td>`
                : `<td class="kvar-first" style="text-align:right;color:#c4cadc">–</td>`)
       + krCell(p.spelare, 'lev-val')
       + (p.laget ? `<td class="split-first split-lev-val" style="text-align:right">${fmt(p.laget)}&nbsp;kr</td>`
                  : `<td class="split-first" style="text-align:right;color:#c4cadc">–</td>`)
+      + gothiaCell(p)
       + '</tr>';
   });
   // Totalrad nederst
   html += `<tr class="totals-row"><td>TOTALT</td>`
-    + `<td style="text-align:right;color:#c4cadc">–</td>`
-    + `<td style="text-align:right;color:#c4cadc">–</td>`
+    + `<td style="text-align:right;color:#c4cadc">–</td><td style="text-align:right;color:#c4cadc">–</td>`
     + `<td class="kvar-first kvar-val" style="text-align:right;font-weight:700">${fmt(sumTot)}&nbsp;kr</td>`
     + `<td class="lev-val" style="text-align:right;font-weight:700">${fmt(sumSpelarna)}&nbsp;kr</td>`
     + `<td class="split-first split-lev-val" style="text-align:right;font-weight:700">${fmt(sumLaget)}&nbsp;kr</td>`
-    + '</tr>';
+    + totGothiaHtml + '</tr>';
   html += '</tbody></table>';
   wrap.innerHTML = html;
+
+  /* ── Mobilkort ── */
+  let mHtml = '';
+  data.forEach((p, idx) => {
+    const gothiaCls  = p.tot === 0 ? '' : (p.gothia === 0 ? 'paid' : 'owing');
+    const gothiaText = p.tot === 0 ? '–'
+      : p.gothia === 0 ? (p.surplus > 0 ? `✓ Täckt  +${fmt(p.surplus)} kr kvar` : '✓ Täckt')
+      : `${fmt(p.gothia)} kr att betala`;
+    mHtml += `
+      <div class="vinst-row" onclick="openVinstModal(${idx})">
+        <div class="vinst-row-name">${esc(p.name)}</div>
+        <div class="vinst-main">
+          <div class="vinst-mini">
+            <div class="vinst-mini-label">Total vinst</div>
+            <div class="vinst-mini-val">${p.tot ? fmt(p.tot) + ' kr' : '–'}</div>
+          </div>
+          <div class="vinst-mini">
+            <div class="vinst-mini-label">Till spelaren (60%)</div>
+            <div class="vinst-mini-val c-green">${p.spelare ? fmt(p.spelare) + ' kr' : '–'}</div>
+          </div>
+          <div class="vinst-mini">
+            <div class="vinst-mini-label">Till lagkassan (40%)</div>
+            <div class="vinst-mini-val c-purple">${p.laget ? fmt(p.laget) + ' kr' : '–'}</div>
+          </div>
+          <div class="vinst-mini">
+            <div class="vinst-mini-label">Vinst 2025</div>
+            <div class="vinst-mini-val c-blue">${p.v25 ? fmt(p.v25) + ' kr' : '–'}</div>
+          </div>
+        </div>
+        <div class="gothia-chip ${gothiaCls}">
+          <span>⛳ Gothia Cup (${fmt(GOTHIA_COST)} kr)</span>
+          <strong>${gothiaText}</strong>
+        </div>
+      </div>`;
+  });
+  listWrap.innerHTML = mHtml || '<div class="empty-state"><div class="icon">📭</div><p>Inga spelare</p></div>';
 }
 
 function _renderDelivery(rows) {
