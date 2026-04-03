@@ -193,15 +193,31 @@ td.zero { color: #c4cadc; }
 .overview-card.visible { display: block; }
 .overview-header { background: var(--navy); color: #fff; padding: 16px 24px; display: flex; align-items: center; gap: 12px; }
 .overview-header h2 { font-size: 0.95rem; font-weight: 600; margin: 0; }
-.overview-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-.overview-table-wrap table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
-.overview-table-wrap thead th { background: #f1f5fd; color: var(--navy); font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; padding: 11px 14px; text-align: right; border-bottom: 2px solid var(--border); white-space: nowrap; }
-.overview-table-wrap thead th:first-child { text-align: left; }
-.overview-table-wrap tbody td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; white-space: nowrap; text-align: right; }
-.overview-table-wrap tbody td:first-child { text-align: left; font-weight: 500; }
-.overview-table-wrap tbody tr:last-child td { border-bottom: none; }
-.overview-table-wrap .totals-row td { font-weight: 700; background: #f8fafc; border-top: 2px solid var(--border); }
-.overview-table-wrap .zero { color: var(--muted); }
+/* Overview – ingen sidscroll, delivery-table-stil med grupperade rubriker */
+.overview-table-wrap { overflow: visible; }
+.overview-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.8rem; table-layout: fixed; }
+.overview-table thead th { background: #f1f5fd; color: var(--navy); font-weight: 600; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.4px; padding: 7px 8px 9px; text-align: right; border-bottom: 2px solid var(--border); }
+.overview-table thead th:first-child { text-align: left; }
+.overview-table thead th .col-group { display: block; font-size: 0.55rem; font-weight: 700; letter-spacing: 0.3px; margin-bottom: 2px; opacity: 0.8; }
+.overview-table thead th.ov-26     { background: #d1fae5; color: #065f46; }
+.overview-table thead th.ov-split  { background: #ede9fe; color: #5b21b6; }
+.overview-table thead th.ov-25     { background: #dbeafe; color: #1e40af; }
+.overview-table thead th.ov-split-first { border-left: 2px solid #a78bfa; }
+.overview-table thead th.ov-25-first    { border-left: 2px solid #93c5fd; }
+.overview-table tbody td { padding: 9px 8px; border-bottom: 1px solid var(--border); text-align: right; vertical-align: middle; }
+.overview-table tbody td:first-child { text-align: left; font-weight: 500; }
+.overview-table tbody td.ov-split-first { border-left: 2px solid #ddd6fe; }
+.overview-table tbody td.ov-25-first    { border-left: 2px solid #bfdbfe; }
+.overview-table tbody tr:last-child td { border-bottom: none; }
+.overview-table .totals-row td { font-weight: 700; background: #eef2f8; color: var(--navy); border-top: 2px solid var(--border); border-bottom: none; }
+.overview-table .zero { color: #c4cadc; font-weight: 400; }
+.overview-table td.ov-26-val    { color: #059669; font-weight: 600; }
+.overview-table td.ov-split-val { color: #6d28d9; font-weight: 600; }
+.overview-table td.ov-25-val    { color: #1e40af; font-weight: 600; }
+/* Vinst card – återanvänder delivery-card-stil */
+.vinst-card { background: var(--card); border-radius: 16px; box-shadow: 0 2px 6px rgba(15,42,94,.08), 0 8px 24px rgba(15,42,94,.08); border: 1px solid var(--border); overflow: hidden; display: none; }
+.vinst-card.visible { display: block; }
+.vinst-note { padding: 10px 20px; background: #fafbff; border-bottom: 1px solid var(--border); font-size: .8rem; color: var(--muted); }
 .delivery-header { background: var(--navy); color: #fff; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .delivery-header h2 { font-size: 0.95rem; font-weight: 600; margin: 0; }
 .delivery-badge { background: rgba(255,255,255,0.15); color: #fff; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; }
@@ -471,6 +487,19 @@ td.zero { color: #c4cadc; }
     </div>
   </div>
 
+  <!-- VINST VIEW (visas när Vinstfördelning väljs) -->
+  <div class="section-divider" id="vinstDivider" style="display:none"><div class="section-divider-line"></div><span class="section-divider-label">Vinstfördelning per spelare</span><div class="section-divider-line"></div></div>
+  <div class="vinst-card" id="vinstCard">
+    <div class="delivery-header">
+      <h2>💰 Vinstfördelning</h2>
+      <span class="delivery-badge" id="vinstBadge"></span>
+    </div>
+    <div class="vinst-note">
+      60% av vinsten tillfaller spelaren · 40% till lagkassan. Baserat på 2025 Advance (50 kr/frp) och 2026 försäljning per sort.
+    </div>
+    <div class="delivery-table-wrap delivery-desktop" id="vinstTableWrap"><div class="spinner"></div></div>
+  </div>
+
 </div><!-- /main -->
 
 <!-- MODAL (mobile) -->
@@ -646,6 +675,12 @@ function _renderPlayerSelect(sel, list) {
   oOv.textContent = '📋 Beställningsöversikt';
   if (current === 'BESTALLNING_OVERSIKT') oOv.selected = true;
   sel.appendChild(oOv);
+  // Lägg till Vinstfördelning
+  const oVinst = document.createElement('option');
+  oVinst.value = 'VINST_FORDELNING';
+  oVinst.textContent = '💰 Vinstfördelning';
+  if (current === 'VINST_FORDELNING') oVinst.selected = true;
+  sel.appendChild(oVinst);
 }
 
 /* ── Load player list (stale-while-revalidate från allPlayers-endpoint) ── */
@@ -802,7 +837,22 @@ async function loadOrders(player) {
     document.getElementById('tableCard').style.display = 'none';
     document.getElementById('orderListCard').style.display = 'none';
     _showDeliverySection(false);
+    _showVinstSection(false);
     loadPlayerOverview();
+    return;
+  }
+
+  // VINST_FORDELNING → visa vinstfördelning
+  if (player === 'VINST_FORDELNING') {
+    hideStats();
+    tableContent.innerHTML = listContent.innerHTML = '';
+    orderCount.style.display = listCount.style.display = 'none';
+    document.getElementById('ordersDivider').style.display = 'none';
+    document.getElementById('tableCard').style.display = 'none';
+    document.getElementById('orderListCard').style.display = 'none';
+    _showDeliverySection(false);
+    _showOverviewSection(false);
+    loadVinstFordelning();
     return;
   }
 
@@ -816,13 +866,15 @@ async function loadOrders(player) {
     document.getElementById('tableCard').style.display = 'none';
     document.getElementById('orderListCard').style.display = 'none';
     _showOverviewSection(false);
+    _showVinstSection(false);
     loadDelivery();
     return;
   }
 
-  // Dölj leverans- och översiktsvyn när en annan spelare väljs
+  // Dölj leverans-, översikts- och vinstvy när en annan spelare väljs
   _showDeliverySection(false);
   _showOverviewSection(false);
+  _showVinstSection(false);
   document.getElementById('tableCard').style.display = '';
   document.getElementById('orderListCard').style.display = '';
 
@@ -1058,6 +1110,19 @@ function _showOverviewSection(show) {
   }
 }
 
+/* ── Vinst view helpers ── */
+function _showVinstSection(show) {
+  const card    = document.getElementById('vinstCard');
+  const divider = document.getElementById('vinstDivider');
+  if (show) {
+    card.classList.add('visible');
+    divider.style.display = 'flex';
+  } else {
+    card.classList.remove('visible');
+    divider.style.display = 'none';
+  }
+}
+
 async function loadPlayerOverview() {
   _showOverviewSection(true);
   const wrap = document.getElementById('overviewTableWrap');
@@ -1082,20 +1147,134 @@ function _renderPlayerOverview(rows) {
   }
   const players = rows.filter(r => r.name !== 'TOTALT');
   const tot     = rows.find(r => r.name === 'TOTALT');
-  function cell(n) { return `<td class="${n ? '' : 'zero'}">${n || '–'}</td>`; }
-  let html = `<table>
-    <thead><tr>
-      <th>Spelare</th>
-      <th>Adv 2026</th><th>P2 2026</th><th>P3 2026</th>
-      <th>P2 6-pack</th><th>P3 8-pack</th>
-      <th>Adv 2025</th>
-    </tr></thead><tbody>`;
-  players.forEach(r => {
-    html += `<tr><td>${r.name}</td>${cell(r.adv)}${cell(r.p2)}${cell(r.p3)}${cell(r.p2_6)}${cell(r.p3_8)}${cell(r.adv_2025)}</tr>`;
-  });
-  if (tot) {
-    html += `<tr class="totals-row"><td>TOTALT</td>${cell(tot.adv)}${cell(tot.p2)}${cell(tot.p3)}${cell(tot.p2_6)}${cell(tot.p3_8)}${cell(tot.adv_2025)}</tr>`;
+  function gh(group, label, cls) {
+    return `<th class="${cls}"><span class="col-group">${group}</span>${label}</th>`;
   }
+  function cell(n, cls) {
+    return `<td class="${cls}${n ? '' : ' zero'}">${n || '–'}</td>`;
+  }
+  function totCell(n, cls) {
+    return `<td class="${cls}${n ? '' : ' zero'}" style="font-weight:700">${n || '–'}</td>`;
+  }
+  let html = '<table class="overview-table">'
+    + '<colgroup><col style="width:24%"><col style="width:11%"><col style="width:11%"><col style="width:11%"><col style="width:11%"><col style="width:11%"><col style="width:11%"></colgroup>'
+    + '<thead><tr>'
+    + '<th>Spelare</th>'
+    + gh('2026', 'Adv', 'ov-26')
+    + gh('2026', 'Prem 2', 'ov-26')
+    + gh('2026', 'Prem 3', 'ov-26')
+    + gh('Split', 'P2 6-pack', 'ov-split ov-split-first')
+    + gh('Split', 'P3 8-pack', 'ov-split')
+    + gh('2025', 'Adv', 'ov-25 ov-25-first')
+    + '</tr></thead><tbody>';
+  // Totalrad överst
+  if (tot) {
+    html += `<tr class="totals-row"><td>TOTALT</td>`
+      + totCell(tot.adv,'ov-26-val') + totCell(tot.p2,'ov-26-val') + totCell(tot.p3,'ov-26-val')
+      + totCell(tot.p2_6,'ov-split-val ov-split-first') + totCell(tot.p3_8,'ov-split-val')
+      + totCell(tot.adv_2025,'ov-25-val ov-25-first') + '</tr>';
+  }
+  players.forEach(r => {
+    html += `<tr><td>${esc(r.name)}</td>`
+      + cell(r.adv,'ov-26-val') + cell(r.p2,'ov-26-val') + cell(r.p3,'ov-26-val')
+      + cell(r.p2_6,'ov-split-val ov-split-first') + cell(r.p3_8,'ov-split-val')
+      + cell(r.adv_2025,'ov-25-val ov-25-first') + '</tr>';
+  });
+  // Totalrad nederst
+  if (tot) {
+    html += `<tr class="totals-row"><td>TOTALT</td>`
+      + totCell(tot.adv,'ov-26-val') + totCell(tot.p2,'ov-26-val') + totCell(tot.p3,'ov-26-val')
+      + totCell(tot.p2_6,'ov-split-val ov-split-first') + totCell(tot.p3_8,'ov-split-val')
+      + totCell(tot.adv_2025,'ov-25-val ov-25-first') + '</tr>';
+  }
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+
+async function loadVinstFordelning() {
+  _showVinstSection(true);
+  const wrap = document.getElementById('vinstTableWrap');
+  const stale = _getCache('player_overview');
+  if (stale) _renderVinstFordelning(stale);
+  else wrap.innerHTML = '<div class="spinner"></div>';
+  try {
+    const res  = await fetch(API + '?action=playerOverview');
+    const rows = await res.json();
+    _setCache('player_overview', rows);
+    _renderVinstFordelning(rows);
+  } catch(e) {
+    if (!stale) wrap.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>Kunde inte ladda data.</p></div>';
+  }
+}
+
+function _renderVinstFordelning(rows) {
+  const wrap  = document.getElementById('vinstTableWrap');
+  const badge = document.getElementById('vinstBadge');
+  if (!Array.isArray(rows) || rows.length === 0) {
+    wrap.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>Ingen data</p></div>';
+    return;
+  }
+  const players = rows.filter(r => r.name !== 'TOTALT');
+  // Beräkna vinst per spelare
+  const data = players.map(r => {
+    const v25  = (r.adv_2025 || 0) * 50;
+    const v26  = (r.adv   || 0) * VINST_PER.adv
+               + (r.p2    || 0) * VINST_PER.p2
+               + (r.p2_6  || 0) * VINST_PER.p2_6
+               + (r.p3    || 0) * VINST_PER.p3
+               + (r.p3_8  || 0) * VINST_PER.p3_8;
+    const tot  = v25 + v26;
+    return { name: r.name, v25, v26, tot,
+             spelare: Math.round(tot * 0.60),
+             laget:   Math.round(tot * 0.40) };
+  });
+  const sumTot      = data.reduce((s, p) => s + p.tot,     0);
+  const sumSpelarna = data.reduce((s, p) => s + p.spelare, 0);
+  const sumLaget    = data.reduce((s, p) => s + p.laget,   0);
+  badge.textContent = fmt(sumTot) + ' kr total vinst';
+  function gh(group, label, cls) {
+    return `<th class="${cls}"><span class="col-group">${group}</span>${label}</th>`;
+  }
+  function krCell(n, cls) {
+    return n ? `<td class="${cls}" style="text-align:right">${fmt(n)}&nbsp;kr</td>`
+             : `<td style="text-align:right;color:#c4cadc">–</td>`;
+  }
+  let html = '<table class="delivery-table">';
+  html += '<thead><tr>';
+  html += '<th>Spelare</th>';
+  html += gh('2025', 'Adv-vinst', 'split-kvar');
+  html += gh('2026', 'Vinst 2026', 'lev');
+  html += gh('Totalt', 'Total vinst', 'kvar kvar-first');
+  html += gh('60% → Spelare', 'Till spelaren', 'lev');
+  html += gh('40% → Laget', 'Till lagkassan', 'split-lev split-first');
+  html += '</tr></thead><tbody>';
+  // Totalrad överst
+  html += `<tr class="totals-row"><td>TOTALT</td>`
+    + `<td style="text-align:right;color:#c4cadc">–</td>`
+    + `<td style="text-align:right;color:#c4cadc">–</td>`
+    + `<td class="kvar-first kvar-val" style="text-align:right;font-weight:700">${fmt(sumTot)}&nbsp;kr</td>`
+    + `<td class="lev-val" style="text-align:right;font-weight:700">${fmt(sumSpelarna)}&nbsp;kr</td>`
+    + `<td class="split-first split-lev-val" style="text-align:right;font-weight:700">${fmt(sumLaget)}&nbsp;kr</td>`
+    + '</tr>';
+  data.forEach(p => {
+    html += `<tr><td>${esc(p.name)}</td>`
+      + krCell(p.v25,     'split-val')
+      + krCell(p.v26,     'lev-val')
+      + (p.tot ? `<td class="kvar-first kvar-val" style="text-align:right">${fmt(p.tot)}&nbsp;kr</td>`
+               : `<td class="kvar-first" style="text-align:right;color:#c4cadc">–</td>`)
+      + krCell(p.spelare, 'lev-val')
+      + (p.laget ? `<td class="split-first split-lev-val" style="text-align:right">${fmt(p.laget)}&nbsp;kr</td>`
+                 : `<td class="split-first" style="text-align:right;color:#c4cadc">–</td>`)
+      + '</tr>';
+  });
+  // Totalrad nederst
+  html += `<tr class="totals-row"><td>TOTALT</td>`
+    + `<td style="text-align:right;color:#c4cadc">–</td>`
+    + `<td style="text-align:right;color:#c4cadc">–</td>`
+    + `<td class="kvar-first kvar-val" style="text-align:right;font-weight:700">${fmt(sumTot)}&nbsp;kr</td>`
+    + `<td class="lev-val" style="text-align:right;font-weight:700">${fmt(sumSpelarna)}&nbsp;kr</td>`
+    + `<td class="split-first split-lev-val" style="text-align:right;font-weight:700">${fmt(sumLaget)}&nbsp;kr</td>`
+    + '</tr>';
   html += '</tbody></table>';
   wrap.innerHTML = html;
 }
