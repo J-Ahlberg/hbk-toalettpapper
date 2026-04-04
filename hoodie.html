@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HBK F14 – Hoodie-beställning</title>
+<title>HBK F14 – Hoodie-röstning</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -20,13 +20,7 @@
     --radius: 14px;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--cream);
-    color: var(--dark);
-    min-height: 100vh;
-  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--dark); min-height: 100vh; }
 
   .view { display: none; }
   .view.active { display: block; }
@@ -41,11 +35,10 @@
     overflow: hidden;
   }
   .order-hero::after {
-    content: '🧥';
+    content: '🗳️';
     position: absolute;
     font-size: 9rem;
-    right: -20px;
-    top: -10px;
+    right: -20px; top: -10px;
     opacity: 0.07;
     transform: rotate(15deg);
   }
@@ -69,26 +62,11 @@
     line-height: 1;
     margin-bottom: 8px;
   }
-  .order-hero p {
-    color: rgba(255,255,255,0.65);
-    font-size: 0.92rem;
-    max-width: 420px;
-    margin: 0 auto;
-    line-height: 1.5;
-  }
-  .logo-img {
-    width: 52px; height: 52px;
-    object-fit: contain;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
-    margin-bottom: 14px;
-  }
+  .order-hero p { color: rgba(255,255,255,0.65); font-size: 0.92rem; max-width: 420px; margin: 0 auto; line-height: 1.5; }
+  .logo-img { width: 52px; height: 52px; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3)); margin-bottom: 14px; }
 
   /* ── BODY ─────────────────────────────────── */
-  .order-body {
-    max-width: 620px;
-    margin: 0 auto;
-    padding: 28px 16px 80px;
-  }
+  .order-body { max-width: 620px; margin: 0 auto; padding: 28px 16px 80px; }
 
   .section-title {
     font-family: 'Bebas Neue', sans-serif;
@@ -101,16 +79,10 @@
     align-items: center;
     gap: 8px;
   }
-  .section-sub {
-    font-size: 0.8rem;
-    color: #888;
-    margin-bottom: 14px;
-  }
+  .section-sub { font-size: 0.8rem; color: #888; margin-bottom: 14px; }
 
-  /* ── HOODIE GROUP ─────────────────────────── */
-  .hoodie-group {
-    margin-bottom: 24px;
-  }
+  /* ── GROUP ────────────────────────────────── */
+  .hoodie-group { margin-bottom: 24px; }
   .hoodie-group-label {
     font-size: 0.72rem;
     font-weight: 700;
@@ -123,75 +95,54 @@
     align-items: center;
     gap: 6px;
   }
-  .group-divider {
-    flex: 1;
-    height: 1px;
-    background: #d8e3f5;
-  }
+  .group-divider { flex: 1; height: 1px; background: #d8e3f5; }
 
   /* ── HOODIE CARD ──────────────────────────── */
   .hoodie-card {
     background: white;
     border: 2.5px solid #d8e3f5;
     border-radius: var(--radius);
-    padding: 0;
     display: flex;
     align-items: stretch;
-    cursor: pointer;
-    transition: border-color 0.2s, box-shadow 0.2s;
     overflow: hidden;
     margin-bottom: 10px;
-    user-select: none;
     position: relative;
+    transition: border-color 0.2s, box-shadow 0.2s;
   }
-  .hoodie-card:hover { border-color: var(--navy2); box-shadow: 0 2px 14px rgba(26,63,128,0.1); }
-  .hoodie-card.selected {
-    border-color: var(--navy);
-    box-shadow: 0 3px 16px rgba(15,42,94,0.15);
-  }
-  .hoodie-card input[type="radio"] {
-    position: absolute; opacity: 0; width: 0; height: 0;
-  }
+  .hoodie-card.selected { border-color: var(--navy); box-shadow: 0 3px 16px rgba(15,42,94,0.15); }
+  .hoodie-card input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
 
-  /* Photo/swatch area */
+  /* Photo */
   .hoodie-photo {
     width: 96px;
-    min-height: 90px;
+    min-height: 96px;
     flex-shrink: 0;
     position: relative;
     overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    cursor: pointer;
   }
   .hoodie-photo img {
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     object-fit: cover;
     display: block;
     position: relative;
     z-index: 1;
   }
-  /* Fallback color swatch shown behind img; visible if img fails to load */
-  .hoodie-photo::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-  }
-  /* Per-variant swatch fallbacks */
+  .hoodie-photo::before { content: ''; position: absolute; inset: 0; z-index: 0; }
+
+  /* Swatches */
   .swatch-trumpet-navy::before    { background: linear-gradient(160deg,#0f2a5e 50%,#3a5080 100%); }
   .swatch-trumpet-blue::before    { background: linear-gradient(160deg,#1a5fcc 50%,#3b82f6 100%); }
   .swatch-fenders-lilac::before   { background: linear-gradient(160deg,#3d3d3d 50%,#b07ab0 100%); }
   .swatch-fenders-navy::before    { background: linear-gradient(160deg,#0f2a5e 50%,#1a3f80 100%); }
   .swatch-horn-sky::before        { background: linear-gradient(160deg,#38bdf8 45%,#0ea5e9 100%); }
   .swatch-horn-navy::before       { background: linear-gradient(160deg,#0f2a5e 45%,#2563eb 100%); }
-  .swatch-horn-white::before      { background: linear-gradient(160deg,#f8fafc 50%,#dde3ef 100%); border-right:1px solid #dde; }
+  .swatch-horn-white::before      { background: linear-gradient(160deg,#f8fafc 50%,#dde3ef 100%); }
   .swatch-tiamat-navy::before     { background: linear-gradient(160deg,#0f2a5e 50%,#f8fafc 100%); }
   .swatch-yaruga-navy::before     { background: linear-gradient(160deg,#0f2a5e 55%,#1e3a5f 100%); }
   .swatch-yaruga-lilac::before    { background: linear-gradient(160deg,#c4aee8 45%,#9d7bcf 100%); }
 
-  /* Selected overlay */
+  /* Selected checkmark */
   .hoodie-card.selected .hoodie-photo::after {
     content: '✓';
     position: absolute;
@@ -208,7 +159,24 @@
     z-index: 2;
   }
 
-  /* Text area */
+  /* Vote count badge on photo */
+  .vote-badge {
+    position: absolute;
+    bottom: 6px; right: 6px;
+    background: rgba(15,42,94,0.82);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    z-index: 3;
+    white-space: nowrap;
+    backdrop-filter: blur(2px);
+    display: none; /* shown when data loaded */
+  }
+  .vote-badge.has-votes { display: block; }
+
+  /* Info area */
   .hoodie-info {
     flex: 1;
     padding: 12px 14px;
@@ -218,42 +186,67 @@
     gap: 3px;
     min-width: 0;
   }
-  .hoodie-name {
-    font-weight: 700;
-    font-size: 0.92rem;
-    color: var(--dark);
-    line-height: 1.3;
-  }
-  .hoodie-color {
-    font-size: 0.77rem;
-    color: #777;
-  }
-  .hoodie-meta {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 4px;
-    flex-wrap: wrap;
-  }
-  .badge {
-    font-size: 0.62rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    padding: 3px 8px;
-    border-radius: 20px;
-  }
+  .hoodie-name { font-weight: 700; font-size: 0.92rem; color: var(--dark); line-height: 1.3; }
+  .hoodie-color { font-size: 0.77rem; color: #777; }
+  .hoodie-meta { display: flex; align-items: center; gap: 6px; margin-top: 5px; flex-wrap: wrap; }
+
+  .badge { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 3px 8px; border-radius: 20px; }
   .badge-zip      { background: #e8f0fe; color: #3b5eb8; }
   .badge-pullover { background: #f0faf4; color: #2e7d53; }
   .badge-jacket   { background: #fdf4e7; color: #b45309; }
   .badge-training { background: #f5f0ff; color: #6d28d9; }
 
-  /* ── SIZE GRID ────────────────────────────── */
-  .size-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 8px;
+  /* "Visa röster" button */
+  .btn-show-voters {
+    background: none;
+    border: 1.5px solid #d8e3f5;
+    border-radius: 20px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--mid);
+    padding: 3px 10px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+    white-space: nowrap;
+    display: none; /* shown when data loaded */
   }
+  .btn-show-voters.visible { display: inline-flex; align-items: center; gap: 4px; }
+  .btn-show-voters:hover { border-color: var(--navy); color: var(--navy); background: #eef2f8; }
+
+  /* Select area */
+  .hoodie-select {
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    flex-shrink: 0;
+  }
+  .radio-circle {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid #ccd;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .hoodie-card.selected .radio-circle {
+    background: var(--navy);
+    border-color: var(--navy);
+  }
+  .radio-circle::after {
+    content: '';
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: white;
+    display: none;
+  }
+  .hoodie-card.selected .radio-circle::after { display: block; }
+
+  /* ── SIZE ─────────────────────────────────── */
+  .size-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
   @media (max-width: 380px) { .size-grid { grid-template-columns: repeat(3, 1fr); } }
   .size-btn {
     background: white;
@@ -273,94 +266,149 @@
 
   /* ── FORM ─────────────────────────────────── */
   .form-group { margin-bottom: 16px; }
-  .form-label {
-    display: block;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--mid);
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-  }
-  .form-input {
-    width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #d8e3f5;
-    border-radius: 10px;
-    font-size: 0.95rem;
-    font-family: 'DM Sans', sans-serif;
-    color: var(--dark);
-    background: white;
-    outline: none;
-    transition: border-color 0.2s;
-  }
+  .form-label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--mid); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.8px; }
+  .form-input { width: 100%; padding: 12px 16px; border: 2px solid #d8e3f5; border-radius: 10px; font-size: 0.95rem; font-family: 'DM Sans', sans-serif; color: var(--dark); background: white; outline: none; transition: border-color 0.2s; }
   .form-input:focus { border-color: var(--navy2); }
   .form-input.error { border-color: var(--red); }
   .error-msg { color: var(--red); font-size: 0.78rem; margin-top: 5px; }
 
   /* ── SUMMARY ──────────────────────────────── */
-  .order-summary {
-    background: var(--navy);
-    color: white;
-    border-radius: var(--radius);
-    padding: 20px 22px;
-    margin-top: 24px;
-    display: none;
-  }
-  .summary-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.1rem;
-    letter-spacing: 2px;
-    margin-bottom: 12px;
-    opacity: 0.75;
-  }
-  .summary-line {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.88rem;
-    margin-bottom: 7px;
-    opacity: 0.85;
-    gap: 12px;
-  }
+  .order-summary { background: var(--navy); color: white; border-radius: var(--radius); padding: 20px 22px; margin-top: 24px; display: none; }
+  .summary-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 2px; margin-bottom: 12px; opacity: 0.75; }
+  .summary-line { display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 7px; opacity: 0.85; gap: 12px; }
   .summary-line span:last-child { font-weight: 600; flex-shrink: 0; }
-  .summary-note {
-    font-size: 0.75rem;
-    opacity: 0.55;
-    margin-top: 10px;
-    border-top: 1px solid rgba(255,255,255,0.15);
-    padding-top: 10px;
-    line-height: 1.5;
-  }
+  .summary-note { font-size: 0.75rem; opacity: 0.55; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 10px; line-height: 1.5; }
 
   /* ── SUBMIT ───────────────────────────────── */
   .btn-submit {
-    width: 100%;
-    background: var(--navy);
-    color: white;
-    border: none;
-    border-radius: var(--radius);
-    padding: 18px;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.4rem;
-    letter-spacing: 2px;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: background 0.2s, transform 0.15s;
+    width: 100%; background: var(--navy); color: white; border: none; border-radius: var(--radius);
+    padding: 18px; font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 2px;
+    cursor: pointer; margin-top: 20px; transition: background 0.2s, transform 0.15s;
     box-shadow: 0 4px 20px rgba(15,42,94,0.25);
   }
   .btn-submit:hover { background: var(--navy2); transform: translateY(-1px); }
   .btn-submit:disabled { background: #aaa; cursor: not-allowed; transform: none; box-shadow: none; }
 
-  .warn-box {
-    background: #fff8e8;
-    border: 1.5px solid #f0a500;
-    border-radius: 10px;
-    padding: 12px 16px;
-    font-size: 0.84rem;
-    color: #856404;
-    margin-top: 12px;
-    display: none;
+  .warn-box { background: #fff8e8; border: 1.5px solid #f0a500; border-radius: 10px; padding: 12px 16px; font-size: 0.84rem; color: #856404; margin-top: 12px; display: none; }
+
+  /* ── VOTERS MODAL ─────────────────────────── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(5,14,39,0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 100;
+    padding: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
   }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal-card {
+    background: white;
+    border-radius: 24px 24px 0 0;
+    padding: 0;
+    width: 100%;
+    max-width: 520px;
+    max-height: 80vh;
+    overflow-y: auto;
+    transform: translateY(40px);
+    transition: transform 0.25s cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 -8px 40px rgba(0,0,0,0.2);
+  }
+  .modal-overlay.open .modal-card { transform: translateY(0); }
+
+  .modal-pull { width: 40px; height: 4px; background: #dde; border-radius: 4px; margin: 12px auto 0; }
+
+  .modal-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px 14px;
+    border-bottom: 1px solid #eef2f8;
+  }
+  .modal-swatch {
+    width: 56px; height: 56px;
+    border-radius: 12px;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .modal-swatch img { width: 100%; height: 100%; object-fit: cover; display: block; position: relative; z-index: 1; }
+  .modal-swatch::before { content: ''; position: absolute; inset: 0; z-index: 0; }
+
+  .modal-hoodie-name { font-weight: 700; font-size: 1rem; color: var(--dark); }
+  .modal-hoodie-color { font-size: 0.8rem; color: #888; margin-top: 2px; }
+
+  .modal-close {
+    margin-left: auto;
+    background: #eef2f8;
+    border: none;
+    border-radius: 50%;
+    width: 32px; height: 32px;
+    font-size: 1rem;
+    cursor: pointer;
+    color: var(--mid);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-body { padding: 16px 20px 28px; }
+
+  .modal-vote-count {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 1px;
+    color: var(--navy);
+    margin-bottom: 12px;
+  }
+  .modal-vote-count span { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 400; color: #888; letter-spacing: 0; margin-left: 6px; }
+
+  .voter-list { display: flex; flex-direction: column; gap: 8px; }
+  .voter-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f8faff;
+    border-radius: 10px;
+    padding: 10px 14px;
+  }
+  .voter-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: white;
+    font-weight: 700;
+    font-size: 0.82rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .voter-name { font-weight: 600; font-size: 0.9rem; }
+  .voter-size { font-size: 0.75rem; color: #888; margin-top: 1px; }
+
+  .modal-empty { color: #aaa; font-size: 0.88rem; text-align: center; padding: 24px 0; }
+
+  .btn-modal-select {
+    width: 100%;
+    background: var(--navy);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.2s;
+  }
+  .btn-modal-select:hover { background: var(--navy2); }
 
   /* ── CONFIRM ──────────────────────────────── */
   #view-confirm {
@@ -370,71 +418,23 @@
     justify-content: center;
     padding: 40px 20px;
   }
-  .confirm-card {
-    background: white;
-    border-radius: 24px;
-    padding: 48px 36px;
-    max-width: 480px;
-    width: 100%;
-    text-align: center;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.08);
-  }
+  .confirm-card { background: white; border-radius: 24px; padding: 48px 36px; max-width: 480px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.08); }
   .confirm-icon { font-size: 4rem; margin-bottom: 16px; display: block; }
-  .confirm-card h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.2rem;
-    color: var(--navy);
-    letter-spacing: 2px;
-    margin-bottom: 10px;
-  }
+  .confirm-card h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; color: var(--navy); letter-spacing: 2px; margin-bottom: 10px; }
   .confirm-card p { font-size: 0.95rem; color: #666; line-height: 1.6; margin-bottom: 10px; }
-  .confirm-ref {
-    background: #eef2f8;
-    border-radius: 10px;
-    padding: 14px 20px;
-    margin: 18px 0;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.3rem;
-    color: var(--navy);
-    letter-spacing: 2px;
-  }
-  .confirm-detail {
-    background: linear-gradient(135deg, var(--navy), #050e27);
-    color: white;
-    border-radius: 14px;
-    padding: 18px 20px;
-    margin-top: 20px;
-    text-align: left;
-  }
+  .confirm-ref { background: #eef2f8; border-radius: 10px; padding: 14px 20px; margin: 18px 0; font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; color: var(--navy); letter-spacing: 2px; }
+  .confirm-detail { background: linear-gradient(135deg, var(--navy), #050e27); color: white; border-radius: 14px; padding: 18px 20px; margin-top: 20px; text-align: left; }
   .confirm-detail-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.6; margin-bottom: 4px; margin-top: 10px; }
   .confirm-detail-label:first-child { margin-top: 0; }
-  .confirm-detail-val {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.35rem;
-    letter-spacing: 1px;
-    color: var(--sky);
-    line-height: 1.2;
-  }
+  .confirm-detail-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.35rem; letter-spacing: 1px; color: var(--sky); line-height: 1.2; }
   .confirm-detail-note { font-size: 0.75rem; opacity: 0.5; margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 8px; }
-  .btn-back {
-    display: block;
-    margin: 24px auto 0;
-    background: none;
-    border: 2px solid var(--navy);
-    color: var(--navy);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.1rem;
-    letter-spacing: 1px;
-    padding: 10px 28px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-  }
+  .btn-back { display: block; margin: 24px auto 0; background: none; border: 2px solid var(--navy); color: var(--navy); font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 1px; padding: 10px 28px; border-radius: 8px; cursor: pointer; transition: background 0.2s, color 0.2s; }
   .btn-back:hover { background: var(--navy); color: white; }
 
   @media (max-width: 480px) {
     .confirm-card { padding: 32px 20px; }
     .hoodie-photo { width: 80px; }
+    .modal-overlay { align-items: flex-end; }
   }
 </style>
 </head>
@@ -448,186 +448,235 @@
   <div class="order-hero">
     <img src="hbk-logo.png" class="logo-img" alt="HBK emblem">
     <div class="hero-tag">HBK F14 · 2026</div>
-    <h1>HOODIE-BESTÄLLNING</h1>
-    <p>Välj din favorit att ha på dig till och från matcher samt under Gothia Cup!</p>
+    <h1>HOODIE-RÖSTNING</h1>
+    <p>Vilken hoodie vill du ha? Rösta på din favorit — vi beställer det laget vill ha mest!</p>
   </div>
 
   <div class="order-body">
 
-    <div class="section-title">🧥 Välj modell &amp; färg</div>
-    <div class="section-sub">Välj ett alternativ – alla är från Macron via MCR Sport</div>
+    <div class="section-title">🧥 Rösta på din favorit</div>
+    <div class="section-sub">Tryck på en hoodie för att se vem som röstat — välj sen din favorit</div>
 
-    <!-- ── ZIP HOODIES ──────────────────────── -->
+    <!-- ── ZIP HOODIES ── -->
     <div class="hoodie-group">
       <div class="hoodie-group-label">Zip Hoodie – Heavy Cotton Trumpet <div class="group-divider"></div></div>
 
-      <label class="hoodie-card" id="card-trumpet-navy" onclick="selectHoodie('trumpet-navy')">
+      <div class="hoodie-card" id="card-trumpet-navy">
         <input type="radio" name="hoodie" value="trumpet-navy">
-        <div class="hoodie-photo swatch-trumpet-navy">
-          <img src="hooded-sweatshirt-zip-hoody-hoodie-heavy-cotton-trumpet-macron-navy.jpg" alt="Trumpet Zip Navy" onerror="this.style.display='none'">
+        <div class="hoodie-photo swatch-trumpet-navy" onclick="showVoters('trumpet-navy')">
+          <img src="hooded-sweatshirt-zip-hoody-hoodie-heavy-cotton-trumpet-macron-navy.jpg" alt="" onerror="this.style.display='none'">
+          <div class="vote-badge" id="badge-trumpet-navy"></div>
         </div>
-        <div class="hoodie-info">
+        <div class="hoodie-info" onclick="showVoters('trumpet-navy')" style="cursor:pointer">
           <div class="hoodie-name">Trumpet Zip Hoody</div>
           <div class="hoodie-color">Navy · Heavy Cotton</div>
           <div class="hoodie-meta">
             <span class="badge badge-zip">Zip</span>
+            <button class="btn-show-voters" id="btn-voters-trumpet-navy">👥 Visa röster</button>
           </div>
         </div>
-      </label>
-
-      <label class="hoodie-card" id="card-trumpet-blue" onclick="selectHoodie('trumpet-blue')">
-        <input type="radio" name="hoodie" value="trumpet-blue">
-        <div class="hoodie-photo swatch-trumpet-blue">
-          <img src="hooded-sweatshirt-zip-hoody-hoodie-heavy-cotton-trumpet-macron-skyblue.jpg" alt="Trumpet Zip Blue" onerror="this.style.display='none'">
+        <div class="hoodie-select" onclick="selectHoodie('trumpet-navy')">
+          <div class="radio-circle"></div>
         </div>
-        <div class="hoodie-info">
+      </div>
+
+      <div class="hoodie-card" id="card-trumpet-blue">
+        <input type="radio" name="hoodie" value="trumpet-blue">
+        <div class="hoodie-photo swatch-trumpet-blue" onclick="showVoters('trumpet-blue')">
+          <img src="hooded-sweatshirt-zip-hoody-hoodie-heavy-cotton-trumpet-macron-skyblue.jpg" alt="" onerror="this.style.display='none'">
+          <div class="vote-badge" id="badge-trumpet-blue"></div>
+        </div>
+        <div class="hoodie-info" onclick="showVoters('trumpet-blue')" style="cursor:pointer">
           <div class="hoodie-name">Trumpet Zip Hoody</div>
           <div class="hoodie-color">Royal Blue · Heavy Cotton</div>
           <div class="hoodie-meta">
             <span class="badge badge-zip">Zip</span>
+            <button class="btn-show-voters" id="btn-voters-trumpet-blue">👥 Visa röster</button>
           </div>
         </div>
-      </label>
+        <div class="hoodie-select" onclick="selectHoodie('trumpet-blue')">
+          <div class="radio-circle"></div>
+        </div>
+      </div>
     </div>
 
-    <!-- ── FENDERS PULLOVER ─────────────────── -->
+    <!-- ── FENDERS PULLOVER ── -->
     <div class="hoodie-group">
       <div class="hoodie-group-label">Pullover – Heavy Cotton Fenders (V-design) <div class="group-divider"></div></div>
 
-      <label class="hoodie-card" id="card-fenders-lilac" onclick="selectHoodie('fenders-lilac')">
+      <div class="hoodie-card" id="card-fenders-lilac">
         <input type="radio" name="hoodie" value="fenders-lilac">
-        <div class="hoodie-photo swatch-fenders-lilac">
-          <img src="hooded-sweatshirt-hoody-heavy-cotton-fenders-macron-anthracite-lilac.jpg" alt="Fenders Grå/Lila" onerror="this.style.display='none'">
+        <div class="hoodie-photo swatch-fenders-lilac" onclick="showVoters('fenders-lilac')">
+          <img src="hooded-sweatshirt-hoody-heavy-cotton-fenders-macron-anthracite-lilac.jpg" alt="" onerror="this.style.display='none'">
+          <div class="vote-badge" id="badge-fenders-lilac"></div>
         </div>
-        <div class="hoodie-info">
+        <div class="hoodie-info" onclick="showVoters('fenders-lilac')" style="cursor:pointer">
           <div class="hoodie-name">Fenders Pullover</div>
           <div class="hoodie-color">Mörkgrå / Lila · Heavy Cotton</div>
           <div class="hoodie-meta">
             <span class="badge badge-pullover">Pullover</span>
+            <button class="btn-show-voters" id="btn-voters-fenders-lilac">👥 Visa röster</button>
           </div>
         </div>
-      </label>
-
-      <label class="hoodie-card" id="card-fenders-navy" onclick="selectHoodie('fenders-navy')">
-        <input type="radio" name="hoodie" value="fenders-navy">
-        <div class="hoodie-photo swatch-fenders-navy">
-          <img src="hooded-sweatshirt-hoody-heavy-cotton-fenders-macron-navy.jpg" alt="Fenders Navy" onerror="this.style.display='none'">
+        <div class="hoodie-select" onclick="selectHoodie('fenders-lilac')">
+          <div class="radio-circle"></div>
         </div>
-        <div class="hoodie-info">
+      </div>
+
+      <div class="hoodie-card" id="card-fenders-navy">
+        <input type="radio" name="hoodie" value="fenders-navy">
+        <div class="hoodie-photo swatch-fenders-navy" onclick="showVoters('fenders-navy')">
+          <img src="hooded-sweatshirt-hoody-heavy-cotton-fenders-macron-navy.jpg" alt="" onerror="this.style.display='none'">
+          <div class="vote-badge" id="badge-fenders-navy"></div>
+        </div>
+        <div class="hoodie-info" onclick="showVoters('fenders-navy')" style="cursor:pointer">
           <div class="hoodie-name">Fenders Pullover</div>
           <div class="hoodie-color">Navy · Heavy Cotton</div>
           <div class="hoodie-meta">
             <span class="badge badge-pullover">Pullover</span>
+            <button class="btn-show-voters" id="btn-voters-fenders-navy">👥 Visa röster</button>
           </div>
         </div>
-      </label>
+        <div class="hoodie-select" onclick="selectHoodie('fenders-navy')">
+          <div class="radio-circle"></div>
+        </div>
+      </div>
     </div>
 
-    <!-- ── HORN PULLOVER ────────────────────── -->
+    <!-- ── HORN ── -->
     <div class="hoodie-group">
       <div class="hoodie-group-label">Pullover – Horn <div class="group-divider"></div></div>
 
-      <label class="hoodie-card" id="card-horn-sky" onclick="selectHoodie('horn-sky')">
+      <div class="hoodie-card" id="card-horn-sky">
         <input type="radio" name="hoodie" value="horn-sky">
-        <div class="hoodie-photo swatch-horn-sky">
-          <img src="hooded-sweatshirt-hoody-hoodie-horn-macron-neon-sky-blue.jpg" alt="Horn Neon Sky Blue" onerror="this.style.display='none'">
+        <div class="hoodie-photo swatch-horn-sky" onclick="showVoters('horn-sky')">
+          <img src="hooded-sweatshirt-hoody-hoodie-horn-macron-neon-sky-blue.jpg" alt="" onerror="this.style.display='none'">
+          <div class="vote-badge" id="badge-horn-sky"></div>
         </div>
-        <div class="hoodie-info">
+        <div class="hoodie-info" onclick="showVoters('horn-sky')" style="cursor:pointer">
           <div class="hoodie-name">Horn Pullover</div>
           <div class="hoodie-color">Neon Sky Blue</div>
           <div class="hoodie-meta">
             <span class="badge badge-pullover">Pullover</span>
+            <button class="btn-show-voters" id="btn-voters-horn-sky">👥 Visa röster</button>
           </div>
         </div>
-      </label>
-
-      <label class="hoodie-card" id="card-horn-navy" onclick="selectHoodie('horn-navy')">
-        <input type="radio" name="hoodie" value="horn-navy">
-        <div class="hoodie-photo swatch-horn-navy">
-          <img src="hooded-sweatshirt-hoody-hoodie-horn-macron-navy.jpg" alt="Horn Navy tvåfärgad" onerror="this.style.display='none'">
+        <div class="hoodie-select" onclick="selectHoodie('horn-sky')">
+          <div class="radio-circle"></div>
         </div>
-        <div class="hoodie-info">
+      </div>
+
+      <div class="hoodie-card" id="card-horn-navy">
+        <input type="radio" name="hoodie" value="horn-navy">
+        <div class="hoodie-photo swatch-horn-navy" onclick="showVoters('horn-navy')">
+          <img src="hooded-sweatshirt-hoody-hoodie-horn-macron-navy.jpg" alt="" onerror="this.style.display='none'">
+          <div class="vote-badge" id="badge-horn-navy"></div>
+        </div>
+        <div class="hoodie-info" onclick="showVoters('horn-navy')" style="cursor:pointer">
           <div class="hoodie-name">Horn Pullover</div>
           <div class="hoodie-color">Navy tvåfärgad</div>
           <div class="hoodie-meta">
             <span class="badge badge-pullover">Pullover</span>
+            <button class="btn-show-voters" id="btn-voters-horn-navy">👥 Visa röster</button>
           </div>
         </div>
-      </label>
-
-      <label class="hoodie-card" id="card-horn-white" onclick="selectHoodie('horn-white')">
-        <input type="radio" name="hoodie" value="horn-white">
-        <div class="hoodie-photo swatch-horn-white">
-          <img src="hooded-sweatshirt-hoody-hoodie-horn-macron-white.jpg" alt="Horn Vit" onerror="this.style.display='none'">
+        <div class="hoodie-select" onclick="selectHoodie('horn-navy')">
+          <div class="radio-circle"></div>
         </div>
-        <div class="hoodie-info">
+      </div>
+
+      <div class="hoodie-card" id="card-horn-white">
+        <input type="radio" name="hoodie" value="horn-white">
+        <div class="hoodie-photo swatch-horn-white" onclick="showVoters('horn-white')">
+          <img src="hooded-sweatshirt-hoody-hoodie-horn-macron-white.jpg" alt="" onerror="this.style.display='none'">
+          <div class="vote-badge" id="badge-horn-white"></div>
+        </div>
+        <div class="hoodie-info" onclick="showVoters('horn-white')" style="cursor:pointer">
           <div class="hoodie-name">Horn Pullover</div>
           <div class="hoodie-color">Vit</div>
           <div class="hoodie-meta">
             <span class="badge badge-pullover">Pullover</span>
+            <button class="btn-show-voters" id="btn-voters-horn-white">👥 Visa röster</button>
           </div>
         </div>
-      </label>
+        <div class="hoodie-select" onclick="selectHoodie('horn-white')">
+          <div class="radio-circle"></div>
+        </div>
+      </div>
     </div>
 
-    <!-- ── TIAMAT ZIP JACKET ─────────────────── -->
+    <!-- ── TIAMAT ── -->
     <div class="hoodie-group">
       <div class="hoodie-group-label">Zip Jacket – Tiamat Microfibre <div class="group-divider"></div></div>
 
-      <label class="hoodie-card" id="card-tiamat-navy" onclick="selectHoodie('tiamat-navy')">
+      <div class="hoodie-card" id="card-tiamat-navy">
         <input type="radio" name="hoodie" value="tiamat-navy">
-        <div class="hoodie-photo swatch-tiamat-navy">
-          <img src="top-sweatshirt-zip-tracksuit-jacket-tiamat-microfibre-macron-navy-white.jpg" alt="Tiamat Navy/Vit" onerror="this.style.display='none'">
+        <div class="hoodie-photo swatch-tiamat-navy" onclick="showVoters('tiamat-navy')">
+          <img src="top-sweatshirt-zip-tracksuit-jacket-tiamat-microfibre-macron-navy-white.jpg" alt="" onerror="this.style.display='none'">
+          <div class="vote-badge" id="badge-tiamat-navy"></div>
         </div>
-        <div class="hoodie-info">
+        <div class="hoodie-info" onclick="showVoters('tiamat-navy')" style="cursor:pointer">
           <div class="hoodie-name">Tiamat Tracksuit Jacket</div>
           <div class="hoodie-color">Navy / Vit · Microfibre</div>
           <div class="hoodie-meta">
             <span class="badge badge-jacket">Zip Jacket</span>
+            <button class="btn-show-voters" id="btn-voters-tiamat-navy">👥 Visa röster</button>
           </div>
         </div>
-      </label>
+        <div class="hoodie-select" onclick="selectHoodie('tiamat-navy')">
+          <div class="radio-circle"></div>
+        </div>
+      </div>
     </div>
 
-    <!-- ── YARUGA TRAINING TOP ──────────────── -->
+    <!-- ── YARUGA ── -->
     <div class="hoodie-group">
       <div class="hoodie-group-label">Training Top – Yaruga Outdoor <div class="group-divider"></div></div>
 
-      <label class="hoodie-card" id="card-yaruga-navy" onclick="selectHoodie('yaruga-navy')">
+      <div class="hoodie-card" id="card-yaruga-navy">
         <input type="radio" name="hoodie" value="yaruga-navy">
-        <div class="hoodie-photo swatch-yaruga-navy">
-          <img src="top-sweatshirt-tracksuit-jacket-yaruga-training-outdoor-macron-navy.jpg" alt="Yaruga Navy" onerror="this.style.display='none'">
+        <div class="hoodie-photo swatch-yaruga-navy" onclick="showVoters('yaruga-navy')">
+          <img src="top-sweatshirt-tracksuit-jacket-yaruga-training-outdoor-macron-navy.jpg" alt="" onerror="this.style.display='none'">
+          <div class="vote-badge" id="badge-yaruga-navy"></div>
         </div>
-        <div class="hoodie-info">
+        <div class="hoodie-info" onclick="showVoters('yaruga-navy')" style="cursor:pointer">
           <div class="hoodie-name">Yaruga Training Top</div>
           <div class="hoodie-color">Navy · Half-zip</div>
           <div class="hoodie-meta">
             <span class="badge badge-training">Training</span>
+            <button class="btn-show-voters" id="btn-voters-yaruga-navy">👥 Visa röster</button>
           </div>
         </div>
-      </label>
-
-      <label class="hoodie-card" id="card-yaruga-lilac" onclick="selectHoodie('yaruga-lilac')">
-        <input type="radio" name="hoodie" value="yaruga-lilac">
-        <div class="hoodie-photo swatch-yaruga-lilac">
-          <img src="top-sweatshirt-tracksuit-jacket-yaruga-training-outdoor-macron-lilac-anthracite.jpg" alt="Yaruga Lila" onerror="this.style.display='none'">
+        <div class="hoodie-select" onclick="selectHoodie('yaruga-navy')">
+          <div class="radio-circle"></div>
         </div>
-        <div class="hoodie-info">
+      </div>
+
+      <div class="hoodie-card" id="card-yaruga-lilac">
+        <input type="radio" name="hoodie" value="yaruga-lilac">
+        <div class="hoodie-photo swatch-yaruga-lilac" onclick="showVoters('yaruga-lilac')">
+          <img src="top-sweatshirt-tracksuit-jacket-yaruga-training-outdoor-macron-lilac-anthracite.jpg" alt="" onerror="this.style.display='none'">
+          <div class="vote-badge" id="badge-yaruga-lilac"></div>
+        </div>
+        <div class="hoodie-info" onclick="showVoters('yaruga-lilac')" style="cursor:pointer">
           <div class="hoodie-name">Yaruga Training Top</div>
           <div class="hoodie-color">Lila / Grå · Half-zip</div>
           <div class="hoodie-meta">
             <span class="badge badge-training">Training</span>
+            <button class="btn-show-voters" id="btn-voters-yaruga-lilac">👥 Visa röster</button>
           </div>
         </div>
-      </label>
+        <div class="hoodie-select" onclick="selectHoodie('yaruga-lilac')">
+          <div class="radio-circle"></div>
+        </div>
+      </div>
     </div>
 
     <div class="warn-box" id="warn-hoodie">⚠️ Välj en hoodie för att fortsätta.</div>
 
-    <!-- ── STORLEK ──────────────────────────── -->
+    <!-- ── STORLEK ── -->
     <div class="section-title">📏 Välj storlek</div>
-    <div class="section-sub">Macron använder europeiska storlekar (3XS–5XL tillgängliga vid beställning)</div>
-
+    <div class="section-sub">Macron använder europeiska storlekar (3XS–5XL tillgängliga)</div>
     <div class="size-grid">
       <button class="size-btn" onclick="selectSize('XS')">XS</button>
       <button class="size-btn" onclick="selectSize('S')">S</button>
@@ -638,28 +687,47 @@
     </div>
     <div class="warn-box" id="warn-size">⚠️ Välj en storlek för att fortsätta.</div>
 
-    <!-- ── UPPGIFTER ────────────────────────── -->
-    <div class="section-title" style="margin-top:32px;">👤 Dina uppgifter</div>
-
+    <!-- ── NAMN ── -->
+    <div class="section-title" style="margin-top:32px;">👤 Din röst</div>
     <div class="form-group">
       <label class="form-label">Namn *</label>
       <input class="form-input" id="buyer-name" type="text" placeholder="Förnamn + efternamn" autocomplete="name">
       <div class="error-msg" id="err-name"></div>
     </div>
 
-    <!-- ── SUMMERING ───────────────────────── -->
+    <!-- ── SUMMERING ── -->
     <div class="order-summary" id="order-summary">
-      <div class="summary-title">Din beställning</div>
+      <div class="summary-title">Din röst</div>
       <div id="summary-lines"></div>
-      <div class="summary-note">
-        Priset meddelas när vi lagt en gemensam beställning. Du binder dig inte till ett köp med den här anmälan.
-      </div>
+      <div class="summary-note">Det här är en röstning — ingen betalning nu. Vi beställer det alternativ som får flest röster.</div>
     </div>
 
-    <button class="btn-submit" id="btn-submit" onclick="submitOrder()">SKICKA IN INTRESSE →</button>
+    <button class="btn-submit" id="btn-submit" onclick="submitOrder()">SKICKA IN MIN RÖST →</button>
     <p style="font-size:0.75rem;color:#999;text-align:center;margin-top:10px;line-height:1.5;">
-      Ingen betalning nu – vi återkommer med mer info när vi vet hur många som är intresserade.
+      Ingen betalning nu – vi samlar röster och meddelar vilket alternativ som vann!
     </p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- VOTERS MODAL                                              -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="voters-modal" onclick="handleModalClick(event)">
+  <div class="modal-card">
+    <div class="modal-pull"></div>
+    <div class="modal-top">
+      <div class="modal-swatch" id="modal-swatch"></div>
+      <div>
+        <div class="modal-hoodie-name" id="modal-name">–</div>
+        <div class="modal-hoodie-color" id="modal-color">–</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-vote-count" id="modal-vote-count">0 röster</div>
+      <div class="voter-list" id="modal-voter-list"></div>
+      <button class="btn-modal-select" id="btn-modal-select" onclick="selectFromModal()">VÄLJ DENNA OCH RÖSTA →</button>
+    </div>
   </div>
 </div>
 
@@ -669,9 +737,9 @@
 <div id="view-confirm" class="view">
   <div class="confirm-card">
     <img src="hbk-logo.png" style="width:64px;height:64px;object-fit:contain;margin-bottom:8px;" alt="HBK">
-    <span class="confirm-icon">🎉</span>
-    <h2>TACK FÖR DIN ANMÄLAN!</h2>
-    <p>Din intresseanmälan är registrerad. Vi återkommer med mer info om pris och leverans.</p>
+    <span class="confirm-icon">🗳️</span>
+    <h2>RÖSTEN ÄR REGISTRERAD!</h2>
+    <p>Tack! Vi samlar röster och meddelar vilket alternativ som vann när alla röstat.</p>
     <div class="confirm-ref" id="confirm-ref">–</div>
     <div class="confirm-detail">
       <div class="confirm-detail-label">Vald hoodie</div>
@@ -680,10 +748,10 @@
       <div class="confirm-detail-val" id="confirm-size">–</div>
       <div class="confirm-detail-label">Namn</div>
       <div class="confirm-detail-val" id="confirm-name">–</div>
-      <div class="confirm-detail-note">Hör av dig till tränarna om du vill ändra din anmälan.</div>
+      <div class="confirm-detail-note">Hör av dig till tränarna om du vill ändra din röst.</div>
     </div>
     <p style="margin-top:18px;font-size:0.82rem;color:#999;">Du kan spara denna sida som bekräftelse.</p>
-    <button class="btn-back" onclick="resetForm()">← Gör en ny anmälan</button>
+    <button class="btn-back" onclick="resetForm()">← Rösta igen</button>
   </div>
 </div>
 
@@ -692,21 +760,54 @@
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwtUDMA1oc2aRJA30D4pDCUs0J-mBgU0ka6eM0LEEYNaeuur9WYjfYatQT3H-i7HtnQ/exec';
 
 // ── DATA ──────────────────────────────────────────────────────────
-const HOODIE_LABELS = {
-  'trumpet-navy':  'Trumpet Zip Hoody – Navy',
-  'trumpet-blue':  'Trumpet Zip Hoody – Royal Blue',
-  'fenders-lilac': 'Fenders Pullover – Mörkgrå/Lila',
-  'fenders-navy':  'Fenders Pullover – Navy',
-  'horn-sky':      'Horn Pullover – Neon Sky Blue',
-  'horn-navy':     'Horn Pullover – Navy tvåfärgad',
-  'horn-white':    'Horn Pullover – Vit',
-  'tiamat-navy':   'Tiamat Tracksuit Jacket – Navy/Vit',
-  'yaruga-navy':   'Yaruga Training Top – Navy',
-  'yaruga-lilac':  'Yaruga Training Top – Lila/Grå',
+const HOODIES = {
+  'trumpet-navy':  { name: 'Trumpet Zip Hoody', color: 'Navy · Heavy Cotton',         img: 'hooded-sweatshirt-zip-hoody-hoodie-heavy-cotton-trumpet-macron-navy.jpg' },
+  'trumpet-blue':  { name: 'Trumpet Zip Hoody', color: 'Royal Blue · Heavy Cotton',   img: 'hooded-sweatshirt-zip-hoody-hoodie-heavy-cotton-trumpet-macron-skyblue.jpg' },
+  'fenders-lilac': { name: 'Fenders Pullover',  color: 'Mörkgrå / Lila · Heavy Cotton', img: 'hooded-sweatshirt-hoody-heavy-cotton-fenders-macron-anthracite-lilac.jpg' },
+  'fenders-navy':  { name: 'Fenders Pullover',  color: 'Navy · Heavy Cotton',         img: 'hooded-sweatshirt-hoody-heavy-cotton-fenders-macron-navy.jpg' },
+  'horn-sky':      { name: 'Horn Pullover',     color: 'Neon Sky Blue',               img: 'hooded-sweatshirt-hoody-hoodie-horn-macron-neon-sky-blue.jpg' },
+  'horn-navy':     { name: 'Horn Pullover',     color: 'Navy tvåfärgad',              img: 'hooded-sweatshirt-hoody-hoodie-horn-macron-navy.jpg' },
+  'horn-white':    { name: 'Horn Pullover',     color: 'Vit',                         img: 'hooded-sweatshirt-hoody-hoodie-horn-macron-white.jpg' },
+  'tiamat-navy':   { name: 'Tiamat Jacket',     color: 'Navy / Vit · Microfibre',     img: 'top-sweatshirt-zip-tracksuit-jacket-tiamat-microfibre-macron-navy-white.jpg' },
+  'yaruga-navy':   { name: 'Yaruga Training',   color: 'Navy · Half-zip',             img: 'top-sweatshirt-tracksuit-jacket-yaruga-training-outdoor-macron-navy.jpg' },
+  'yaruga-lilac':  { name: 'Yaruga Training',   color: 'Lila / Grå · Half-zip',       img: 'top-sweatshirt-tracksuit-jacket-yaruga-training-outdoor-macron-lilac-anthracite.jpg' },
 };
 
-let selectedHoodie = null;
-let selectedSize   = null;
+const HOODIE_LABELS = Object.fromEntries(
+  Object.entries(HOODIES).map(([id, h]) => [id, h.name + ' – ' + h.color])
+);
+
+let selectedHoodie  = null;
+let selectedSize    = null;
+let _votesData      = {};
+let _modalHoodieId  = null;
+
+// ── LOAD VOTES ────────────────────────────────────────────────────
+async function loadVotes() {
+  try {
+    const res  = await fetch(APPS_SCRIPT_URL + '?action=hoodie_votes');
+    const data = await res.json();
+    _votesData = data.votes || {};
+    updateVoteBadges();
+  } catch (e) {
+    // Silently fail — badges just stay hidden
+  }
+}
+
+function updateVoteBadges() {
+  Object.keys(HOODIES).forEach(id => {
+    const voters  = _votesData[id] || [];
+    const badge   = document.getElementById('badge-' + id);
+    const btnShow = document.getElementById('btn-voters-' + id);
+    if (badge) {
+      if (voters.length > 0) {
+        badge.textContent = voters.length + (voters.length === 1 ? ' röst' : ' röster');
+        badge.classList.add('has-votes');
+      }
+    }
+    if (btnShow) btnShow.classList.add('visible');
+  });
+}
 
 // ── SELECTION ─────────────────────────────────────────────────────
 function selectHoodie(id) {
@@ -719,11 +820,75 @@ function selectHoodie(id) {
 
 function selectSize(size) {
   selectedSize = size;
-  document.querySelectorAll('.size-btn').forEach(b => {
-    b.classList.toggle('selected', b.textContent === size);
-  });
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.toggle('selected', b.textContent === size));
   document.getElementById('warn-size').style.display = 'none';
   updateSummary();
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────
+function showVoters(id) {
+  _modalHoodieId = id;
+  const h      = HOODIES[id];
+  const voters = _votesData[id] || [];
+
+  // Header
+  document.getElementById('modal-name').textContent  = h.name;
+  document.getElementById('modal-color').textContent = h.color;
+
+  // Swatch
+  const sw = document.getElementById('modal-swatch');
+  sw.className = 'modal-swatch swatch-' + id;
+  sw.innerHTML = `<img src="${h.img}" alt="" onerror="this.style.display='none'">`;
+
+  // Vote count
+  const cnt = voters.length;
+  document.getElementById('modal-vote-count').innerHTML =
+    `${cnt} ${cnt === 1 ? 'röst' : 'röster'}` +
+    (cnt > 0 ? '' : '<span>– bli den första!</span>');
+
+  // Voter list
+  const list = document.getElementById('modal-voter-list');
+  if (voters.length === 0) {
+    list.innerHTML = '<div class="modal-empty">Inga röster ännu på denna hoodie.</div>';
+  } else {
+    list.innerHTML = voters.map(v => `
+      <div class="voter-item">
+        <div class="voter-avatar">${v.name ? v.name[0].toUpperCase() : '?'}</div>
+        <div>
+          <div class="voter-name">${v.name}</div>
+          ${v.size ? `<div class="voter-size">Storlek ${v.size}</div>` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Select button label
+  document.getElementById('btn-modal-select').textContent =
+    selectedHoodie === id ? '✓ VALD – BLÄDDRA VIDARE' : 'VÄLJ DENNA OCH RÖSTA →';
+
+  document.getElementById('voters-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('voters-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  _modalHoodieId = null;
+}
+
+function handleModalClick(e) {
+  if (e.target === document.getElementById('voters-modal')) closeModal();
+}
+
+function selectFromModal() {
+  if (_modalHoodieId) {
+    selectHoodie(_modalHoodieId);
+    closeModal();
+    setTimeout(() => {
+      document.getElementById('size-section') && document.getElementById('size-section').scrollIntoView({ behavior: 'smooth' });
+      document.querySelector('.size-grid').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 300);
+  }
 }
 
 // ── SUMMARY ───────────────────────────────────────────────────────
@@ -734,7 +899,7 @@ function updateSummary() {
   }
   document.getElementById('order-summary').style.display = 'block';
   document.getElementById('summary-lines').innerHTML = `
-    <div class="summary-line"><span>Modell &amp; färg</span><span>${HOODIE_LABELS[selectedHoodie]}</span></div>
+    <div class="summary-line"><span>Hoodie</span><span>${HOODIE_LABELS[selectedHoodie]}</span></div>
     <div class="summary-line"><span>Storlek</span><span>${selectedSize}</span></div>
   `;
 }
@@ -742,15 +907,8 @@ function updateSummary() {
 // ── VALIDATE ──────────────────────────────────────────────────────
 function validate() {
   let ok = true;
-  if (!selectedHoodie) {
-    document.getElementById('warn-hoodie').style.display = 'block';
-    document.getElementById('card-trumpet-navy').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    ok = false;
-  }
-  if (!selectedSize) {
-    document.getElementById('warn-size').style.display = 'block';
-    ok = false;
-  }
+  if (!selectedHoodie) { document.getElementById('warn-hoodie').style.display = 'block'; ok = false; }
+  if (!selectedSize)   { document.getElementById('warn-size').style.display = 'block'; ok = false; }
   const name = document.getElementById('buyer-name').value.trim();
   document.getElementById('err-name').textContent = name ? '' : 'Ange ditt namn';
   document.getElementById('buyer-name').classList.toggle('error', !name);
@@ -761,27 +919,21 @@ function validate() {
 // ── SUBMIT ────────────────────────────────────────────────────────
 function submitOrder() {
   if (!validate()) return;
-
   const name = document.getElementById('buyer-name').value.trim();
   const ref  = 'HBK-H-' + Date.now().toString(36).toUpperCase().slice(-5);
-
   const payload = {
-    type:      'hoodie',
-    ref:       ref,
-    name:      name,
-    hoodie:    HOODIE_LABELS[selectedHoodie],
-    hoodieId:  selectedHoodie,
-    size:      selectedSize,
+    type: 'hoodie_vote', ref, name,
+    hoodie: HOODIE_LABELS[selectedHoodie],
+    hoodieId: selectedHoodie,
+    size: selectedSize,
     timestamp: new Date().toISOString(),
   };
-
   const btn = document.getElementById('btn-submit');
   btn.disabled = true;
   btn.textContent = 'SKICKAR…';
 
   fetch(APPS_SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
+    method: 'POST', mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   })
@@ -790,18 +942,17 @@ function submitOrder() {
 }
 
 function showConfirmation(ref, name) {
-  document.getElementById('confirm-ref').textContent = ref;
-  document.getElementById('confirm-hoodie').textContent = HOODIE_LABELS[selectedHoodie];
-  document.getElementById('confirm-size').textContent = selectedSize;
-  document.getElementById('confirm-name').textContent = name;
+  document.getElementById('confirm-ref').textContent     = ref;
+  document.getElementById('confirm-hoodie').textContent  = HOODIE_LABELS[selectedHoodie];
+  document.getElementById('confirm-size').textContent    = selectedSize;
+  document.getElementById('confirm-name').textContent    = name;
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-confirm').classList.add('active');
   window.scrollTo(0, 0);
 }
 
 function resetForm() {
-  selectedHoodie = null;
-  selectedSize   = null;
+  selectedHoodie = null; selectedSize = null;
   document.querySelectorAll('.hoodie-card').forEach(c => c.classList.remove('selected'));
   document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
   document.getElementById('buyer-name').value = '';
@@ -810,15 +961,16 @@ function resetForm() {
   ['warn-hoodie','warn-size'].forEach(id => document.getElementById(id).style.display = 'none');
   document.getElementById('order-summary').style.display = 'none';
   const btn = document.getElementById('btn-submit');
-  btn.disabled = false;
-  btn.textContent = 'SKICKA IN INTRESSE →';
+  btn.disabled = false; btn.textContent = 'SKICKA IN MIN RÖST →';
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-order').classList.add('active');
   window.scrollTo(0, 0);
+  loadVotes();
 }
 
 // ── INIT ──────────────────────────────────────────────────────────
 document.getElementById('view-order').classList.add('active');
+loadVotes();
 </script>
 </body>
 </html>
