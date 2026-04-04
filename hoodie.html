@@ -159,22 +159,18 @@
     z-index: 2;
   }
 
-  /* Vote count badge on photo */
+  /* Vote count badge – visas i info-området, inte på bilden */
   .vote-badge {
-    position: absolute;
-    bottom: 6px; right: 6px;
-    background: rgba(15,42,94,0.82);
-    color: white;
-    font-size: 0.65rem;
+    display: none;
+    font-size: 0.7rem;
     font-weight: 700;
-    padding: 2px 7px;
+    color: var(--navy);
+    background: #dde8f8;
+    padding: 3px 9px;
     border-radius: 20px;
-    z-index: 3;
     white-space: nowrap;
-    backdrop-filter: blur(2px);
-    display: none; /* shown when data loaded */
   }
-  .vote-badge.has-votes { display: block; }
+  .vote-badge.has-votes { display: inline-block; }
 
   /* Info area */
   .hoodie-info {
@@ -797,7 +793,7 @@ let _modalHoodieId  = null;
 // ── LOAD VOTES ────────────────────────────────────────────────────
 async function loadVotes() {
   try {
-    const res  = await fetch(APPS_SCRIPT_URL + '?action=hoodie_votes');
+    const res  = await fetch(APPS_SCRIPT_URL + '?action=hoodie_votes&t=' + Date.now());
     const data = await res.json();
     _votesData = data.votes || {};
     updateVoteBadges();
@@ -811,10 +807,17 @@ function updateVoteBadges() {
     const voters  = _votesData[id] || [];
     const badge   = document.getElementById('badge-' + id);
     const btnShow = document.getElementById('btn-voters-' + id);
+
     if (badge) {
+      // Flytta badgen till hoodie-meta (info-området) om den inte redan är där
+      const meta = badge.closest('.hoodie-meta') || document.querySelector('#card-' + id + ' .hoodie-meta');
+      if (meta && !meta.contains(badge)) meta.appendChild(badge);
+
       if (voters.length > 0) {
         badge.textContent = voters.length + (voters.length === 1 ? ' röst' : ' röster');
         badge.classList.add('has-votes');
+      } else {
+        badge.classList.remove('has-votes');
       }
     }
     if (btnShow) btnShow.classList.add('visible');
@@ -952,8 +955,14 @@ function submitOrder() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   })
-  .then(() => showConfirmation(ref, name))
-  .catch(() => showConfirmation(ref, name));
+  .then(() => {
+    showConfirmation(ref, name);
+    setTimeout(loadVotes, 2000); // Uppdatera rösterna i bakgrunden
+  })
+  .catch(() => {
+    showConfirmation(ref, name);
+    setTimeout(loadVotes, 2000);
+  });
 }
 
 function showConfirmation(ref, name) {
@@ -980,7 +989,8 @@ function resetForm() {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-order').classList.add('active');
   window.scrollTo(0, 0);
-  loadVotes();
+  // Kort fördröjning så rösten hinner skrivas till Sheetet innan vi hämtar om
+  setTimeout(loadVotes, 1500);
 }
 
 // ── INIT ──────────────────────────────────────────────────────────
