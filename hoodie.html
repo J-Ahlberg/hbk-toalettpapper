@@ -322,40 +322,51 @@
 
   .modal-pull { width: 40px; height: 4px; background: #dde; border-radius: 4px; margin: 12px auto 0; }
 
-  .modal-top {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 16px 20px 14px;
-    border-bottom: 1px solid #eef2f8;
-  }
-  .modal-swatch {
-    width: 56px; height: 56px;
-    border-radius: 12px;
-    flex-shrink: 0;
+  /* Hero image area */
+  .modal-hero {
     position: relative;
+    width: 100%;
+    height: 380px;
     overflow: hidden;
-  }
-  .modal-swatch img { width: 100%; height: 100%; object-fit: cover; display: block; position: relative; z-index: 1; }
-  .modal-swatch::before { content: ''; position: absolute; inset: 0; z-index: 0; }
-
-  .modal-hoodie-name { font-weight: 700; font-size: 1rem; color: var(--dark); }
-  .modal-hoodie-color { font-size: 0.8rem; color: #888; margin-top: 2px; }
-
-  .modal-close {
-    margin-left: auto;
     background: #eef2f8;
+  }
+  .modal-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    padding: 12px;
+  }
+  .modal-hero-fallback {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .modal-close {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: rgba(255,255,255,0.9);
     border: none;
     border-radius: 50%;
-    width: 32px; height: 32px;
+    width: 34px; height: 34px;
     font-size: 1rem;
     cursor: pointer;
     color: var(--mid);
-    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    backdrop-filter: blur(4px);
   }
+  .modal-close:hover { background: white; color: var(--navy); }
+
+  .modal-top {
+    padding: 14px 20px 12px;
+    border-bottom: 1px solid #eef2f8;
+  }
+  .modal-hoodie-name { font-weight: 700; font-size: 1.05rem; color: var(--dark); }
+  .modal-hoodie-color { font-size: 0.82rem; color: #888; margin-top: 2px; }
 
   .modal-body { padding: 16px 20px 28px; }
 
@@ -715,13 +726,14 @@
 <div class="modal-overlay" id="voters-modal" onclick="handleModalClick(event)">
   <div class="modal-card">
     <div class="modal-pull"></div>
-    <div class="modal-top">
-      <div class="modal-swatch" id="modal-swatch"></div>
-      <div>
-        <div class="modal-hoodie-name" id="modal-name">–</div>
-        <div class="modal-hoodie-color" id="modal-color">–</div>
-      </div>
+    <div class="modal-hero" id="modal-hero">
+      <div class="modal-hero-fallback" id="modal-hero-fallback"></div>
+      <img class="modal-hero-img" id="modal-hero-img" src="" alt="">
       <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-top">
+      <div class="modal-hoodie-name" id="modal-name">–</div>
+      <div class="modal-hoodie-color" id="modal-color">–</div>
     </div>
     <div class="modal-body">
       <div class="modal-vote-count" id="modal-vote-count">0 röster</div>
@@ -835,10 +847,13 @@ function showVoters(id) {
   document.getElementById('modal-name').textContent  = h.name;
   document.getElementById('modal-color').textContent = h.color;
 
-  // Swatch
-  const sw = document.getElementById('modal-swatch');
-  sw.className = 'modal-swatch swatch-' + id;
-  sw.innerHTML = `<img src="${h.img}" alt="" onerror="this.style.display='none'">`;
+  // Hero image
+  const heroImg      = document.getElementById('modal-hero-img');
+  const heroFallback = document.getElementById('modal-hero-fallback');
+  heroFallback.className = 'modal-hero-fallback swatch-' + id;
+  heroImg.src = h.img;
+  heroImg.style.display = 'block';
+  heroImg.onerror = () => { heroImg.style.display = 'none'; };
 
   // Vote count
   const cnt = voters.length;
