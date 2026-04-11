@@ -221,6 +221,31 @@ td.zero { color: #c4cadc; }
 .overview-table td.ov-26-val    { color: #059669; font-weight: 600; }
 .overview-table td.ov-split-val { color: #6d28d9; font-weight: 600; }
 .overview-table td.ov-25-val    { color: #1e40af; font-weight: 600; }
+/* ── Player vinst summary (visas i per-spelare-vy) ── */
+.pv-card { background: var(--card); border-radius: 16px; box-shadow: 0 2px 6px rgba(15,42,94,.07); border: 1px solid var(--border); overflow: hidden; }
+.pv-header { background: var(--navy); color: #fff; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; font-size: .88rem; font-weight: 600; }
+.pv-body { display: grid; grid-template-columns: 1fr 1fr; }
+.pv-year { padding: 14px 18px; }
+.pv-year + .pv-year { border-left: 1px solid var(--border); }
+.pv-year-label { font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 10px; }
+.pv-year-label.y25 { color: #1e40af; }
+.pv-year-label.y26 { color: #059669; }
+.pv-row { display: flex; justify-content: space-between; font-size: .84rem; padding: 4px 0; border-bottom: 1px solid var(--border); }
+.pv-row:last-child { border-bottom: none; }
+.pv-row-label { color: var(--muted); }
+.pv-row-val { font-weight: 700; }
+.pv-row-val.blue  { color: #1e40af; }
+.pv-row-val.green { color: #059669; }
+.pv-row-val.purple{ color: #6d28d9; }
+.pv-row-val.muted { color: #c4cadc; font-weight: 400; }
+.pv-footer { border-top: 1px solid var(--border); padding: 10px 18px; display: flex; align-items: center; justify-content: space-between; font-size: .85rem; }
+.pv-footer-label { color: var(--muted); }
+.pv-gothia-owing  { font-weight: 700; color: #d97706; }
+.pv-gothia-paid   { font-weight: 700; color: #059669; }
+@media (max-width: 640px) {
+  .pv-body { grid-template-columns: 1fr; }
+  .pv-year + .pv-year { border-left: none; border-top: 1px solid var(--border); }
+}
 /* Vinst card – återanvänder delivery-card-stil */
 .vinst-card { background: var(--card); border-radius: 16px; box-shadow: 0 2px 6px rgba(15,42,94,.08), 0 8px 24px rgba(15,42,94,.08); border: 1px solid var(--border); overflow: hidden; display: none; }
 .vinst-card.visible { display: block; }
@@ -477,6 +502,9 @@ td.zero { color: #c4cadc; }
     </div>
   </div>
 
+  <!-- PLAYER VINST SUMMARY -->
+  <div id="playerVinstSummary" style="display:none;margin-bottom:16px"></div>
+
   <!-- ORDERS TABLE (desktop) -->
   <div class="section-divider" id="ordersDivider" style="display:none"><div class="section-divider-line"></div><span class="section-divider-label">Beställningar</span><div class="section-divider-line"></div></div>
   <div class="table-card desktop-only" id="tableCard">
@@ -666,7 +694,7 @@ async function loadTeamStats() {
     const tP2_6  = allOrders.reduce((s, o) => s + (Number(o.p2_6)  || 0), 0);
     const tP3    = allOrders.reduce((s, o) => s + (Number(o.p3)    || 0), 0);
     const tP3_8  = allOrders.reduce((s, o) => s + (Number(o.p3_8)  || 0), 0);
-    const tRev   = allOrders.reduce((s, o) => s + (o.total || 0), 0);
+    const tRev   = tAdv * 150 + tP2 * 330 + tP2_6 * 50 + tP3 * 290 + tP3_8 * 45;
     const tProfit = tAdv * VINST_PER.adv + tP2 * VINST_PER.p2 + tP2_6 * VINST_PER.p2_6 + tP3 * VINST_PER.p3 + tP3_8 * VINST_PER.p3_8;
     document.getElementById('tOrd').textContent    = allOrders.length || '–';
     document.getElementById('tRev').textContent    = fmt(tRev);
@@ -772,7 +800,7 @@ async function loadPlayers() {
 
 /* ── Render orders into the page (shared by cache-path and live-path) ── */
 function _renderOrders(orders, tableContent, listContent, statsTop, statsProducts, tableTitle, listTitle, orderCount, listCount) {
-  function hideStats() { statsTop.style.display = statsProducts.style.display = 'none'; document.getElementById('ordersDivider').style.display = 'none'; }
+  function hideStats() { statsTop.style.display = statsProducts.style.display = 'none'; document.getElementById('ordersDivider').style.display = 'none'; const pvs = document.getElementById('playerVinstSummary'); if (pvs) pvs.style.display = 'none'; }
   function showStats() { statsTop.style.display = 'grid'; statsProducts.style.display = 'grid'; document.getElementById('ordersDivider').style.display = 'flex'; }
   if (!Array.isArray(orders) || orders.length === 0) {
     const noHtml = '<div class="empty-state"><div class="icon">📭</div><p>Inga beställningar ännu</p></div>';
@@ -780,12 +808,12 @@ function _renderOrders(orders, tableContent, listContent, statsTop, statsProduct
     tableContent.innerHTML = listContent.innerHTML = noHtml;
     return;
   }
-  const total    = orders.reduce((s, o) => s + (o.total || 0), 0);
   const sumAdv   = orders.reduce((s, o) => s + (Number(o.adv)   || 0), 0);
   const sumP2    = orders.reduce((s, o) => s + (Number(o.p2)    || 0), 0);
   const sumP2_6  = orders.reduce((s, o) => s + (Number(o.p2_6)  || 0), 0);
   const sumP3    = orders.reduce((s, o) => s + (Number(o.p3)    || 0), 0);
   const sumP3_8  = orders.reduce((s, o) => s + (Number(o.p3_8)  || 0), 0);
+  const total    = sumAdv * 150 + sumP2 * 330 + sumP2_6 * 50 + sumP3 * 290 + sumP3_8 * 45;
   document.getElementById('statCount').textContent  = orders.length;
   document.getElementById('statTotal').textContent  = fmt(total);
   document.getElementById('statAdv').textContent    = sumAdv   || '–';
@@ -794,6 +822,80 @@ function _renderOrders(orders, tableContent, listContent, statsTop, statsProduct
   document.getElementById('statP3').textContent     = sumP3    || '–';
   document.getElementById('statP3_8').textContent   = sumP3_8  || '–';
   showStats();
+
+  /* ── Per-spelare vinstsammanfattning (2025/2026) ── */
+  (function renderPlayerVinst() {
+    const wrap = document.getElementById('playerVinstSummary');
+    if (!wrap) return;
+    // Separera 2025-raden från 2026-rader
+    const ord2025 = orders.find(o => o._is2025);
+    const ord2026 = orders.filter(o => !o._is2025);
+    const adv2025 = ord2025 ? (Number(ord2025.adv) || 0) : 0;
+    const s26Adv  = ord2026.reduce((s, o) => s + (Number(o.adv)   || 0), 0);
+    const s26P2   = ord2026.reduce((s, o) => s + (Number(o.p2)    || 0), 0);
+    const s26P2_6 = ord2026.reduce((s, o) => s + (Number(o.p2_6)  || 0), 0);
+    const s26P3   = ord2026.reduce((s, o) => s + (Number(o.p3)    || 0), 0);
+    const s26P3_8 = ord2026.reduce((s, o) => s + (Number(o.p3_8)  || 0), 0);
+    // Försäljningspriser per enhet (sälj-pris, inte vinst)
+    const SELL = { adv: 150, p2: 330, p2_6: 50, p3: 290, p3_8: 45 };
+    const rev25   = adv2025 * SELL.adv;
+    const rev26   = s26Adv  * SELL.adv  + s26P2  * SELL.p2
+                  + s26P2_6 * SELL.p2_6 + s26P3  * SELL.p3
+                  + s26P3_8 * SELL.p3_8;
+    const v25     = adv2025 * 50;
+    const v26     = s26Adv  * VINST_PER.adv  + s26P2  * VINST_PER.p2
+                  + s26P2_6 * VINST_PER.p2_6 + s26P3  * VINST_PER.p3
+                  + s26P3_8 * VINST_PER.p3_8;
+    const tot     = v25 + v26;
+    const sp25    = Math.round(v25 * 0.60);
+    const lag25   = Math.round(v25 * 0.40);
+    const sp26    = Math.round(v26 * 0.60);
+    const lag26   = Math.round(v26 * 0.40);
+    const spelare = Math.round(tot * 0.60);
+    const laget   = Math.round(tot * 0.40);
+    const gothia  = Math.max(0, GOTHIA_COST - spelare);
+    const surplus = Math.max(0, spelare - GOTHIA_COST);
+    function kr(n, cls) {
+      return n ? `<span class="pv-row-val ${cls}">${fmt(n)}&nbsp;kr</span>`
+               : `<span class="pv-row-val muted">–</span>`;
+    }
+    function row(label, val, cls) {
+      return `<div class="pv-row"><span class="pv-row-label">${label}</span>${kr(val, cls)}</div>`;
+    }
+    const gothiaCls  = gothia === 0 ? 'pv-gothia-paid' : 'pv-gothia-owing';
+    const gothiaText = !tot ? '–'
+      : gothia === 0 ? (surplus > 0 ? `✓ Täckt  (+${fmt(surplus)} kr kvar)` : '✓ Täckt')
+      : `${fmt(gothia)} kr att betala`;
+    wrap.style.display = '';
+    wrap.innerHTML = `
+      <div class="pv-card">
+        <div class="pv-header">
+          <span>💰 Vinstfördelning</span>
+          <span style="font-size:.82rem;opacity:.75">60% → spelaren · 40% → laget</span>
+        </div>
+        <div class="pv-body">
+          <div class="pv-year">
+            <div class="pv-year-label y25">2025 · Uppgjort ✓</div>
+            ${row('Försäljning', rev25, 'blue')}
+            ${row('Vinst', v25, 'blue')}
+            ${row('Till spelaren (60%)', sp25, 'blue')}
+            ${row('Till lagkassan (40%)', lag25, 'blue')}
+          </div>
+          <div class="pv-year">
+            <div class="pv-year-label y26">2026 · Nytt att betala in</div>
+            ${row('Försäljning', rev26, 'green')}
+            ${row('Vinst', v26, 'green')}
+            ${row('Till spelaren (60%)', sp26, 'green')}
+            ${row('Till lagkassan (40%)', lag26, 'purple')}
+          </div>
+        </div>
+        <div class="pv-footer" style="flex-wrap:wrap;gap:6px">
+          <span class="pv-footer-label">Total försäljning: <strong>${fmt(rev25 + rev26)} kr</strong> &nbsp;·&nbsp; Gothia Cup (${fmt(GOTHIA_COST)} kr) · spelarandel totalt (${fmt(spelare)} kr)</span>
+          <span class="${gothiaCls}">${gothiaText}</span>
+        </div>
+      </div>`;
+  })();
+
   const countText = orders.length + ' st';
   orderCount.textContent = listCount.textContent = countText;
   orderCount.style.display = listCount.style.display = 'inline-block';
@@ -1172,7 +1274,7 @@ function openVinstModal(idx) {
   const gothiaText = p.tot === 0 ? '–'
     : p.gothia === 0 ? (p.surplus > 0 ? `✓ Täckt  (+${fmt(p.surplus)} kr kvar)` : '✓ Täckt')
     : `${fmt(p.gothia)} kr att betala`;
-  const gothiaColor = p.gothia === 0 ? '#059669' : '#d97706';
+  const gothiaColor = (p.tot === 0 || p.gothia === 0) ? '#059669' : '#d97706';
   document.getElementById('modalHeader').innerHTML = `
     <div class="modal-avatar" style="background:#6d28d9">${esc(initials(p.name))}</div>
     <div><div class="modal-buyer-name">${esc(p.name)}</div>
@@ -1184,16 +1286,23 @@ function openVinstModal(idx) {
       <span style="font-size:1rem;font-weight:700;color:${val ? col : '#c4cadc'}">${val ? fmt(val) + ' kr' : '–'}</span></div>`;
   }
   document.getElementById('modalBody').innerHTML = `
-    <div class="modal-section">
-      <div class="modal-section-title">Vinst</div>
-      ${vRow('Vinst 2025 (Advance)', p.v25, '#1e40af')}
-      ${vRow('Vinst 2026',           p.v26, '#059669')}
-      ${vRow('Total vinst',          p.tot, 'var(--navy)')}
+    <div class="modal-section" style="opacity:.7">
+      <div class="modal-section-title" style="color:#1e40af">2025 · Uppgjort ✓</div>
+      ${vRow('Vinst 2025 (Advance)', p.v25,  '#1e40af')}
+      ${vRow('Spelarens andel (60%)', p.sp25, '#1e40af')}
+      ${vRow('Lagens andel (40%)',    p.lag25,'#1e40af')}
     </div>
     <div class="modal-section">
-      <div class="modal-section-title">Fördelning</div>
-      ${vRow('Till spelaren (60%)',  p.spelare, '#059669')}
-      ${vRow('Till lagkassan (40%)', p.laget,   '#6d28d9')}
+      <div class="modal-section-title" style="color:#059669">2026 · Nytt att betala in</div>
+      ${vRow('Vinst 2026',             p.v26,  '#059669')}
+      ${vRow('Spelarens andel (60%)',  p.sp26,  '#059669')}
+      ${vRow('Lagens andel (40%)',     p.lag26, '#6d28d9')}
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Totalt (2025+2026)</div>
+      ${vRow('Total vinst',            p.tot,     'var(--navy)')}
+      ${vRow('Till spelaren (60%)',    p.spelare,  '#059669')}
+      ${vRow('Till lagkassan (40%)',   p.laget,    '#6d28d9')}
     </div>
     <div class="modal-total" style="background:${gothiaColor}">
       <span class="modal-total-label">Gothia Cup (${fmt(GOTHIA_COST)} kr)</span>
@@ -1405,25 +1514,33 @@ function _renderVinstFordelning(rows) {
   }
   const players = rows.filter(r => r.name !== 'TOTALT');
   const data = players.map(r => {
-    const v25  = (r.adv_2025 || 0) * 50;
-    const v26  = (r.adv   || 0) * VINST_PER.adv
-               + (r.p2    || 0) * VINST_PER.p2
-               + (r.p2_6  || 0) * VINST_PER.p2_6
-               + (r.p3    || 0) * VINST_PER.p3
-               + (r.p3_8  || 0) * VINST_PER.p3_8;
-    const tot      = v25 + v26;
+    const v25   = (r.adv_2025 || 0) * 50;
+    const v26   = (r.adv   || 0) * VINST_PER.adv
+                + (r.p2    || 0) * VINST_PER.p2
+                + (r.p2_6  || 0) * VINST_PER.p2_6
+                + (r.p3    || 0) * VINST_PER.p3
+                + (r.p3_8  || 0) * VINST_PER.p3_8;
+    const tot     = v25 + v26;
+    // 60/40 på totalen (2025 + 2026)
     const spelare  = Math.round(tot * 0.60);
     const laget    = Math.round(tot * 0.40);
-    const gothia   = Math.max(0, GOTHIA_COST - spelare);   // kr att betala
-    const surplus  = Math.max(0, spelare - GOTHIA_COST);   // kr över efter Gothia
-    return { name: r.name, v25, v26, tot, spelare, laget, gothia, surplus };
+    // 2025 andel – visas separat för referens (uppgjort)
+    const sp25     = Math.round(v25 * 0.60);
+    const lag25    = Math.round(v25 * 0.40);
+    // 2026 andel – vad spelaren ska betala in NU
+    const sp26     = Math.round(v26 * 0.60);
+    const lag26    = Math.round(v26 * 0.40);
+    // Gothia baseras på totala spelarandelen
+    const gothia   = Math.max(0, GOTHIA_COST - spelare);
+    const surplus  = Math.max(0, spelare - GOTHIA_COST);
+    return { name: r.name, v25, v26, tot, spelare, laget, sp25, lag25, sp26, lag26, gothia, surplus };
   });
   window._vinstRows = data; // för modal
   const sumTot      = data.reduce((s, p) => s + p.tot,     0);
   const sumSpelarna = data.reduce((s, p) => s + p.spelare, 0);
   const sumLaget    = data.reduce((s, p) => s + p.laget,   0);
   const sumGothia   = data.reduce((s, p) => s + p.gothia,  0);
-  badge.textContent = fmt(sumTot) + ' kr total vinst';
+  badge.textContent = fmt(sumTot) + ' kr total vinst (2025+2026)';
 
   function gh(group, label, cls) {
     return `<th class="${cls}"><span class="col-group">${group}</span>${label}</th>`;
@@ -1444,9 +1561,9 @@ function _renderVinstFordelning(rows) {
   /* ── Desktop tabell ── */
   let html = '<table class="delivery-table"><thead><tr>';
   html += '<th>Spelare</th>';
-  html += gh('2025', 'Adv-vinst', 'split-kvar');
-  html += gh('2026', 'Vinst 2026', 'lev');
-  html += gh('Totalt', 'Total vinst', 'kvar kvar-first');
+  html += gh('2025 · Uppgjort', 'Vinst 2025', 'split-kvar');
+  html += gh('2026 · Nytt', 'Vinst 2026', 'lev');
+  html += gh('2025+2026 · Totalt', 'Total vinst', 'kvar kvar-first');
   html += gh('60% → Spelare', 'Till spelaren', 'lev');
   html += gh('40% → Laget', 'Till lagkassan', 'split-lev split-first');
   html += gh('Gothia Cup', `Att betala (${fmt(GOTHIA_COST)} kr)`, 'kvar split-kvar-first');
@@ -1456,7 +1573,8 @@ function _renderVinstFordelning(rows) {
     ? `<td class="split-kvar-first kvar-val" style="text-align:right;font-weight:700">${fmt(sumGothia)}&nbsp;kr</td>`
     : `<td class="split-kvar-first" style="text-align:right;color:#059669;font-weight:700">✓ Täckt</td>`;
   html += `<tr class="totals-row"><td>TOTALT</td>`
-    + `<td style="text-align:right;color:#c4cadc">–</td><td style="text-align:right;color:#c4cadc">–</td>`
+    + `<td style="text-align:right;color:#c4cadc">–</td>`
+    + `<td style="text-align:right;color:#c4cadc">–</td>`
     + `<td class="kvar-first kvar-val" style="text-align:right;font-weight:700">${fmt(sumTot)}&nbsp;kr</td>`
     + `<td class="lev-val" style="text-align:right;font-weight:700">${fmt(sumSpelarna)}&nbsp;kr</td>`
     + `<td class="split-first split-lev-val" style="text-align:right;font-weight:700">${fmt(sumLaget)}&nbsp;kr</td>`
@@ -1475,7 +1593,8 @@ function _renderVinstFordelning(rows) {
   });
   // Totalrad nederst
   html += `<tr class="totals-row"><td>TOTALT</td>`
-    + `<td style="text-align:right;color:#c4cadc">–</td><td style="text-align:right;color:#c4cadc">–</td>`
+    + `<td style="text-align:right;color:#c4cadc">–</td>`
+    + `<td style="text-align:right;color:#c4cadc">–</td>`
     + `<td class="kvar-first kvar-val" style="text-align:right;font-weight:700">${fmt(sumTot)}&nbsp;kr</td>`
     + `<td class="lev-val" style="text-align:right;font-weight:700">${fmt(sumSpelarna)}&nbsp;kr</td>`
     + `<td class="split-first split-lev-val" style="text-align:right;font-weight:700">${fmt(sumLaget)}&nbsp;kr</td>`
@@ -1495,19 +1614,19 @@ function _renderVinstFordelning(rows) {
         <div class="vinst-row-name">${esc(p.name)}</div>
         <div class="vinst-main">
           <div class="vinst-mini">
-            <div class="vinst-mini-label">Total vinst</div>
-            <div class="vinst-mini-val">${p.tot ? fmt(p.tot) + ' kr' : '–'}</div>
+            <div class="vinst-mini-label">Vinst 2026 (nytt)</div>
+            <div class="vinst-mini-val">${p.v26 ? fmt(p.v26) + ' kr' : '–'}</div>
           </div>
           <div class="vinst-mini">
-            <div class="vinst-mini-label">Till spelaren (60%)</div>
+            <div class="vinst-mini-label">Till spelaren 60%</div>
             <div class="vinst-mini-val c-green">${p.spelare ? fmt(p.spelare) + ' kr' : '–'}</div>
           </div>
           <div class="vinst-mini">
-            <div class="vinst-mini-label">Till lagkassan (40%)</div>
+            <div class="vinst-mini-label">Till lagkassan 40%</div>
             <div class="vinst-mini-val c-purple">${p.laget ? fmt(p.laget) + ' kr' : '–'}</div>
           </div>
           <div class="vinst-mini">
-            <div class="vinst-mini-label">Vinst 2025</div>
+            <div class="vinst-mini-label">Vinst 2025 (uppgjort)</div>
             <div class="vinst-mini-val c-blue">${p.v25 ? fmt(p.v25) + ' kr' : '–'}</div>
           </div>
         </div>
