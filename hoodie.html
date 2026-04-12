@@ -228,6 +228,15 @@
             .swatch-yaruga-lilac::before {
                 background: linear-gradient(160deg, #c4aee8 45%, #9d7bcf 100%);
             }
+            .swatch-fenders-royal::before {
+                background: linear-gradient(160deg, #1a5fcc 50%, #3b82f6 100%);
+            }
+            .swatch-cello-navy::before {
+                background: linear-gradient(160deg, #0f2a5e 50%, #1a3f80 100%);
+            }
+            .swatch-cello-royal::before {
+                background: linear-gradient(160deg, #1a5fcc 50%, #3b82f6 100%);
+            }
 
             /* Selected checkmark */
             .hoodie-card.selected .hoodie-photo::after {
@@ -314,6 +323,29 @@
             .badge-training {
                 background: #f5f0ff;
                 color: #6d28d9;
+            }
+            .badge-parent {
+                background: #d1fae5;
+                color: #065f46;
+            }
+
+            /* ── SECTION SEPARATOR ────────────────────── */
+            .section-separator {
+                margin: 36px 0 18px;
+                padding: 14px 18px;
+                border-radius: var(--radius);
+                color: white;
+            }
+            .section-separator-title {
+                font-family: "Bebas Neue", sans-serif;
+                font-size: 1.15rem;
+                letter-spacing: 2px;
+            }
+            .section-separator-sub {
+                font-size: 0.78rem;
+                opacity: 0.65;
+                margin-top: 4px;
+                line-height: 1.4;
             }
 
             /* "Visa röster" button */
@@ -842,104 +874,10 @@
                     favorit
                 </div>
 
-                <!-- ── ZIP HOODIES ── -->
-                <div class="hoodie-group">
-                    <div class="hoodie-group-label">
-                        Zip Hoodie – Heavy Cotton Trumpet
-                        <div class="group-divider"></div>
-                    </div>
-
-                    <div class="hoodie-card" id="card-trumpet-navy">
-                        <input
-                            type="radio"
-                            name="hoodie"
-                            value="trumpet-navy"
-                        />
-                        <div
-                            class="hoodie-photo swatch-trumpet-navy"
-                            onclick="showVoters('trumpet-navy')"
-                        >
-                            <img
-                                src="hooded-sweatshirt-zip-hoody-hoodie-heavy-cotton-trumpet-macron-navy.jpg"
-                                alt=""
-                                onerror="this.style.display = 'none'"
-                            />
-                            <div
-                                class="vote-badge"
-                                id="badge-trumpet-navy"
-                            ></div>
-                        </div>
-                        <div
-                            class="hoodie-info"
-                            onclick="showVoters('trumpet-navy')"
-                            style="cursor: pointer"
-                        >
-                            <div class="hoodie-name">Trumpet Zip Hoody</div>
-                            <div class="hoodie-color">Navy · Heavy Cotton</div>
-                            <div class="hoodie-meta">
-                                <span class="badge badge-zip">Zip</span>
-                                <button
-                                    class="btn-show-voters"
-                                    id="btn-voters-trumpet-navy"
-                                >
-                                    👥 Visa röster
-                                </button>
-                            </div>
-                        </div>
-                        <div
-                            class="hoodie-select"
-                            onclick="selectHoodie('trumpet-navy')"
-                        >
-                            <div class="radio-circle"></div>
-                        </div>
-                    </div>
-
-                    <div class="hoodie-card" id="card-trumpet-blue">
-                        <input
-                            type="radio"
-                            name="hoodie"
-                            value="trumpet-blue"
-                        />
-                        <div
-                            class="hoodie-photo swatch-trumpet-blue"
-                            onclick="showVoters('trumpet-blue')"
-                        >
-                            <img
-                                src="hooded-sweatshirt-zip-hoody-hoodie-heavy-cotton-trumpet-macron-skyblue.jpg"
-                                alt=""
-                                onerror="this.style.display = 'none'"
-                            />
-                            <div
-                                class="vote-badge"
-                                id="badge-trumpet-blue"
-                            ></div>
-                        </div>
-                        <div
-                            class="hoodie-info"
-                            onclick="showVoters('trumpet-blue')"
-                            style="cursor: pointer"
-                        >
-                            <div class="hoodie-name">Trumpet Zip Hoody</div>
-                            <div class="hoodie-color">
-                                Royal Blue · Heavy Cotton
-                            </div>
-                            <div class="hoodie-meta">
-                                <span class="badge badge-zip">Zip</span>
-                                <button
-                                    class="btn-show-voters"
-                                    id="btn-voters-trumpet-blue"
-                                >
-                                    👥 Visa röster
-                                </button>
-                            </div>
-                        </div>
-                        <div
-                            class="hoodie-select"
-                            onclick="selectHoodie('trumpet-blue')"
-                        >
-                            <div class="radio-circle"></div>
-                        </div>
-                    </div>
+                <!-- ══ SPELARE & LEDARE ══ -->
+                <div class="section-separator" style="background: linear-gradient(135deg, var(--navy) 0%, #050e27 100%); margin-top: 18px;">
+                    <div class="section-separator-title">⚽ SPELARE &amp; LEDARE</div>
+                    <div class="section-separator-sub">Hoodies och tröjor – rösta på er favorit!</div>
                 </div>
 
                 <!-- ── FENDERS PULLOVER ── -->
@@ -950,97 +888,39 @@
                     </div>
 
                     <div class="hoodie-card" id="card-fenders-lilac">
-                        <input
-                            type="radio"
-                            name="hoodie"
-                            value="fenders-lilac"
-                        />
-                        <div
-                            class="hoodie-photo swatch-fenders-lilac"
-                            onclick="showVoters('fenders-lilac')"
-                        >
-                            <img
-                                src="hooded-sweatshirt-hoody-heavy-cotton-fenders-macron-anthracite-lilac.jpg"
-                                alt=""
-                                onerror="this.style.display = 'none'"
-                            />
-                            <div
-                                class="vote-badge"
-                                id="badge-fenders-lilac"
-                            ></div>
+                        <input type="radio" name="hoodie" value="fenders-lilac" />
+                        <div class="hoodie-photo swatch-fenders-lilac" onclick="showVoters('fenders-lilac')">
+                            <img src="hooded-sweatshirt-hoody-heavy-cotton-fenders-macron-anthracite-lilac.jpg" alt="" onerror="this.style.display = 'none'" />
+                            <div class="vote-badge" id="badge-fenders-lilac"></div>
                         </div>
-                        <div
-                            class="hoodie-info"
-                            onclick="showVoters('fenders-lilac')"
-                            style="cursor: pointer"
-                        >
+                        <div class="hoodie-info" onclick="showVoters('fenders-lilac')" style="cursor: pointer">
                             <div class="hoodie-name">Fenders Pullover</div>
-                            <div class="hoodie-color">
-                                Mörkgrå / Lila · Heavy Cotton
-                            </div>
+                            <div class="hoodie-color">Mörkgrå / Lila · Heavy Cotton</div>
                             <div class="hoodie-meta">
-                                <span class="badge badge-pullover"
-                                    >Pullover</span
-                                >
-                                <button
-                                    class="btn-show-voters"
-                                    id="btn-voters-fenders-lilac"
-                                >
-                                    👥 Visa röster
-                                </button>
+                                <span class="badge badge-pullover">Pullover</span>
+                                <button class="btn-show-voters" id="btn-voters-fenders-lilac">👥 Visa röster</button>
                             </div>
                         </div>
-                        <div
-                            class="hoodie-select"
-                            onclick="selectHoodie('fenders-lilac')"
-                        >
+                        <div class="hoodie-select" onclick="selectHoodie('fenders-lilac')">
                             <div class="radio-circle"></div>
                         </div>
                     </div>
 
                     <div class="hoodie-card" id="card-fenders-navy">
-                        <input
-                            type="radio"
-                            name="hoodie"
-                            value="fenders-navy"
-                        />
-                        <div
-                            class="hoodie-photo swatch-fenders-navy"
-                            onclick="showVoters('fenders-navy')"
-                        >
-                            <img
-                                src="hooded-sweatshirt-hoody-heavy-cotton-fenders-macron-navy.jpg"
-                                alt=""
-                                onerror="this.style.display = 'none'"
-                            />
-                            <div
-                                class="vote-badge"
-                                id="badge-fenders-navy"
-                            ></div>
+                        <input type="radio" name="hoodie" value="fenders-navy" />
+                        <div class="hoodie-photo swatch-fenders-navy" onclick="showVoters('fenders-navy')">
+                            <img src="hooded-sweatshirt-hoody-heavy-cotton-fenders-macron-navy.jpg" alt="" onerror="this.style.display = 'none'" />
+                            <div class="vote-badge" id="badge-fenders-navy"></div>
                         </div>
-                        <div
-                            class="hoodie-info"
-                            onclick="showVoters('fenders-navy')"
-                            style="cursor: pointer"
-                        >
+                        <div class="hoodie-info" onclick="showVoters('fenders-navy')" style="cursor: pointer">
                             <div class="hoodie-name">Fenders Pullover</div>
                             <div class="hoodie-color">Navy · Heavy Cotton</div>
                             <div class="hoodie-meta">
-                                <span class="badge badge-pullover"
-                                    >Pullover</span
-                                >
-                                <button
-                                    class="btn-show-voters"
-                                    id="btn-voters-fenders-navy"
-                                >
-                                    👥 Visa röster
-                                </button>
+                                <span class="badge badge-pullover">Pullover</span>
+                                <button class="btn-show-voters" id="btn-voters-fenders-navy">👥 Visa röster</button>
                             </div>
                         </div>
-                        <div
-                            class="hoodie-select"
-                            onclick="selectHoodie('fenders-navy')"
-                        >
+                        <div class="hoodie-select" onclick="selectHoodie('fenders-navy')">
                             <div class="radio-circle"></div>
                         </div>
                     </div>
@@ -1053,122 +933,40 @@
                         <div class="group-divider"></div>
                     </div>
 
-                    <div class="hoodie-card" id="card-horn-sky">
-                        <input type="radio" name="hoodie" value="horn-sky" />
-                        <div
-                            class="hoodie-photo swatch-horn-sky"
-                            onclick="showVoters('horn-sky')"
-                        >
-                            <img
-                                src="hooded-sweatshirt-hoody-hoodie-horn-macron-neon-sky-blue.jpg"
-                                alt=""
-                                onerror="this.style.display = 'none'"
-                            />
-                            <div class="vote-badge" id="badge-horn-sky"></div>
-                        </div>
-                        <div
-                            class="hoodie-info"
-                            onclick="showVoters('horn-sky')"
-                            style="cursor: pointer"
-                        >
-                            <div class="hoodie-name">Horn Pullover</div>
-                            <div class="hoodie-color">Neon Sky Blue</div>
-                            <div class="hoodie-meta">
-                                <span class="badge badge-pullover"
-                                    >Pullover</span
-                                >
-                                <button
-                                    class="btn-show-voters"
-                                    id="btn-voters-horn-sky"
-                                >
-                                    👥 Visa röster
-                                </button>
-                            </div>
-                        </div>
-                        <div
-                            class="hoodie-select"
-                            onclick="selectHoodie('horn-sky')"
-                        >
-                            <div class="radio-circle"></div>
-                        </div>
-                    </div>
-
                     <div class="hoodie-card" id="card-horn-navy">
                         <input type="radio" name="hoodie" value="horn-navy" />
-                        <div
-                            class="hoodie-photo swatch-horn-navy"
-                            onclick="showVoters('horn-navy')"
-                        >
-                            <img
-                                src="hooded-sweatshirt-hoody-hoodie-horn-macron-navy.jpg"
-                                alt=""
-                                onerror="this.style.display = 'none'"
-                            />
+                        <div class="hoodie-photo swatch-horn-navy" onclick="showVoters('horn-navy')">
+                            <img src="hooded-sweatshirt-hoody-hoodie-horn-macron-navy.jpg" alt="" onerror="this.style.display = 'none'" />
                             <div class="vote-badge" id="badge-horn-navy"></div>
                         </div>
-                        <div
-                            class="hoodie-info"
-                            onclick="showVoters('horn-navy')"
-                            style="cursor: pointer"
-                        >
+                        <div class="hoodie-info" onclick="showVoters('horn-navy')" style="cursor: pointer">
                             <div class="hoodie-name">Horn Pullover</div>
                             <div class="hoodie-color">Navy tvåfärgad</div>
                             <div class="hoodie-meta">
-                                <span class="badge badge-pullover"
-                                    >Pullover</span
-                                >
-                                <button
-                                    class="btn-show-voters"
-                                    id="btn-voters-horn-navy"
-                                >
-                                    👥 Visa röster
-                                </button>
+                                <span class="badge badge-pullover">Pullover</span>
+                                <button class="btn-show-voters" id="btn-voters-horn-navy">👥 Visa röster</button>
                             </div>
                         </div>
-                        <div
-                            class="hoodie-select"
-                            onclick="selectHoodie('horn-navy')"
-                        >
+                        <div class="hoodie-select" onclick="selectHoodie('horn-navy')">
                             <div class="radio-circle"></div>
                         </div>
                     </div>
 
                     <div class="hoodie-card" id="card-horn-white">
                         <input type="radio" name="hoodie" value="horn-white" />
-                        <div
-                            class="hoodie-photo swatch-horn-white"
-                            onclick="showVoters('horn-white')"
-                        >
-                            <img
-                                src="hooded-sweatshirt-hoody-hoodie-horn-macron-white.jpg"
-                                alt=""
-                                onerror="this.style.display = 'none'"
-                            />
+                        <div class="hoodie-photo swatch-horn-white" onclick="showVoters('horn-white')">
+                            <img src="hooded-sweatshirt-hoody-hoodie-horn-macron-white.jpg" alt="" onerror="this.style.display = 'none'" />
                             <div class="vote-badge" id="badge-horn-white"></div>
                         </div>
-                        <div
-                            class="hoodie-info"
-                            onclick="showVoters('horn-white')"
-                            style="cursor: pointer"
-                        >
+                        <div class="hoodie-info" onclick="showVoters('horn-white')" style="cursor: pointer">
                             <div class="hoodie-name">Horn Pullover</div>
                             <div class="hoodie-color">Vit</div>
                             <div class="hoodie-meta">
-                                <span class="badge badge-pullover"
-                                    >Pullover</span
-                                >
-                                <button
-                                    class="btn-show-voters"
-                                    id="btn-voters-horn-white"
-                                >
-                                    👥 Visa röster
-                                </button>
+                                <span class="badge badge-pullover">Pullover</span>
+                                <button class="btn-show-voters" id="btn-voters-horn-white">👥 Visa röster</button>
                             </div>
                         </div>
-                        <div
-                            class="hoodie-select"
-                            onclick="selectHoodie('horn-white')"
-                        >
+                        <div class="hoodie-select" onclick="selectHoodie('horn-white')">
                             <div class="radio-circle"></div>
                         </div>
                     </div>
@@ -1183,47 +981,19 @@
 
                     <div class="hoodie-card" id="card-tiamat-navy">
                         <input type="radio" name="hoodie" value="tiamat-navy" />
-                        <div
-                            class="hoodie-photo swatch-tiamat-navy"
-                            onclick="showVoters('tiamat-navy')"
-                        >
-                            <img
-                                src="top-sweatshirt-zip-tracksuit-jacket-tiamat-microfibre-macron-navy-white.jpg"
-                                alt=""
-                                onerror="this.style.display = 'none'"
-                            />
-                            <div
-                                class="vote-badge"
-                                id="badge-tiamat-navy"
-                            ></div>
+                        <div class="hoodie-photo swatch-tiamat-navy" onclick="showVoters('tiamat-navy')">
+                            <img src="top-sweatshirt-zip-tracksuit-jacket-tiamat-microfibre-macron-navy-white.jpg" alt="" onerror="this.style.display = 'none'" />
+                            <div class="vote-badge" id="badge-tiamat-navy"></div>
                         </div>
-                        <div
-                            class="hoodie-info"
-                            onclick="showVoters('tiamat-navy')"
-                            style="cursor: pointer"
-                        >
-                            <div class="hoodie-name">
-                                Tiamat Tracksuit Jacket
-                            </div>
-                            <div class="hoodie-color">
-                                Navy / Vit · Microfibre
-                            </div>
+                        <div class="hoodie-info" onclick="showVoters('tiamat-navy')" style="cursor: pointer">
+                            <div class="hoodie-name">Tiamat Tracksuit Jacket</div>
+                            <div class="hoodie-color">Navy / Vit · Microfibre</div>
                             <div class="hoodie-meta">
-                                <span class="badge badge-jacket"
-                                    >Zip Jacket</span
-                                >
-                                <button
-                                    class="btn-show-voters"
-                                    id="btn-voters-tiamat-navy"
-                                >
-                                    👥 Visa röster
-                                </button>
+                                <span class="badge badge-jacket">Zip Jacket</span>
+                                <button class="btn-show-voters" id="btn-voters-tiamat-navy">👥 Visa röster</button>
                             </div>
                         </div>
-                        <div
-                            class="hoodie-select"
-                            onclick="selectHoodie('tiamat-navy')"
-                        >
+                        <div class="hoodie-select" onclick="selectHoodie('tiamat-navy')">
                             <div class="radio-circle"></div>
                         </div>
                     </div>
@@ -1238,15 +1008,8 @@
 
                     <div class="hoodie-card" id="card-yaruga-navy">
                         <input type="radio" name="hoodie" value="yaruga-navy" />
-                        <div
-                            class="hoodie-photo swatch-yaruga-navy"
-                            onclick="showVoters('yaruga-navy')"
-                        >
-                            <img
-                                src="top-sweatshirt-tracksuit-jacket-yaruga-training-outdoor-macron-navy.jpg"
-                                alt=""
-                                onerror="this.style.display = 'none'"
-                            />
+                        <div class="hoodie-photo swatch-yaruga-navy" onclick="showVoters('yaruga-navy')">
+                            <img src="top-sweatshirt-tracksuit-jacket-yaruga-training-outdoor-macron-navy.jpg" alt="" onerror="this.style.display = 'none'" />
                             <div
                                 class="vote-badge"
                                 id="badge-yaruga-navy"
@@ -1324,6 +1087,156 @@
                             class="hoodie-select"
                             onclick="selectHoodie('yaruga-lilac')"
                         >
+                            <div class="radio-circle"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ══ FÖRÄLDRAR ══ -->
+                <div class="section-separator" style="background: linear-gradient(135deg, #1a4a2e 0%, #0d2b1a 100%);">
+                    <div class="section-separator-title">👨‍👩‍👧 FÖRÄLDRAR</div>
+                    <div class="section-separator-sub">Hoodies för föräldrar – matcha laget!</div>
+                </div>
+
+                <!-- ── TRUMPET ZIP – FÖRÄLDRAR ── -->
+                <div class="hoodie-group">
+                    <div class="hoodie-group-label">
+                        Zip Hoodie – Heavy Cotton Trumpet
+                        <div class="group-divider"></div>
+                    </div>
+
+                    <div class="hoodie-card" id="card-trumpet-navy">
+                        <input type="radio" name="hoodie" value="trumpet-navy" />
+                        <div class="hoodie-photo swatch-trumpet-navy" onclick="showVoters('trumpet-navy')">
+                            <img src="hooded-sweatshirt-zip-hoody-hoodie-heavy-cotton-trumpet-macron-navy.jpg" alt="" onerror="this.style.display = 'none'" />
+                            <div class="vote-badge" id="badge-trumpet-navy"></div>
+                        </div>
+                        <div class="hoodie-info" onclick="showVoters('trumpet-navy')" style="cursor: pointer">
+                            <div class="hoodie-name">Trumpet Zip Hoody</div>
+                            <div class="hoodie-color">Navy · Heavy Cotton</div>
+                            <div class="hoodie-meta">
+                                <span class="badge badge-zip">Zip</span>
+                                <span class="badge badge-parent">Förälder</span>
+                                <button class="btn-show-voters" id="btn-voters-trumpet-navy">👥 Visa röster</button>
+                            </div>
+                        </div>
+                        <div class="hoodie-select" onclick="selectHoodie('trumpet-navy')">
+                            <div class="radio-circle"></div>
+                        </div>
+                    </div>
+
+                    <div class="hoodie-card" id="card-trumpet-blue">
+                        <input type="radio" name="hoodie" value="trumpet-blue" />
+                        <div class="hoodie-photo swatch-trumpet-blue" onclick="showVoters('trumpet-blue')">
+                            <img src="hooded-sweatshirt-zip-hoody-hoodie-heavy-cotton-trumpet-macron-skyblue.jpg" alt="" onerror="this.style.display = 'none'" />
+                            <div class="vote-badge" id="badge-trumpet-blue"></div>
+                        </div>
+                        <div class="hoodie-info" onclick="showVoters('trumpet-blue')" style="cursor: pointer">
+                            <div class="hoodie-name">Trumpet Zip Hoody</div>
+                            <div class="hoodie-color">Royal Blue · Heavy Cotton</div>
+                            <div class="hoodie-meta">
+                                <span class="badge badge-zip">Zip</span>
+                                <span class="badge badge-parent">Förälder</span>
+                                <button class="btn-show-voters" id="btn-voters-trumpet-blue">👥 Visa röster</button>
+                            </div>
+                        </div>
+                        <div class="hoodie-select" onclick="selectHoodie('trumpet-blue')">
+                            <div class="radio-circle"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── CELLO ZIP – FÖRÄLDRAR ── -->
+                <div class="hoodie-group">
+                    <div class="hoodie-group-label">
+                        Zip Hoodie – Cello
+                        <div class="group-divider"></div>
+                    </div>
+
+                    <div class="hoodie-card" id="card-cello-navy">
+                        <input type="radio" name="hoodie" value="cello-navy" />
+                        <div class="hoodie-photo swatch-cello-navy" onclick="showVoters('cello-navy')">
+                            <img src="hooded-sweatshirt-zip-hoody-hoodie-cello-macron-navy.jpg" alt="" onerror="this.style.display = 'none'" />
+                            <div class="vote-badge" id="badge-cello-navy"></div>
+                        </div>
+                        <div class="hoodie-info" onclick="showVoters('cello-navy')" style="cursor: pointer">
+                            <div class="hoodie-name">Cello Zip Hoody</div>
+                            <div class="hoodie-color">Navy</div>
+                            <div class="hoodie-meta">
+                                <span class="badge badge-zip">Zip</span>
+                                <span class="badge badge-parent">Förälder</span>
+                                <button class="btn-show-voters" id="btn-voters-cello-navy">👥 Visa röster</button>
+                            </div>
+                        </div>
+                        <div class="hoodie-select" onclick="selectHoodie('cello-navy')">
+                            <div class="radio-circle"></div>
+                        </div>
+                    </div>
+
+                    <div class="hoodie-card" id="card-cello-royal">
+                        <input type="radio" name="hoodie" value="cello-royal" />
+                        <div class="hoodie-photo swatch-cello-royal" onclick="showVoters('cello-royal')">
+                            <img src="hooded-sweatshirt-zip-hoody-hoodie-cello-macron-royal-blue.jpg" alt="" onerror="this.style.display = 'none'" />
+                            <div class="vote-badge" id="badge-cello-royal"></div>
+                        </div>
+                        <div class="hoodie-info" onclick="showVoters('cello-royal')" style="cursor: pointer">
+                            <div class="hoodie-name">Cello Zip Hoody</div>
+                            <div class="hoodie-color">Royal Blue</div>
+                            <div class="hoodie-meta">
+                                <span class="badge badge-zip">Zip</span>
+                                <span class="badge badge-parent">Förälder</span>
+                                <button class="btn-show-voters" id="btn-voters-cello-royal">👥 Visa röster</button>
+                            </div>
+                        </div>
+                        <div class="hoodie-select" onclick="selectHoodie('cello-royal')">
+                            <div class="radio-circle"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── HORN SKY + FENDERS ROYAL – FÖRÄLDRAR ── -->
+                <div class="hoodie-group">
+                    <div class="hoodie-group-label">
+                        Pullover – Horn &amp; Fenders
+                        <div class="group-divider"></div>
+                    </div>
+
+                    <div class="hoodie-card" id="card-horn-sky">
+                        <input type="radio" name="hoodie" value="horn-sky" />
+                        <div class="hoodie-photo swatch-horn-sky" onclick="showVoters('horn-sky')">
+                            <img src="hooded-sweatshirt-hoody-hoodie-horn-macron-neon-sky-blue.jpg" alt="" onerror="this.style.display = 'none'" />
+                            <div class="vote-badge" id="badge-horn-sky"></div>
+                        </div>
+                        <div class="hoodie-info" onclick="showVoters('horn-sky')" style="cursor: pointer">
+                            <div class="hoodie-name">Horn Pullover</div>
+                            <div class="hoodie-color">Neon Sky Blue</div>
+                            <div class="hoodie-meta">
+                                <span class="badge badge-pullover">Pullover</span>
+                                <span class="badge badge-parent">Förälder</span>
+                                <button class="btn-show-voters" id="btn-voters-horn-sky">👥 Visa röster</button>
+                            </div>
+                        </div>
+                        <div class="hoodie-select" onclick="selectHoodie('horn-sky')">
+                            <div class="radio-circle"></div>
+                        </div>
+                    </div>
+
+                    <div class="hoodie-card" id="card-fenders-royal">
+                        <input type="radio" name="hoodie" value="fenders-royal" />
+                        <div class="hoodie-photo swatch-fenders-royal" onclick="showVoters('fenders-royal')">
+                            <img src="hooded-sweatshirt-hoody-heavy-cotton-fenders-macron-royal-blue.jpg" alt="" onerror="this.style.display = 'none'" />
+                            <div class="vote-badge" id="badge-fenders-royal"></div>
+                        </div>
+                        <div class="hoodie-info" onclick="showVoters('fenders-royal')" style="cursor: pointer">
+                            <div class="hoodie-name">Fenders Pullover</div>
+                            <div class="hoodie-color">Royal Blue · Heavy Cotton</div>
+                            <div class="hoodie-meta">
+                                <span class="badge badge-pullover">Pullover</span>
+                                <span class="badge badge-parent">Förälder</span>
+                                <button class="btn-show-voters" id="btn-voters-fenders-royal">👥 Visa röster</button>
+                            </div>
+                        </div>
+                        <div class="hoodie-select" onclick="selectHoodie('fenders-royal')">
                             <div class="radio-circle"></div>
                         </div>
                     </div>
@@ -1504,16 +1417,6 @@
 
             // ── DATA ──────────────────────────────────────────────────────────
             const HOODIES = {
-                "trumpet-navy": {
-                    name: "Trumpet Zip Hoody",
-                    color: "Navy · Heavy Cotton",
-                    img: "hooded-sweatshirt-zip-hoody-hoodie-heavy-cotton-trumpet-macron-navy.jpg",
-                },
-                "trumpet-blue": {
-                    name: "Trumpet Zip Hoody",
-                    color: "Royal Blue · Heavy Cotton",
-                    img: "hooded-sweatshirt-zip-hoody-hoodie-heavy-cotton-trumpet-macron-skyblue.jpg",
-                },
                 "fenders-lilac": {
                     name: "Fenders Pullover",
                     color: "Mörkgrå / Lila · Heavy Cotton",
@@ -1523,11 +1426,6 @@
                     name: "Fenders Pullover",
                     color: "Navy · Heavy Cotton",
                     img: "hooded-sweatshirt-hoody-heavy-cotton-fenders-macron-navy.jpg",
-                },
-                "horn-sky": {
-                    name: "Horn Pullover",
-                    color: "Neon Sky Blue",
-                    img: "hooded-sweatshirt-hoody-hoodie-horn-macron-neon-sky-blue.jpg",
                 },
                 "horn-navy": {
                     name: "Horn Pullover",
@@ -1553,6 +1451,36 @@
                     name: "Yaruga Training",
                     color: "Lila / Grå · Half-zip",
                     img: "top-sweatshirt-tracksuit-jacket-yaruga-training-outdoor-macron-lilac-anthracite.jpg",
+                },
+                "trumpet-navy": {
+                    name: "Trumpet Zip Hoody",
+                    color: "Navy · Heavy Cotton",
+                    img: "hooded-sweatshirt-zip-hoody-hoodie-heavy-cotton-trumpet-macron-navy.jpg",
+                },
+                "trumpet-blue": {
+                    name: "Trumpet Zip Hoody",
+                    color: "Royal Blue · Heavy Cotton",
+                    img: "hooded-sweatshirt-zip-hoody-hoodie-heavy-cotton-trumpet-macron-skyblue.jpg",
+                },
+                "cello-navy": {
+                    name: "Cello Zip Hoody",
+                    color: "Navy",
+                    img: "hooded-sweatshirt-zip-hoody-hoodie-cello-macron-navy.jpg",
+                },
+                "cello-royal": {
+                    name: "Cello Zip Hoody",
+                    color: "Royal Blue",
+                    img: "hooded-sweatshirt-zip-hoody-hoodie-cello-macron-royal-blue.jpg",
+                },
+                "horn-sky": {
+                    name: "Horn Pullover",
+                    color: "Neon Sky Blue",
+                    img: "hooded-sweatshirt-hoody-hoodie-horn-macron-neon-sky-blue.jpg",
+                },
+                "fenders-royal": {
+                    name: "Fenders Pullover",
+                    color: "Royal Blue · Heavy Cotton",
+                    img: "hooded-sweatshirt-hoody-heavy-cotton-fenders-macron-royal-blue.jpg",
                 },
             };
 
