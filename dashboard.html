@@ -462,6 +462,10 @@ td.zero { color: #c4cadc; }
   cursor: pointer; transition: background 0.15s;
 }
 .confirm-no-btn:hover { background: #e5e7eb; }
+/* Liten toggle för desktop-tabellen */
+.tog-btn.tog-sm { width: 40px; height: 22px; border-radius: 11px; }
+.tog-btn.tog-sm::after { width: 16px; height: 16px; top: 3px; left: 3px; }
+.tog-btn.tog-sm.on::after { transform: translateX(18px); }
 </style>
 </head>
 <body>
@@ -1149,22 +1153,26 @@ function _renderOrders(orders, tableContent, listContent, statsTop, statsProduct
   orderCount.textContent = listCount.textContent = countText;
   orderCount.style.display = listCount.style.display = 'inline-block';
   /* ── Desktop table ── */
+  const _deskPlayer = (document.getElementById('tableTitle').textContent || '').trim();
   const cols = [
-    { key: 'date',   label: 'Datum' },
-    { key: 'buyer',  label: 'Köpare' },
-    { key: 'phone',  label: 'Telefon' },
-    { key: 'adv',    label: 'Advance 2-lag (frp)',      num: true },
-    { key: 'p2',     label: 'Premium 2-lag (frp)',     num: true },
-    { key: 'p2_6',   label: 'Premium 2-lag infrp',     num: true },
-    { key: 'p3',     label: 'Premium 3-lag (frp)',     num: true },
-    { key: 'p3_8',   label: 'Premium 3-lag infrp',     num: true },
-    { key: 'total',  label: 'Summa (kr)', num: true },
+    { key: 'date',        label: 'Datum' },
+    { key: 'buyer',       label: 'Köpare' },
+    { key: 'phone',       label: 'Telefon' },
+    { key: 'adv',         label: 'Advance 2-lag (frp)', num: true },
+    { key: 'p2',          label: 'Premium 2-lag (frp)', num: true },
+    { key: 'p2_6',        label: 'Premium 2-lag infrp', num: true },
+    { key: 'p3',          label: 'Premium 3-lag (frp)', num: true },
+    { key: 'p3_8',        label: 'Premium 3-lag infrp', num: true },
+    { key: 'total',       label: 'Summa (kr)', num: true },
+    { key: '_levererat',  label: '📦 Levererat', status: true },
+    { key: '_betalt',     label: '💰 Betalt',    status: true },
   ];
   const sumKeys = ['adv','p2','p2_6','p3','p3_8','total'];
+  const realOrders = orders.filter(o => !o._isManual && !o._is2025 && o.buyer);
   let tableHtml = '<div class="table-wrap"><table><thead><tr>';
-  cols.forEach(c => tableHtml += `<th${c.num ? ' style="text-align:right"' : ''}>${c.label}</th>`);
+  cols.forEach(c => tableHtml += `<th${c.num ? ' style="text-align:right"' : c.status ? ' style="text-align:center"' : ''}>${c.label}</th>`);
   tableHtml += '</tr></thead><tbody>';
-  orders.forEach(o => {
+  orders.forEach((o, idx) => {
     const rowStyle = o._isManual ? ' style="background:#eff6ff"' : o._is2025 ? ' style="background:#fffbeb"' : '';
     tableHtml += `<tr${rowStyle}>`;
     cols.forEach(c => {
@@ -1183,6 +1191,20 @@ function _renderOrders(orders, tableContent, listContent, statsTop, statsProduct
         const n = Number(val) || 0;
         tableHtml += `<td class="num${n === 0 ? ' zero' : ''}">${n === 0 ? '–' : n}</td>`; return;
       }
+      if (c.status) {
+        if (o._isManual || o._is2025 || !o.buyer) {
+          tableHtml += '<td style="text-align:center;color:#c4cadc">–</td>'; return;
+        }
+        const _field = c.key === '_levererat' ? 'levererat' : 'betalt';
+        const _key   = _statusKey(_deskPlayer, o);
+        const _on    = _getStatus(_key)[_field];
+        const _buyer = esc(o.buyer || '').replace(/'/g, "\\'");
+        tableHtml += `<td style="text-align:center">
+          <button class="tog-btn tog-sm${_on ? ' on' : ''}" id="dtog-${_field}-${idx}"
+            onclick="promptStatusToggle(${idx},'${_field}','${_buyer}');event.stopPropagation();">
+          </button>
+        </td>`; return;
+      }
       tableHtml += `<td>${esc(String(val))}</td>`;
     });
     tableHtml += '</tr>';
@@ -1196,6 +1218,10 @@ function _renderOrders(orders, tableContent, listContent, statsTop, statsProduct
     } else if (sumKeys.includes(c.key)) {
       const s = orders.reduce((acc, o) => acc + (Number(o[c.key]) || 0), 0);
       tableHtml += `<td class="num">${s > 0 ? s : '–'}</td>`;
+    } else if (c.status) {
+      const _field = c.key === '_levererat' ? 'levererat' : 'betalt';
+      const done = realOrders.filter(o => _getStatus(_statusKey(_deskPlayer, o))[_field]).length;
+      tableHtml += `<td style="text-align:center;font-size:.8rem;color:var(--muted)">${done}/${realOrders.length}</td>`;
     } else { tableHtml += '<td></td>'; }
   });
   tableHtml += '</tr></tbody></table></div>';
@@ -1320,7 +1346,7 @@ function confirmStatusToggle() {
 
   const isLev = field === 'levererat';
 
-  // Uppdatera toggle i modal
+  // Uppdatera toggle i modal (mobil)
   const togEl = document.getElementById(isLev ? 'modal-tog-lev' : 'modal-tog-bet');
   const subEl = document.getElementById(isLev ? 'modal-sub-lev' : 'modal-sub-bet');
   if (togEl) togEl.classList.toggle('on', newVal);
@@ -1336,6 +1362,27 @@ function confirmStatusToggle() {
       <span class="status-chip ${stNow.levererat ? 'lev' : 'pend'}">${stNow.levererat ? '✓ Levererat' : '○ Ej levererat'}</span>
       <span class="status-chip ${stNow.betalt    ? 'bet' : 'pend'}">${stNow.betalt    ? '✓ Betalt'    : '○ Ej betalt'}</span>`;
   }
+
+  // Uppdatera toggle i desktop-tabellen
+  const deskTogEl = document.getElementById(`dtog-${field}-${orderIdx}`);
+  if (deskTogEl) deskTogEl.classList.toggle('on', newVal);
+
+  // Uppdatera totals-räknaren i desktop-tabellen (X/Y i sista raden)
+  const stNow = _getStatus(key);
+  const _deskPlayer2 = (document.getElementById('tableTitle').textContent || '').trim();
+  const realOrds = (window._orders || []).filter(o => !o._isManual && !o._is2025 && o.buyer);
+  ['levererat','betalt'].forEach(f => {
+    const done = realOrds.filter(o => _getStatus(_statusKey(_deskPlayer2, o))[f]).length;
+    // Hitta rätt td i totals-raden – leta efter tog-knapp i kolumnen för att lokalisera index
+    const firstTog = document.querySelector(`#dtog-${f}-0`) || document.querySelector(`[id^="dtog-${f}-"]`);
+    if (!firstTog) return;
+    const colIdx = firstTog.closest('td') ? Array.from(firstTog.closest('tr').cells).indexOf(firstTog.closest('td')) : -1;
+    if (colIdx < 0) return;
+    const totalsRow = document.querySelector('.totals-row');
+    if (totalsRow && totalsRow.cells[colIdx]) {
+      totalsRow.cells[colIdx].textContent = `${done}/${realOrds.length}`;
+    }
+  });
 
   _pendingToggle = null;
   document.getElementById('confirmOverlay').classList.remove('open');
