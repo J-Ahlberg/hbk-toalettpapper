@@ -387,6 +387,81 @@ td.zero { color: #c4cadc; }
   .overview-list { display: none !important; }
   .vinst-list { display: none !important; }
 }
+
+/* ── LEVERANS & BETALNING – TOGGLES ──────────────────────── */
+.status-section { margin-top: 20px; border-top: 1px solid var(--border); padding-top: 16px; }
+.status-section-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--muted); margin-bottom: 12px; }
+.status-toggle-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+}
+.status-toggle-row:last-child { border-bottom: none; }
+.status-toggle-text { flex: 1; }
+.status-toggle-label { font-size: 0.92rem; font-weight: 600; color: var(--text); }
+.status-toggle-sub { font-size: 0.76rem; color: var(--muted); margin-top: 2px; }
+/* Toggle switch */
+.tog-btn {
+  position: relative; width: 52px; height: 28px;
+  border-radius: 14px; border: none; cursor: pointer;
+  background: #d1d5db; transition: background 0.25s;
+  flex-shrink: 0; -webkit-tap-highlight-color: transparent; outline: none;
+}
+.tog-btn:focus-visible { box-shadow: 0 0 0 3px rgba(15,42,94,0.25); }
+.tog-btn.on { background: #22c55e; }
+.tog-btn::after {
+  content: ''; position: absolute;
+  width: 20px; height: 20px; top: 4px; left: 4px;
+  border-radius: 50%; background: white;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.22);
+  transition: transform 0.22s;
+}
+.tog-btn.on::after { transform: translateX(24px); }
+/* Status-chips på mobilkorten */
+.order-status-chips { display: flex; gap: 5px; margin-top: 5px; flex-wrap: wrap; }
+.status-chip {
+  font-size: 0.68rem; font-weight: 700; padding: 2px 8px;
+  border-radius: 99px; white-space: nowrap;
+}
+.status-chip.lev  { background: #dcfce7; color: #166534; }
+.status-chip.bet  { background: #dbeafe; color: #1e40af; }
+.status-chip.pend { background: #f3f4f6; color: #6b7280; }
+/* Bekräftelse-overlay */
+.confirm-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(5,14,39,0.65);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  z-index: 3000;
+  align-items: flex-end; justify-content: center;
+}
+.confirm-overlay.open { display: flex; }
+.confirm-sheet {
+  background: #fff; border-radius: 24px 24px 0 0;
+  width: 100%; max-width: 480px;
+  animation: confirmUp 0.22s ease;
+  padding-bottom: env(safe-area-inset-bottom, 8px);
+}
+@keyframes confirmUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.confirm-sheet-handle { width: 40px; height: 4px; background: #dde3ef; border-radius: 4px; margin: 14px auto 0; }
+.confirm-sheet-body { padding: 18px 22px 26px; }
+.confirm-sheet-icon { font-size: 2.2rem; text-align: center; margin-bottom: 8px; }
+.confirm-sheet-title { font-size: 1.1rem; font-weight: 700; text-align: center; color: var(--text); margin-bottom: 6px; line-height: 1.25; }
+.confirm-sheet-desc { text-align: center; font-size: 0.88rem; color: var(--muted); line-height: 1.5; margin-bottom: 20px; }
+.confirm-sheet-desc strong { color: var(--text); }
+.confirm-sheet-btns { display: flex; flex-direction: column; gap: 9px; }
+.confirm-yes-btn {
+  width: 100%; padding: 14px; border: none; border-radius: 12px;
+  font-size: 1rem; font-weight: 700; cursor: pointer; transition: opacity 0.15s;
+}
+.confirm-yes-btn.is-on  { background: #22c55e; color: white; }
+.confirm-yes-btn.is-off { background: #f87171; color: white; }
+.confirm-yes-btn:hover  { opacity: 0.9; }
+.confirm-no-btn {
+  width: 100%; padding: 13px; background: #f3f4f6;
+  border: none; border-radius: 12px;
+  font-size: 0.9rem; font-weight: 600; color: var(--muted);
+  cursor: pointer; transition: background 0.15s;
+}
+.confirm-no-btn:hover { background: #e5e7eb; }
 </style>
 </head>
 <body>
@@ -613,6 +688,22 @@ td.zero { color: #c4cadc; }
   </div>
 
 </div><!-- /main -->
+
+<!-- BEKRÄFTELSE-OVERLAY (för leverans/betalning-togglarna) -->
+<div class="confirm-overlay" id="confirmOverlay" onclick="handleConfirmOverlayClick(event)">
+  <div class="confirm-sheet" id="confirmSheet">
+    <div class="confirm-sheet-handle"></div>
+    <div class="confirm-sheet-body">
+      <div class="confirm-sheet-icon" id="confirmIcon">📦</div>
+      <div class="confirm-sheet-title" id="confirmTitle">Bekräfta</div>
+      <div class="confirm-sheet-desc" id="confirmDesc"></div>
+      <div class="confirm-sheet-btns">
+        <button class="confirm-yes-btn is-on" id="confirmYesBtn" onclick="confirmStatusToggle()">Bekräfta</button>
+        <button class="confirm-no-btn" onclick="cancelStatusToggle()">Avbryt – inga ändringar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- MODAL (mobile) -->
 <div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
@@ -1131,12 +1222,24 @@ function _renderOrders(orders, tableContent, listContent, statsTop, statsProduct
       ? `<span class="badge badge-pending" style="font-size:.82rem">Försäljning 2025</span>`
       : esc(name);
     const metaFallback = o._isManual ? 'Beställning 2026' : o._is2025 ? 'Advance 2-lag förra säsongen' : 'Inget meddelande';
+    // Statuschips (levererat / betalt) – visas bara för riktiga beställningar
+    let statusChipsHtml = '';
+    if (!o._isManual && !o._is2025 && o.buyer) {
+      const _player = (document.getElementById('tableTitle').textContent || '').trim();
+      const _key    = _statusKey(_player, o);
+      const _st     = _getStatus(_key);
+      statusChipsHtml = `<div class="order-status-chips">
+        <span class="status-chip ${_st.levererat ? 'lev' : 'pend'}">${_st.levererat ? '✓ Levererat' : '○ Ej levererat'}</span>
+        <span class="status-chip ${_st.betalt ? 'bet' : 'pend'}">${_st.betalt ? '✓ Betalt' : '○ Ej betalt'}</span>
+      </div>`;
+    }
     listHtml += `
       <div class="order-row" onclick="openModal(${idx})" data-idx="${idx}"${rowStyle}>
         <div class="order-avatar"${avatarStyle}>${esc(init)}</div>
         <div class="order-info">
           <div class="order-name">${displayName}</div>
           <div class="order-meta">${meta || `<span style="font-style:italic">${metaFallback}</span>`}</div>
+          ${statusChipsHtml}
         </div>
         <div class="order-total-chip">${(total === '–' && (o._isManual || o._is2025)) ? '' : total}</div>
         <div class="order-chevron">›</div>
@@ -1145,6 +1248,106 @@ function _renderOrders(orders, tableContent, listContent, statsTop, statsProduct
   listHtml += '</div>';
   listContent.innerHTML = listHtml;
   window._orders = orders;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LEVERANS & BETALNING – STATUS I LOCALSTORAGE
+   Nyckel: hbk_st_<spelare>_<köpare+datum+total>
+   ══════════════════════════════════════════════════════════════ */
+function _statusKey(player, order) {
+  // Försök använda ref om det finns, annars sammansatt nyckel
+  if (order.ref) return 'hbk_st_' + player + '_' + order.ref;
+  const part = [order.buyer || '', order.date || '', String(order.total || '')]
+    .join('_').replace(/\s+/g, '').toLowerCase();
+  return 'hbk_st_' + player + '_' + part;
+}
+function _getStatus(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : { levererat: false, betalt: false };
+  } catch { return { levererat: false, betalt: false }; }
+}
+function _saveStatus(key, status) {
+  try { localStorage.setItem(key, JSON.stringify(status)); } catch {}
+}
+
+let _pendingToggle = null; // { orderIdx, field, newVal, key, buyerName }
+
+function promptStatusToggle(orderIdx, field, buyerName) {
+  const o = window._orders && window._orders[orderIdx];
+  if (!o) return;
+  const player = (document.getElementById('tableTitle').textContent || '').trim();
+  const key    = _statusKey(player, o);
+  const st     = _getStatus(key);
+  const newVal = !st[field];
+  _pendingToggle = { orderIdx, field, newVal, key, buyerName };
+
+  const isLev = field === 'levererat';
+  document.getElementById('confirmIcon').textContent = isLev ? '📦' : '💰';
+
+  if (newVal) {
+    document.getElementById('confirmTitle').textContent =
+      isLev ? 'Markera som levererat?' : 'Markera som betalt?';
+    document.getElementById('confirmDesc').innerHTML =
+      isLev
+        ? `Bekräfta att du har levererat toalettpappret till <strong>${esc(buyerName)}</strong>.`
+        : `Bekräfta att du har fått betalning från <strong>${esc(buyerName)}</strong>.`;
+    const yb = document.getElementById('confirmYesBtn');
+    yb.textContent = isLev ? '✓ Ja, levererat!' : '✓ Ja, betalt!';
+    yb.className = 'confirm-yes-btn is-on';
+  } else {
+    document.getElementById('confirmTitle').textContent =
+      isLev ? 'Avmarkera leverans?' : 'Avmarkera betalning?';
+    document.getElementById('confirmDesc').innerHTML =
+      isLev
+        ? `Vill du avmarkera leveransen för <strong>${esc(buyerName)}</strong>?`
+        : `Vill du avmarkera betalningen från <strong>${esc(buyerName)}</strong>?`;
+    const yb = document.getElementById('confirmYesBtn');
+    yb.textContent = isLev ? '✕ Ja, avmarkera leverans' : '✕ Ja, avmarkera betalning';
+    yb.className = 'confirm-yes-btn is-off';
+  }
+  document.getElementById('confirmOverlay').classList.add('open');
+}
+
+function confirmStatusToggle() {
+  if (!_pendingToggle) return;
+  const { orderIdx, field, newVal, key, buyerName } = _pendingToggle;
+
+  // Spara i localStorage
+  const st  = _getStatus(key);
+  st[field] = newVal;
+  _saveStatus(key, st);
+
+  const isLev = field === 'levererat';
+
+  // Uppdatera toggle i modal
+  const togEl = document.getElementById(isLev ? 'modal-tog-lev' : 'modal-tog-bet');
+  const subEl = document.getElementById(isLev ? 'modal-sub-lev' : 'modal-sub-bet');
+  if (togEl) togEl.classList.toggle('on', newVal);
+  if (subEl) subEl.textContent = newVal
+    ? (isLev ? 'Markerat som levererat ✓' : 'Betalning mottagen ✓')
+    : (isLev ? 'Inte levererat än'        : 'Inväntar betalning');
+
+  // Uppdatera statuschips på mobilkortet
+  const cardEl = document.querySelector(`.order-row[data-idx="${orderIdx}"] .order-status-chips`);
+  if (cardEl) {
+    const stNow = _getStatus(key);
+    cardEl.innerHTML = `
+      <span class="status-chip ${stNow.levererat ? 'lev' : 'pend'}">${stNow.levererat ? '✓ Levererat' : '○ Ej levererat'}</span>
+      <span class="status-chip ${stNow.betalt    ? 'bet' : 'pend'}">${stNow.betalt    ? '✓ Betalt'    : '○ Ej betalt'}</span>`;
+  }
+
+  _pendingToggle = null;
+  document.getElementById('confirmOverlay').classList.remove('open');
+}
+
+function cancelStatusToggle() {
+  _pendingToggle = null;
+  document.getElementById('confirmOverlay').classList.remove('open');
+}
+
+function handleConfirmOverlayClick(e) {
+  if (e.target === document.getElementById('confirmOverlay')) cancelStatusToggle();
 }
 
 /* ── Load orders (stale-while-revalidate) ── */
@@ -1298,6 +1501,36 @@ function openModal(idx) {
   });
   productGrid += '</div>';
   const totalVal = o.total ? fmt(o.total) + '\u00A0kr' : '–';
+  // Toggle-sektion för leverans och betalning (ej för manuella / 2025-poster)
+  let statusSection = '';
+  if (!isManual && !is2025 && o.buyer) {
+    const _player = (document.getElementById('tableTitle').textContent || '').trim();
+    const _key    = _statusKey(_player, o);
+    const _st     = _getStatus(_key);
+    statusSection = `
+    <div class="status-section">
+      <div class="status-section-title">Markera status</div>
+      <div class="status-toggle-row">
+        <div class="status-toggle-text">
+          <div class="status-toggle-label">📦 Levererat</div>
+          <div class="status-toggle-sub" id="modal-sub-lev">${_st.levererat ? 'Markerat som levererat ✓' : 'Inte levererat än'}</div>
+        </div>
+        <button class="tog-btn${_st.levererat ? ' on' : ''}" id="modal-tog-lev"
+          onclick="promptStatusToggle(${idx}, 'levererat', '${esc(name).replace(/'/g,"\\'")}')">
+        </button>
+      </div>
+      <div class="status-toggle-row">
+        <div class="status-toggle-text">
+          <div class="status-toggle-label">💰 Fått betalt</div>
+          <div class="status-toggle-sub" id="modal-sub-bet">${_st.betalt ? 'Betalning mottagen ✓' : 'Inväntar betalning'}</div>
+        </div>
+        <button class="tog-btn${_st.betalt ? ' on' : ''}" id="modal-tog-bet"
+          onclick="promptStatusToggle(${idx}, 'betalt', '${esc(name).replace(/'/g,"\\'")}')">
+        </button>
+      </div>
+    </div>`;
+  }
+
   document.getElementById('modalBody').innerHTML = `
     ${date ? `<div class="modal-meta-row">📅 ${esc(date)}</div>` : ''}
     <div class="modal-section">
@@ -1312,6 +1545,7 @@ function openModal(idx) {
         <span class="modal-total-value">${totalVal}</span>
       </div>
     </div>
+    ${statusSection}
   `;
   document.getElementById('modalBackdrop').classList.add('open');
   document.body.style.overflow = 'hidden';
