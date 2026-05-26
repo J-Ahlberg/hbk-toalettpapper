@@ -51,7 +51,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 select { width: 100%; padding: 13px 40px 13px 16px; border: 2px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 1rem; font-weight: 500; color: var(--text); background: var(--bg); appearance: none; cursor: pointer; outline: none; transition: border-color .2s; }
 select:focus { border-color: var(--navy); }
 /* ── STATS ── */
-.stats-top { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 14px; }
+.stats-top { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 14px; }
 .stats-products { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 24px; }
 .stat-card { background: var(--card); border-radius: 14px; padding: 18px 16px 16px; box-shadow: 0 2px 6px rgba(15,42,94,.08), 0 6px 20px rgba(15,42,94,.07); border: 1px solid var(--border); border-top: 3px solid var(--navy); text-align: center; }
 .stat-card.green { border-top-color: #059669; }
@@ -59,6 +59,8 @@ select:focus { border-color: var(--navy); }
 .stat-card.indigo { border-top-color: #6366f1; }
 .stat-card.teal { border-top-color: #0891b2; }
 .stat-card.rose { border-top-color: #e11d48; }
+.stat-card.swish { border-top-color: #6366f1; background: #eef2ff; }
+.stat-card.paid { border-top-color: #059669; background: #f0fdf4; }
 .stat-label { font-size: 0.72rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
 .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--navy); line-height: 1; }
 .stat-card.green .stat-value { color: #059669; }
@@ -66,6 +68,14 @@ select:focus { border-color: var(--navy); }
 .stat-card.indigo .stat-value { color: #6366f1; }
 .stat-card.teal .stat-value { color: #0891b2; }
 .stat-card.rose .stat-value { color: #e11d48; }
+.stat-card.swish .stat-value { color: #4f46e5; }
+.stat-card.paid .stat-value { color: #059669; font-size: 1.4rem; }
+/* Scope badge (e.g. "2025 + 2026") shown above the big number */
+.stat-scope { display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; color: #475569; background: #e2e8f0; padding: 2px 8px; border-radius: 999px; margin-bottom: 8px; }
+.stat-card.green .stat-scope { color: #065f46; background: #d1fae5; }
+.stat-card.amber .stat-scope { color: #92400e; background: #fef3c7; }
+.stat-card.swish .stat-scope { color: #3730a3; background: #e0e7ff; }
+.stat-card.paid  .stat-scope { color: #065f46; background: #d1fae5; }
 /* Smaller text for product cards */
 .stats-products .stat-value { font-size: 1.5rem; }
 .stat-sub { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
@@ -141,12 +151,16 @@ td.zero { color: #c4cadc; }
 /* Date row */
 .modal-meta-row { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--muted); margin-bottom: 16px; }
 /* ── RESPONSIVE ── */
+@media (max-width: 1000px) {
+  .stats-top { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+}
 @media (max-width: 700px) {
   .stats-top { grid-template-columns: repeat(2, 1fr); }
   .stats-products { grid-template-columns: repeat(3, 1fr); }
   .selector-card { padding: 18px 16px; }
 }
 @media (max-width: 480px) {
+  .stats-top { grid-template-columns: 1fr; }
   .stats-products { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 640px) {
@@ -463,13 +477,28 @@ td.zero { color: #c4cadc; }
   <!-- STATS top row -->
   <div class="stats-top" id="statsTop" style="display:none">
     <div class="stat-card">
+      <div class="stat-scope" id="statCountScope">2025 + 2026</div>
       <div class="stat-label">Best&#228;llningar</div>
       <div class="stat-value" id="statCount">&#8212;</div>
+      <div class="stat-sub" id="statCountSub">st totalt</div>
     </div>
     <div class="stat-card green">
-      <div class="stat-label">Total summa</div>
+      <div class="stat-scope" id="statTotalScope">2025 + 2026</div>
+      <div class="stat-label">Total f&#246;rs&#228;ljning</div>
       <div class="stat-value" id="statTotal">&#8212;</div>
-      <div class="stat-sub">kronor</div>
+      <div class="stat-sub" id="statTotalSub">kronor totalt</div>
+    </div>
+    <div class="stat-card amber" id="statRemainingCard">
+      <div class="stat-scope" id="statRemainingScope">Gothia Cup</div>
+      <div class="stat-label">Kvar att betala in</div>
+      <div class="stat-value" id="statRemaining">&#8212;</div>
+      <div class="stat-sub" id="statRemainingSub">kronor</div>
+    </div>
+    <div class="stat-card swish" id="statSwishCard">
+      <div class="stat-scope" id="statSwishScope">2026</div>
+      <div class="stat-label">Kvar att swisha Jimmie</div>
+      <div class="stat-value" id="statSwish">&#8212;</div>
+      <div class="stat-sub" id="statSwishSub">f&#246;r 2026 &#229;rs f&#246;rs&#228;ljning</div>
     </div>
   </div>
 
@@ -665,6 +694,31 @@ async function _fetchPlayers() {
   return _playersCache;
 }
 
+/* ── Kvar att swisha Jimmie (2026): map { "Förnamn Efternamn": belopp } ── */
+async function _getKvarSwishaMap() {
+  if (window._kvarSwishaMap) return window._kvarSwishaMap;
+  const stale = _getCache('kvar_swisha');
+  if (stale && typeof stale === 'object') {
+    window._kvarSwishaMap = stale;
+    // Trigga bakgrundsuppdatering men returnera stale direkt
+    fetch(API + '?action=kvar_swisha')
+      .then(r => r.json())
+      .then(fresh => { if (fresh && typeof fresh === 'object') { _setCache('kvar_swisha', fresh); window._kvarSwishaMap = fresh; } })
+      .catch(() => {});
+    return stale;
+  }
+  try {
+    const res = await fetch(API + '?action=kvar_swisha');
+    const fresh = await res.json();
+    if (fresh && typeof fresh === 'object' && !Array.isArray(fresh)) {
+      _setCache('kvar_swisha', fresh);
+      window._kvarSwishaMap = fresh;
+      return fresh;
+    }
+    return null;
+  } catch { return null; }
+}
+
 /* ── Load team totals (all players aggregated) ── */
 async function loadTeamStats() {
   const badge = document.getElementById('teamBadge');
@@ -814,6 +868,29 @@ function _renderOrders(orders, tableContent, listContent, statsTop, statsProduct
   const sumP3    = orders.reduce((s, o) => s + (Number(o.p3)    || 0), 0);
   const sumP3_8  = orders.reduce((s, o) => s + (Number(o.p3_8)  || 0), 0);
   const total    = sumAdv * 150 + sumP2 * 330 + sumP2_6 * 50 + sumP3 * 290 + sumP3_8 * 45;
+
+  /* ── Split counts / sums 2025 vs 2026 for the summary cards ── */
+  const _ord2025      = orders.filter(o => o._is2025);
+  const _ord2026      = orders.filter(o => !o._is2025);
+  const _count2025    = _ord2025.length;
+  const _count2026    = _ord2026.length;
+  const _adv2025      = _ord2025.reduce((s, o) => s + (Number(o.adv) || 0), 0);
+  const _rev2025      = _adv2025 * 150;
+  const _rev2026      = total - _rev2025;
+  /* ── Beräkna "Kvar att betala in" (samma logik som Vinstfördelning-kortet) ── */
+  const _s26Adv   = _ord2026.reduce((s, o) => s + (Number(o.adv)   || 0), 0);
+  const _s26P2    = _ord2026.reduce((s, o) => s + (Number(o.p2)    || 0), 0);
+  const _s26P2_6  = _ord2026.reduce((s, o) => s + (Number(o.p2_6)  || 0), 0);
+  const _s26P3    = _ord2026.reduce((s, o) => s + (Number(o.p3)    || 0), 0);
+  const _s26P3_8  = _ord2026.reduce((s, o) => s + (Number(o.p3_8)  || 0), 0);
+  const _v25      = _adv2025 * 50;
+  const _v26      = _s26Adv  * VINST_PER.adv  + _s26P2  * VINST_PER.p2
+                  + _s26P2_6 * VINST_PER.p2_6 + _s26P3  * VINST_PER.p3
+                  + _s26P3_8 * VINST_PER.p3_8;
+  const _spelareTot = Math.round((_v25 + _v26) * 0.60);
+  const _gothiaLeft = Math.max(0, GOTHIA_COST - _spelareTot);
+  const _gothiaSurplus = Math.max(0, _spelareTot - GOTHIA_COST);
+
   document.getElementById('statCount').textContent  = orders.length;
   document.getElementById('statTotal').textContent  = fmt(total);
   document.getElementById('statAdv').textContent    = sumAdv   || '–';
@@ -821,6 +898,87 @@ function _renderOrders(orders, tableContent, listContent, statsTop, statsProduct
   document.getElementById('statP2_6').textContent   = sumP2_6  || '–';
   document.getElementById('statP3').textContent     = sumP3    || '–';
   document.getElementById('statP3_8').textContent   = sumP3_8  || '–';
+
+  /* ── Uppdatera scope + sub-labels så det är tydligt att kortet är för 2025 + 2026 ── */
+  const _scopeCount = document.getElementById('statCountScope');
+  const _subCount   = document.getElementById('statCountSub');
+  const _scopeTotal = document.getElementById('statTotalScope');
+  const _subTotal   = document.getElementById('statTotalSub');
+  if (_count2025 > 0 && _count2026 > 0) {
+    _scopeCount.textContent = '2025 + 2026';
+    _subCount.textContent   = `${_count2025} st (2025) + ${_count2026} st (2026)`;
+    _scopeTotal.textContent = '2025 + 2026';
+    _subTotal.textContent   = `${fmt(_rev2025)} kr (2025) + ${fmt(_rev2026)} kr (2026)`;
+  } else if (_count2025 > 0) {
+    _scopeCount.textContent = '2025';
+    _subCount.textContent   = 'st (endast 2025)';
+    _scopeTotal.textContent = '2025';
+    _subTotal.textContent   = 'kronor (endast 2025)';
+  } else {
+    _scopeCount.textContent = '2026';
+    _subCount.textContent   = 'st (endast 2026)';
+    _scopeTotal.textContent = '2026';
+    _subTotal.textContent   = 'kronor (endast 2026)';
+  }
+
+  /* ── "Kvar att betala in" kortet: Gothia Cup-restskuld för spelaren ── */
+  const _remCard  = document.getElementById('statRemainingCard');
+  const _remVal   = document.getElementById('statRemaining');
+  const _remSub   = document.getElementById('statRemainingSub');
+  const _remScope = document.getElementById('statRemainingScope');
+  if (_gothiaLeft === 0) {
+    _remCard.classList.remove('amber');
+    _remCard.classList.add('paid');
+    _remVal.textContent   = _gothiaSurplus > 0 ? `✓ Täckt +${fmt(_gothiaSurplus)} kr` : '✓ Täckt';
+    _remSub.textContent   = `Gothia Cup (${fmt(GOTHIA_COST)} kr) är betald`;
+    _remScope.textContent = 'Gothia Cup';
+  } else {
+    _remCard.classList.remove('paid');
+    _remCard.classList.add('amber');
+    _remVal.textContent   = fmt(_gothiaLeft);
+    _remSub.textContent   = `av ${fmt(GOTHIA_COST)} kr · spelarandel ${fmt(_spelareTot)} kr`;
+    _remScope.textContent = 'Gothia Cup · kvar';
+  }
+
+  /* ── "Kvar att swisha Jimmie" kortet: per-spelare från Försäljning 2026 kolumn K ── */
+  // Backend exponerar ett map { "Förnamn Efternamn": belopp } via ?action=kvar_swisha
+  const _swishCard  = document.getElementById('statSwishCard');
+  const _swishVal   = document.getElementById('statSwish');
+  const _swishSub   = document.getElementById('statSwishSub');
+  const _swishScope = document.getElementById('statSwishScope');
+  _swishScope.textContent = '2026';
+
+  function _paintSwishCard(val, rev26) {
+    if (val === null || val === undefined || Number.isNaN(val)) {
+      _swishCard.classList.remove('paid');
+      _swishCard.classList.add('swish');
+      _swishVal.textContent = '–';
+      _swishSub.textContent = 'kolumn K saknas i API-svaret';
+    } else if (val <= 0) {
+      _swishCard.classList.remove('swish');
+      _swishCard.classList.add('paid');
+      _swishVal.textContent = '✓ Allt swishat';
+      _swishSub.textContent = rev26 ? `allt av ${fmt(rev26)} kr är redan swishat` : 'inget kvar att skicka';
+    } else {
+      _swishCard.classList.remove('paid');
+      _swishCard.classList.add('swish');
+      _swishVal.textContent = fmt(Math.round(val));
+      _swishSub.textContent = rev26 ? `kr kvar · av ${fmt(rev26)} kr i 2026-försäljning` : 'kr kvar';
+    }
+  }
+
+  // Spelarnamn läses från tabellrubriken (sätts innan _renderOrders anropas)
+  const _playerName = (document.getElementById('tableTitle').textContent || '').trim();
+  _paintSwishCard(undefined, _rev2026);      // placeholder tills map laddat
+  (async () => {
+    const map = await _getKvarSwishaMap();
+    if (!map) { _paintSwishCard(null, _rev2026); return; }
+    const raw = map[_playerName];
+    const val = (raw === undefined || raw === null || raw === '') ? null
+              : Number(String(raw).replace(/\s|kr/gi,'').replace(',','.'));
+    _paintSwishCard(Number.isFinite(val) ? val : null, _rev2026);
+  })();
+
   showStats();
 
   /* ── Per-spelare vinstsammanfattning (2025/2026) ── */

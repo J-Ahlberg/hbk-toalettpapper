@@ -711,6 +711,199 @@
     .flyer-headline { font-size: 2.8rem; }
     .confirm-card { padding: 32px 20px; }
   }
+
+  /* ── MINA BESTÄLLNINGAR ───────────────────────────────────── */
+  #view-mina { min-height: 100vh; background: var(--cream); }
+
+  .mina-hero {
+    background: linear-gradient(135deg, var(--green) 0%, #050e27 100%);
+    padding: 28px 20px 30px;
+    position: relative; overflow: hidden;
+  }
+  .mina-hero::after {
+    content: '📋';
+    position: absolute; font-size: 8rem; right: -15px; top: -10px;
+    opacity: 0.07; transform: rotate(10deg); pointer-events: none;
+  }
+  .mina-back {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: white; border-radius: 8px;
+    padding: 7px 14px; font-size: 0.82rem; font-weight: 600;
+    cursor: pointer; margin-bottom: 16px;
+    font-family: 'DM Sans', sans-serif;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: background 0.2s;
+  }
+  .mina-back:hover { background: rgba(255,255,255,0.25); }
+  .mina-hero-label {
+    font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 2.5px; color: var(--lime); margin-bottom: 6px;
+  }
+  .mina-hero h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.8rem, 6vw, 2.8rem);
+    color: white; letter-spacing: 2px; line-height: 1; margin-bottom: 10px;
+  }
+  .mina-hero-player {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px; padding: 6px 16px;
+    color: white; font-size: 0.85rem; font-weight: 600;
+  }
+  .mina-body {
+    max-width: 560px; margin: 0 auto;
+    padding: 20px 16px 80px;
+  }
+  .mina-spinner { text-align: center; padding: 60px 20px; }
+  .mina-spinner-circle {
+    width: 40px; height: 40px;
+    border: 3px solid #d8e3f5;
+    border-top-color: var(--green);
+    border-radius: 50%;
+    animation: minaSpin 0.7s linear infinite;
+    margin: 0 auto 14px;
+  }
+  @keyframes minaSpin { to { transform: rotate(360deg); } }
+  .mina-spinner p { color: var(--mid); font-size: 0.88rem; }
+  .mina-empty-state { text-align: center; padding: 60px 20px; display: none; }
+  .mina-empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
+  .mina-empty-state p { color: var(--mid); font-size: 0.92rem; line-height: 1.6; }
+  .mina-section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem; letter-spacing: 1.5px;
+    color: var(--green); margin-bottom: 12px; margin-top: 4px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .mina-order-card {
+    background: white;
+    border: 2px solid #d8e3f5;
+    border-radius: var(--radius);
+    margin-bottom: 14px; overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .mina-order-card.all-done { border-color: #86efac; }
+  .mina-order-header {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 18px;
+    border-bottom: 1px solid #eef2f8;
+  }
+  .mina-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--green); color: white;
+    font-size: 0.95rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .mina-order-info { flex: 1; min-width: 0; }
+  .mina-order-buyer { font-weight: 700; font-size: 0.95rem; color: var(--dark); }
+  .mina-order-meta { font-size: 0.78rem; color: var(--mid); margin-top: 2px; }
+  .mina-order-amount {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem; color: var(--green); flex-shrink: 0;
+    line-height: 1; text-align: right;
+  }
+  .mina-order-amount span { display: block; font-family: 'DM Sans', sans-serif; font-size: 0.62rem; color: #aaa; font-weight: 400; }
+  .mina-order-products {
+    padding: 10px 18px;
+    border-bottom: 1px solid #eef2f8;
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .mina-prod-chip {
+    background: #eef2f8; border-radius: 6px;
+    padding: 3px 10px; font-size: 0.74rem; font-weight: 600; color: var(--mid);
+  }
+  .mina-status-row {
+    display: flex; align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid #f0f4fb;
+    gap: 14px;
+  }
+  .mina-status-row:last-child { border-bottom: none; }
+  .mina-status-label { font-size: 0.9rem; font-weight: 600; color: var(--dark); }
+  .mina-status-sublabel { font-size: 0.75rem; color: var(--mid); font-weight: 400; margin-top: 1px; }
+  .mina-status-text { flex: 1; }
+  /* Toggle switch */
+  .mina-toggle-btn {
+    position: relative; width: 54px; height: 30px;
+    border-radius: 15px; border: none; cursor: pointer;
+    transition: background 0.25s; flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+    background: #d1d5db;
+    outline: none;
+  }
+  .mina-toggle-btn:focus-visible { box-shadow: 0 0 0 3px rgba(15,42,94,0.3); }
+  .mina-toggle-btn.on { background: #22c55e; }
+  .mina-toggle-btn::after {
+    content: '';
+    position: absolute; width: 22px; height: 22px;
+    top: 4px; left: 4px; border-radius: 50%;
+    background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+    transition: transform 0.25s;
+  }
+  .mina-toggle-btn.on::after { transform: translateX(24px); }
+  /* Knapp för "Mina beställningar" i admin */
+  .btn-my-orders {
+    background: transparent; color: var(--mid);
+    border: 1.5px solid #d8e3f5; border-radius: 6px;
+    padding: 5px 10px; font-size: 0.72rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; text-align: center;
+    width: 100%;
+  }
+  .btn-my-orders:hover { background: #eef2f8; color: var(--green); border-color: var(--green2); }
+  /* Bekräftelse bottom-sheet */
+  .mina-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(5,14,39,0.6);
+    backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+    z-index: 2000;
+    align-items: flex-end; justify-content: center;
+    padding: 0;
+  }
+  .mina-overlay.open { display: flex; }
+  .mina-sheet {
+    background: white; border-radius: 24px 24px 0 0;
+    width: 100%; max-width: 480px;
+    animation: sheetUp 0.22s ease;
+    padding-bottom: env(safe-area-inset-bottom, 8px);
+  }
+  @keyframes sheetUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .mina-sheet-handle {
+    width: 40px; height: 4px; background: #dde3ef;
+    border-radius: 4px; margin: 14px auto 0;
+  }
+  .mina-sheet-body { padding: 20px 24px 28px; }
+  .mina-sheet-icon { font-size: 2.5rem; text-align: center; margin-bottom: 10px; }
+  .mina-sheet-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem; letter-spacing: 1.5px;
+    text-align: center; color: var(--dark); margin-bottom: 8px; line-height: 1.2;
+  }
+  .mina-sheet-desc {
+    text-align: center; font-size: 0.9rem; color: var(--mid);
+    line-height: 1.5; margin-bottom: 22px;
+  }
+  .mina-sheet-desc strong { color: var(--dark); }
+  .mina-sheet-btns { display: flex; flex-direction: column; gap: 10px; }
+  .btn-confirm-yes {
+    width: 100%; padding: 15px;
+    border: none; border-radius: 12px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem; letter-spacing: 1.5px;
+    cursor: pointer; transition: opacity 0.15s;
+  }
+  .btn-confirm-yes.is-on  { background: #22c55e; color: white; }
+  .btn-confirm-yes.is-off { background: #f87171; color: white; }
+  .btn-confirm-yes:hover { opacity: 0.9; }
+  .btn-confirm-cancel {
+    width: 100%; padding: 14px;
+    background: #f3f4f6; border: none; border-radius: 12px;
+    font-size: 0.92rem; font-weight: 600; color: var(--mid);
+    cursor: pointer; transition: background 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-confirm-cancel:hover { background: #e5e7eb; }
 </style>
 </head>
 <body>
@@ -1012,6 +1205,50 @@
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- VIEW: MINA BESTÄLLNINGAR – Per spelare                    -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div id="view-mina" class="view">
+  <div class="mina-hero">
+    <button class="mina-back" onclick="showView('admin')">← Tillbaka</button>
+    <div class="mina-hero-label">HBK F14 · TOAPAPPER 2026</div>
+    <h2>MINA BESTÄLLNINGAR</h2>
+    <div class="mina-hero-player">
+      <span>⚽</span>
+      <span id="mina-player-name">–</span>
+    </div>
+  </div>
+  <div class="mina-body">
+    <div id="mina-loading" class="mina-spinner">
+      <div class="mina-spinner-circle"></div>
+      <p>Hämtar dina beställningar…</p>
+    </div>
+    <div id="mina-empty" class="mina-empty-state">
+      <div class="icon">📭</div>
+      <p>Inga beställningar hittades ännu.<br>Dela din länk och börja sälja!</p>
+    </div>
+    <div id="mina-orders-list"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- BEKRÄFTELSE-MODAL (bottom sheet)                          -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div id="mina-overlay" class="mina-overlay" onclick="handleOverlayClick(event)">
+  <div class="mina-sheet" id="mina-sheet">
+    <div class="mina-sheet-handle"></div>
+    <div class="mina-sheet-body">
+      <div class="mina-sheet-icon" id="sheet-icon">📦</div>
+      <div class="mina-sheet-title" id="sheet-title">BEKRÄFTA</div>
+      <div class="mina-sheet-desc" id="sheet-desc"></div>
+      <div class="mina-sheet-btns">
+        <button class="btn-confirm-yes is-on" id="btn-confirm-yes" onclick="confirmToggle()">Bekräfta</button>
+        <button class="btn-confirm-cancel" onclick="cancelToggle()">Avbryt – inga ändringar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 // Disable browser scroll restoration so page always starts at top on reload
 history.scrollRestoration = 'manual';
@@ -1056,6 +1293,9 @@ const LABELS = {
   p3h:'Premium 3-lag (hel frp)',
   p3s:'Premium 3-lag (8-pack)'
 };
+
+// ── Apps Script URL (global) ──────────────────────────────────
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwtUDMA1oc2aRJA30D4pDCUs0J-mBgU0ka6eM0LEEYNaeuur9WYjfYatQT3H-i7HtnQ/exec';
 
 let currentPlayer = null;
 
@@ -1116,6 +1356,7 @@ function buildAdminList() {
         <button class="btn-copy" id="btn-${p.id}" onclick="copyLink('${p.id}')">Kopiera</button>
       </div>
       <button class="btn-open-flyer" onclick="openFlyer('${p.id}')">🪧 Visa flyer</button>
+      <button class="btn-my-orders" onclick="openMinaView('${p.id}')">📋 Mina beställningar</button>
     `;
     grid.appendChild(card);
   });
@@ -1291,7 +1532,7 @@ function submitOrder() {
 
 // ── BYTA UT URL när Apps Script är driftsatt ──────────────────
 // Extensions → Apps Script → Deploy → New deployment → kopiera URL
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwtUDMA1oc2aRJA30D4pDCUs0J-mBgU0ka6eM0LEEYNaeuur9WYjfYatQT3H-i7HtnQ/exec';
+// (Definierad globalt så att alla funktioner kan använda den)
 
   function showConfirmation() {
     document.getElementById('confirm-player').textContent = currentPlayer.fn + ' ' + currentPlayer.ln;
@@ -1340,6 +1581,249 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwtUDMA1oc2aRJA
   }
 }
 
+// ── HJÄLPFUNKTIONER ───────────────────────────────────────────
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function initials(name) {
+  return (name || '').split(' ').map(w => w[0] || '').join('').toUpperCase().slice(0,2) || '?';
+}
+
+// ── MINA BESTÄLLNINGAR ─────────────────────────────────────────
+let minaCurrentPlayer = null;
+let minaLoadedOrders  = [];
+let pendingToggle     = null; // { orderIdx, field, newVal, key }
+
+const MINA_STATUS_PREFIX = 'hbk_status_';
+const MINA_PROD_LABELS = {
+  adv:  'Advanced 2-lag (frp)',
+  p2:   'Prem 2-lag (frp)',
+  p2_6: 'Prem 2-lag (6-pack)',
+  p3:   'Prem 3-lag (frp)',
+  p3_8: 'Prem 3-lag (8-pack)'
+};
+
+function minaOrderKey(o) {
+  if (o.ref) return o.ref;
+  // Stabil nyckel om ref saknas
+  return [o.date || '', o.buyer || '', String(o.total || '')].join('_')
+    .replace(/\s+/g,'').toLowerCase();
+}
+
+function getMinaStatus(playerId, key) {
+  const raw = localStorage.getItem(MINA_STATUS_PREFIX + playerId + '_' + key);
+  return raw ? JSON.parse(raw) : { levererat: false, betalt: false };
+}
+
+function saveMinaStatus(playerId, key, status) {
+  localStorage.setItem(MINA_STATUS_PREFIX + playerId + '_' + key, JSON.stringify(status));
+}
+
+function openMinaView(playerId) {
+  const p = PLAYERS.find(x => x.id === playerId);
+  if (!p) return;
+  minaCurrentPlayer = p;
+  document.getElementById('mina-player-name').textContent = p.fn + ' ' + p.ln;
+  document.getElementById('mina-loading').style.display = 'block';
+  document.getElementById('mina-empty').style.display   = 'none';
+  document.getElementById('mina-orders-list').innerHTML  = '';
+  minaLoadedOrders = [];
+  showView('mina');
+  fetchMinaOrders(p.fn + ' ' + p.ln, playerId);
+}
+
+async function fetchMinaOrders(playerName, playerId) {
+  try {
+    const url = APPS_SCRIPT_URL + '?action=orders&player=' + encodeURIComponent(playerName);
+    const res = await fetch(url);
+    let orders = await res.json();
+    // Filtrera bort platshållar-poster
+    if (Array.isArray(orders)) {
+      orders = orders.filter(o => !o._isManual && !o._is2025 && o.buyer);
+    } else {
+      orders = [];
+    }
+    minaLoadedOrders = orders;
+    document.getElementById('mina-loading').style.display = 'none';
+    if (orders.length === 0) {
+      document.getElementById('mina-empty').style.display = 'block';
+    } else {
+      renderMinaOrders(orders, playerId);
+    }
+  } catch (err) {
+    document.getElementById('mina-loading').style.display = 'none';
+    const emptyEl = document.getElementById('mina-empty');
+    emptyEl.style.display = 'block';
+    emptyEl.innerHTML = `
+      <div class="icon">⚠️</div>
+      <p>Kunde inte hämta beställningar just nu.<br>
+      <small style="color:#aaa">Kontrollera internetanslutningen och försök igen.</small></p>
+      <button onclick="openMinaView('${esc(playerId)}')"
+        style="margin-top:18px;padding:10px 22px;background:var(--green);color:white;border:none;
+               border-radius:8px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">
+        Försök igen
+      </button>`;
+  }
+}
+
+function renderMinaOrders(orders, playerId) {
+  let levDone = 0, betDone = 0;
+  const cards = orders.map((o, idx) => {
+    const key    = minaOrderKey(o);
+    const status = getMinaStatus(playerId, key);
+    if (status.levererat) levDone++;
+    if (status.betalt)    betDone++;
+    const name   = o.buyer || 'Okänd kund';
+    const inits  = initials(name);
+    const total  = o.total ? o.total + ' kr' : '–';
+    const meta   = [o.date, o.phone].filter(Boolean).join(' · ');
+    const allDone = status.levererat && status.betalt;
+
+    // Produktchips
+    let prods = '';
+    ['adv','p2','p2_6','p3','p3_8'].forEach(k => {
+      if (Number(o[k]) > 0) {
+        prods += `<span class="mina-prod-chip">${o[k]}× ${MINA_PROD_LABELS[k]}</span>`;
+      }
+    });
+
+    return `
+      <div class="mina-order-card${allDone ? ' all-done' : ''}" id="mina-card-${idx}">
+        <div class="mina-order-header">
+          <div class="mina-avatar">${esc(inits)}</div>
+          <div class="mina-order-info">
+            <div class="mina-order-buyer">${esc(name)}</div>
+            ${meta ? `<div class="mina-order-meta">${esc(meta)}</div>` : ''}
+          </div>
+          <div class="mina-order-amount">${esc(total)}<span>att betala</span></div>
+        </div>
+        ${prods ? `<div class="mina-order-products">${prods}</div>` : ''}
+        <div class="mina-status-row">
+          <div class="mina-status-text">
+            <div class="mina-status-label">📦 Levererat</div>
+            <div class="mina-status-sublabel" id="sub-lev-${idx}">
+              ${status.levererat ? 'Markerat som levererat ✓' : 'Inte levererat än'}
+            </div>
+          </div>
+          <button
+            class="mina-toggle-btn${status.levererat ? ' on' : ''}"
+            id="toggle-lev-${idx}"
+            onclick="promptToggle(${idx}, 'levererat', '${esc(name).replace(/'/g,'\\\'')}')"
+            aria-label="${status.levererat ? 'Avmarkera leverans' : 'Markera som levererat'}">
+          </button>
+        </div>
+        <div class="mina-status-row">
+          <div class="mina-status-text">
+            <div class="mina-status-label">💰 Fått betalt</div>
+            <div class="mina-status-sublabel" id="sub-bet-${idx}">
+              ${status.betalt ? 'Betalning mottagen ✓' : 'Inväntar betalning'}
+            </div>
+          </div>
+          <button
+            class="mina-toggle-btn${status.betalt ? ' on' : ''}"
+            id="toggle-bet-${idx}"
+            onclick="promptToggle(${idx}, 'betalt', '${esc(name).replace(/'/g,'\\\'')}')"
+            aria-label="${status.betalt ? 'Avmarkera betalning' : 'Markera som betalt'}">
+          </button>
+        </div>
+      </div>`;
+  });
+
+  const summary = orders.length > 0 ? `
+    <div class="mina-section-title">
+      📋 ${orders.length} beställning${orders.length !== 1 ? 'ar' : ''}
+      &nbsp;·&nbsp;
+      <span style="font-size:0.85rem;font-family:'DM Sans',sans-serif;font-weight:500;color:var(--mid)">
+        ${levDone}/${orders.length} levererade &nbsp;·&nbsp; ${betDone}/${orders.length} betalda
+      </span>
+    </div>` : '';
+
+  document.getElementById('mina-orders-list').innerHTML = summary + cards.join('');
+}
+
+function promptToggle(orderIdx, field, buyerName) {
+  const order = minaLoadedOrders[orderIdx];
+  if (!order) return;
+  const key    = minaOrderKey(order);
+  const status = getMinaStatus(minaCurrentPlayer.id, key);
+  const newVal = !status[field];
+  pendingToggle = { orderIdx, field, newVal, key };
+
+  const isLev = field === 'levererat';
+  document.getElementById('sheet-icon').textContent = isLev ? '📦' : '💰';
+
+  if (newVal) {
+    document.getElementById('sheet-title').textContent =
+      isLev ? 'MARKERA SOM LEVERERAT' : 'MARKERA SOM BETALT';
+    document.getElementById('sheet-desc').innerHTML =
+      isLev
+        ? `Bekräfta att du har levererat toalettpappret till <strong>${esc(buyerName)}</strong>.`
+        : `Bekräfta att du har fått betalning från <strong>${esc(buyerName)}</strong>.`;
+    const yesBtn = document.getElementById('btn-confirm-yes');
+    yesBtn.textContent = isLev ? '✓ Ja, levererat!' : '✓ Ja, betalt!';
+    yesBtn.className = 'btn-confirm-yes is-on';
+  } else {
+    document.getElementById('sheet-title').textContent =
+      isLev ? 'AVMARKERA LEVERANS' : 'AVMARKERA BETALNING';
+    document.getElementById('sheet-desc').innerHTML =
+      isLev
+        ? `Vill du avmarkera leveransen för <strong>${esc(buyerName)}</strong>?`
+        : `Vill du avmarkera betalningen från <strong>${esc(buyerName)}</strong>?`;
+    const yesBtn = document.getElementById('btn-confirm-yes');
+    yesBtn.textContent = isLev ? '✕ Ja, avmarkera leverans' : '✕ Ja, avmarkera betalning';
+    yesBtn.className = 'btn-confirm-yes is-off';
+  }
+
+  document.getElementById('mina-overlay').classList.add('open');
+}
+
+function confirmToggle() {
+  if (!pendingToggle || !minaCurrentPlayer) return;
+  const { orderIdx, field, newVal, key } = pendingToggle;
+
+  // Spara i localStorage
+  const status   = getMinaStatus(minaCurrentPlayer.id, key);
+  status[field]  = newVal;
+  saveMinaStatus(minaCurrentPlayer.id, key, status);
+
+  // Uppdatera toggle-knapp
+  const isLev    = field === 'levererat';
+  const toggleEl = document.getElementById(isLev ? `toggle-lev-${orderIdx}` : `toggle-bet-${orderIdx}`);
+  const subEl    = document.getElementById(isLev ? `sub-lev-${orderIdx}` : `sub-bet-${orderIdx}`);
+  const cardEl   = document.getElementById(`mina-card-${orderIdx}`);
+
+  if (toggleEl) {
+    toggleEl.classList.toggle('on', newVal);
+    toggleEl.setAttribute('aria-label', newVal
+      ? (isLev ? 'Avmarkera leverans' : 'Avmarkera betalning')
+      : (isLev ? 'Markera som levererat' : 'Markera som betalt'));
+  }
+  if (subEl) {
+    subEl.textContent = newVal
+      ? (isLev ? 'Markerat som levererat ✓' : 'Betalning mottagen ✓')
+      : (isLev ? 'Inte levererat än' : 'Inväntar betalning');
+  }
+  // Grön kant om allt klart
+  if (cardEl) {
+    const allDone = status.levererat && status.betalt;
+    cardEl.classList.toggle('all-done', allDone);
+  }
+
+  pendingToggle = null;
+  document.getElementById('mina-overlay').classList.remove('open');
+}
+
+function cancelToggle() {
+  pendingToggle = null;
+  document.getElementById('mina-overlay').classList.remove('open');
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('mina-overlay')) cancelToggle();
+}
+
 // ── INIT ──────────────────────────────────────────────────────
 // --- Draft-save helpers ---
 const DRAFT_FIELDS = ['buyer-name', 'buyer-phone', 'buyer-email', 'buyer-msg'];
@@ -1370,6 +1854,8 @@ function init() {
     if (p) {
       if (vy === 'flyer') {
         openFlyer(pid);
+      } else if (vy === 'mina') {
+        openMinaView(pid);
       } else {
         openOrderForm(pid);
       }
