@@ -1159,14 +1159,14 @@ function _renderOrders(orders, tableContent, listContent, statsTop, statsProduct
     { key: 'date',        label: 'Datum' },
     { key: 'buyer',       label: 'Köpare' },
     { key: 'phone',       label: 'Telefon' },
-    { key: 'adv',         label: 'Advance 2-lag (frp)', num: true },
-    { key: 'p2',          label: 'Premium 2-lag (frp)', num: true },
-    { key: 'p2_6',        label: 'Premium 2-lag infrp', num: true },
-    { key: 'p3',          label: 'Premium 3-lag (frp)', num: true },
-    { key: 'p3_8',        label: 'Premium 3-lag infrp', num: true },
-    { key: 'total',       label: 'Summa (kr)', num: true },
-    { key: '_levererat',  label: '📦 Levererat', status: true },
-    { key: '_betalt',     label: '💰 Betalt',    status: true },
+    { key: 'adv',         label: 'Adv 2-lag (frp)', num: true },
+    { key: 'p2',          label: 'Prem 2-lag (frp)', num: true },
+    { key: 'p2_6',        label: 'Prem 2-lag infrp', num: true },
+    { key: 'p3',          label: 'Prem 3-lag (frp)', num: true },
+    { key: 'p3_8',        label: 'Prem 3-lag infrp', num: true },
+    { key: 'total',       label: 'Sum (kr)', num: true },
+    { key: '_levererat',  label: '📦 Lev', status: true },
+    { key: '_betalt',     label: '💰 Bet',    status: true },
   ];
   const sumKeys = ['adv','p2','p2_6','p3','p3_8','total'];
   const realOrders = orders.filter(o => !o._isManual && !o._is2025 && o.buyer);
