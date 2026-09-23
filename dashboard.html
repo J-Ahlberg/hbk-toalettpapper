@@ -35,6 +35,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .header h1 { font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 700; letter-spacing: 0.3px; line-height: 1.2; }
 .header p { color: rgba(255,255,255,0.7); margin-top: 6px; font-size: 0.95rem; }
 /* ── NAV ── */
+/* ── PERIODVÄLJARE ── */
+.period-bar { background: var(--navy-light); padding: 10px 16px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.period-bar label { color: rgba(255,255,255,0.7); font-size: 0.8rem; text-transform: uppercase; letter-spacing: .6px; }
+.period-bar select { font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600; padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.3); background: #fff; color: var(--navy); cursor: pointer; }
+.period-state { font-size: 0.75rem; font-weight: 700; letter-spacing: .5px; padding: 4px 10px; border-radius: 999px; text-transform: uppercase; }
+.period-state.open { background: var(--green-bg); color: var(--green-text); }
+.period-state.closed { background: var(--amber-bg); color: var(--amber-text); }
 .nav-bar { background: var(--navy-mid); text-align: center; padding: 9px 16px; }
 .nav-bar a { color: rgba(255,255,255,0.65); text-decoration: none; font-size: 0.82rem; transition: color .15s; }
 .nav-bar a:hover { color: #fff; }
@@ -477,6 +484,11 @@ td.zero { color: #c4cadc; }
   <h1>HBK F14 &#8211; Best&#228;llnings&#246;versikt</h1>
   <p>V&#228;lj spelare f&#246;r att se inkomna best&#228;llningar</p>
 </div>
+<div class="period-bar">
+  <label for="periodSelect">F&#246;rs&#228;ljningsperiod</label>
+  <select id="periodSelect"><option>Laddar&#8230;</option></select>
+  <span class="period-state open" id="periodState">&#8211;</span>
+</div>
 <div class="nav-bar">
   <a href="https://j-ahlberg.github.io/hbk-toalettpapper/">&#8592; Tillbaka till best&#228;llningsl&#228;nkar</a>
 </div>
@@ -722,6 +734,64 @@ td.zero { color: #c4cadc; }
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbwtUDMA1oc2aRJA30D4pDCUs0J-mBgU0ka6eM0LEEYNaeuur9WYjfYatQT3H-i7HtnQ/exec';
 
+/* ══ PERIODER ══════════════════════════════════════════════════════
+   Varje anrop till API:t får automatiskt med &period=<vald period>
+   via interceptorn nedan, så inga enskilda fetch-anrop behöver ändras.
+   Byte av period laddar om sidan – då nollställs all cache och alla
+   modulvariabler, vilket är billigare än att jaga varje delcache.
+   ================================================================= */
+const PERIOD_FALLBACK = { id:'2026-HOST', namn:'Höst 2026', aktiv:true };
+let PERIODS = [PERIOD_FALLBACK];
+let PERIOD  = PERIOD_FALLBACK;
+
+const _origFetch = window.fetch.bind(window);
+window.fetch = function (input, init) {
+  if (typeof input === 'string' && input.indexOf(API) === 0 && !/[?&]period=/.test(input)) {
+    input += (input.indexOf('?') === -1 ? '?' : '&') + 'period=' + encodeURIComponent(PERIOD.id);
+  }
+  return _origFetch(input, init);
+};
+
+async function loadPeriods() {
+  try {
+    const res = await _origFetch(API + '?action=perioder');
+    const j   = await res.json();
+    if (j && Array.isArray(j.perioder) && j.perioder.length) {
+      PERIODS = j.perioder;
+      const wanted = (new URLSearchParams(location.search).get('period') || '').toLowerCase();
+      PERIOD = PERIODS.find(x => wanted && x.id.toLowerCase() === wanted)
+            || PERIODS.find(x => x.id === j.aktiv)
+            || PERIODS.find(x => x.aktiv)
+            || PERIODS[PERIODS.length - 1];
+    }
+  } catch (e) { /* backend saknar ännu perioder – kör vidare på fallback */ }
+  renderPeriodBar();
+}
+
+function renderPeriodBar() {
+  const sel = document.getElementById('periodSelect');
+  if (sel) {
+    sel.innerHTML = PERIODS.map(x =>
+      `<option value="${esc(x.id)}"${x.id === PERIOD.id ? ' selected' : ''}>${esc(x.namn)}</option>`
+    ).join('');
+    sel.onchange = () => {
+      const u = new URL(location.href);
+      u.searchParams.set('period', sel.value);
+      u.searchParams.delete('spelare');
+      location.href = u.toString();
+    };
+  }
+  PALL_ORDER = PALL_ORDER_PER_PERIOD[PERIOD.id] || PALL_ORDER_TOM;
+  const st = document.getElementById('periodState');
+  if (st) {
+    st.textContent = PERIOD.aktiv ? 'Pågår' : 'Avslutad';
+    st.className   = 'period-state ' + (PERIOD.aktiv ? 'open' : 'closed');
+  }
+  const sub = document.querySelector('.header p');
+  if (sub) sub.textContent = 'Välj spelare för att se inkomna beställningar · ' + (PERIOD.namn || '');
+  document.title = 'HBK F14 – Beställningsöversikt · ' + (PERIOD.namn || '');
+}
+
 // ── Vinst per såld enhet (från "Produktinfo & Vinstkalkylator") ──────────────
 // Advanced frp: sälj 150 kr − inköp 100 kr = 50 kr/frp
 // P2-lag frp: sälj 330 kr − inköp 280 kr = 50 kr/frp
@@ -736,13 +806,29 @@ const VINST_PER = {
   p3_8: 11.14, // kr vinst per P3 8-pack
 };
 
-// ── Pallorder från leverantör (uppdatera vid ny order) ──────────────────────
-// Källa: Beställning 2026 W3:Y3
-const PALL_ORDER = {
-  adv: { pallar: 2, frpPerPall: 72 },  // Advance 2-lag:  2 pall × 72 frp
-  p2:  { pallar: 4, frpPerPall: 27 },  // Premium 2-lag:  4 pall × 27 frp
-  p3:  { pallar: 1, frpPerPall: 27 },  // Premium 3-lag:  1 pall × 27 frp
+// ── Pallorder från leverantör, per försäljningsperiod ───────────────────────
+// Källa: beställningsfliken W3:Y3 för respektive period.
+// Lägg till en rad här när en ny period startas, annars visas 0 pall
+// i lageröversikten (inga fel, men "kvar i lager" blir missvisande).
+const PALL_ORDER_PER_PERIOD = {
+  '2026-VAR': {                          // Källa: Beställning 2026 W3:Y3
+    adv: { pallar: 2, frpPerPall: 72 },  // Advance 2-lag:  2 pall × 72 frp
+    p2:  { pallar: 4, frpPerPall: 27 },  // Premium 2-lag:  4 pall × 27 frp
+    p3:  { pallar: 1, frpPerPall: 27 },  // Premium 3-lag:  1 pall × 27 frp
+  },
+  '2026-HOST': {                         // Källa: Beställning H26 W3:Y3 – fyll i vid pallorder
+    adv: { pallar: 0, frpPerPall: 72 },
+    p2:  { pallar: 0, frpPerPall: 27 },
+    p3:  { pallar: 0, frpPerPall: 27 },
+  },
 };
+const PALL_ORDER_TOM = {
+  adv: { pallar: 0, frpPerPall: 72 },
+  p2:  { pallar: 0, frpPerPall: 27 },
+  p3:  { pallar: 0, frpPerPall: 27 },
+};
+// Sätts om i renderPeriodBar() när perioden är känd.
+let PALL_ORDER = PALL_ORDER_PER_PERIOD['2026-VAR'];
 
 /* ── helpers ── */
 function fmt(n) { return Number(n).toLocaleString('sv-SE'); }
@@ -765,16 +851,17 @@ function paymentBadge(val) {
 
 /* ── Cache helpers (sessionStorage, 5-min TTL) ─────── */
 const _CACHE_TTL = 5 * 60 * 1000;
+function _cacheKey(key) { return 'hbk_' + PERIOD.id + '_' + key; }
 function _getCache(key) {
   try {
-    const raw = sessionStorage.getItem('hbk_' + key);
+    const raw = sessionStorage.getItem(_cacheKey(key));
     if (!raw) return null;
     const {d, t} = JSON.parse(raw);
     return (Date.now() - t < _CACHE_TTL) ? d : null;
   } catch { return null; }
 }
 function _setCache(key, data) {
-  try { sessionStorage.setItem('hbk_' + key, JSON.stringify({d: data, t: Date.now()})); } catch {}
+  try { sessionStorage.setItem(_cacheKey(key), JSON.stringify({d: data, t: Date.now()})); } catch {}
 }
 function _applyStats(s) {
   const ids = ['tOrd','tRev','tProfit','tAdv','tP2','tP26','tP3','tP38'];
@@ -1756,9 +1843,68 @@ function openVinstModal(idx) {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 /* ── Inventory / Lagersaldo ── */
+/* ── Lagerutförsäljning: perioder med rader i fliken "Lager" ──
+   Visar startlager / sålt / kvar från ?action=lager i stället för
+   pallordern. Perioder utan lager → begransad:false → pallvyn som förut. */
+let _lagerState = null;   // null = ej hämtad, 'loading', eller svaret
+
+function _lagerFmt(p, antalPack) {
+  if (p.perFrp <= 1) return `${antalPack} frp`;
+  const frp = Math.floor(antalPack / p.perFrp), losa = antalPack % p.perFrp;
+  const delar = [];
+  if (frp)  delar.push(`${frp} frp`);
+  if (losa) delar.push(`${losa} × ${p.packNamn}`);
+  return delar.length ? delar.join(' + ') : '0';
+}
+
+function _renderLagerInventory(section, st) {
+  const order = ['adv', 'p2', 'p3'];
+  section.style.display = '';
+  section.innerHTML = `
+    <div class="inv-section">
+      <div class="inv-section-title">📦 Lagerutförsäljning – kvar i lager · uppdaterad ${esc(st.uppdaterad || '')}</div>
+      <div class="inv-grid">
+        ${order.map(k => {
+          const p = st.produkter[k];
+          if (!p) return '';
+          const pct = p.start > 0 ? Math.min(100, Math.round(p.salt / p.start * 100)) : 100;
+          const over = p.oversalt > 0;
+          const kvarColor = over ? 'var(--red-text)' : p.kvar === 0 ? '#059669' : 'var(--navy)';
+          const barColor  = over ? 'var(--red-text)' : pct >= 90 ? '#d97706' : '#059669';
+          const kvarText  = over ? `⚠️ Översålt ${_lagerFmt(p, p.oversalt)}`
+                          : p.kvar === 0 ? '✓ Slutsålt'
+                          : `${_lagerFmt(p, p.kvar)} kvar`;
+          const packRad = p.perFrp > 1
+            ? `<div class="inv-row"><span class="inv-row-label">Kvar som ${esc(p.packNamn)}</span><span class="inv-row-val">${p.kvar} st</span></div>` : '';
+          return `
+            <div class="inv-card">
+              <div class="inv-card-label">${esc(p.namn)} · ${esc(p.art)}</div>
+              <div class="inv-row"><span class="inv-row-label">Startlager</span><span class="inv-row-val">${_lagerFmt(p, p.start)}</span></div>
+              <div class="inv-row"><span class="inv-row-label">Sålt</span><span class="inv-row-val">${_lagerFmt(p, p.salt)}</span></div>
+              ${packRad}
+              <div class="inv-bar-bg"><div class="inv-bar" style="width:${pct}%;background:${barColor}"></div></div>
+              <div class="inv-kvar" style="color:${kvarColor}">${kvarText}</div>
+            </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
 function _renderInventory(totRow) {
   const section = document.getElementById('inventorySection');
   if (!section) return;
+
+  if (_lagerState === null) {
+    _lagerState = 'loading';
+    fetch(API + '?action=lager&_=' + Date.now())
+      .then(r => r.json())
+      .then(j => { _lagerState = (j && typeof j.begransad === 'boolean') ? j : { begransad: false }; })
+      .catch(() => { _lagerState = { begransad: false }; })
+      .then(() => _renderInventory(totRow));
+    return;
+  }
+  if (_lagerState === 'loading') return;
+  if (_lagerState.begransad) { _renderLagerInventory(section, _lagerState); return; }
 
   const products = [
     { label: 'Advance 2-lag',  lev: totRow.lev_adv || 0, kvar: totRow.kvar_adv || 0, ...PALL_ORDER.adv },
@@ -2332,6 +2478,8 @@ async function _injectManualOrders(player, webOrders) {
 
 /* ── Injektera förra årets försäljning (2025) från playerOverview ── */
 async function _inject2025Orders(player, orders) {
+  // 2025 är historik som hör till den allra första perioden
+  if (PERIODS.length && PERIOD.id !== PERIODS[0].id) return orders;
   let rows = _getCache('player_overview');
   if (!rows) {
     try {
@@ -2364,10 +2512,10 @@ document.getElementById('playerSelect').addEventListener('change', e => {
   loadOrders(e.target.value);
 });
 
-loadTeamStats();   // ladda lagtotal direkt vid sidstart
-
 // Ladda spelarlista och välj eventuell spelare från URL
 (async () => {
+  await loadPeriods();     // måste ske först – styr vilken period allt annat läser
+  loadTeamStats();
   await loadPlayers();
   const pre = _getUrlPlayer();
   if (pre) {

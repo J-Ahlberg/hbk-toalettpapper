@@ -904,6 +904,49 @@
     font-family: 'DM Sans', sans-serif;
   }
   .btn-confirm-cancel:hover { background: #e5e7eb; }
+
+/* ── PERIODER ─────────────────────────────────────────────── */
+  .admin-period-banner {
+    display: inline-block; margin-top: 12px; padding: 7px 16px;
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 999px; font-size: 0.82rem; letter-spacing: .3px;
+  }
+  .admin-period-banner.closed { background: rgba(255,180,60,0.18); border-color: rgba(255,180,60,0.5); }
+  .order-closed-note {
+    margin: 16px auto 0; max-width: 560px; padding: 14px 18px;
+    background: #fff6e5; border: 1.5px solid #e8c98a; border-radius: 12px;
+    color: #6b4a12; font-size: 0.92rem; line-height: 1.5; text-align: left;
+  }
+  .order-closed-note strong { color: #4a3208; }
+/* ── LAGERUTFÖRSÄLJNING ───────────────────────────────────── */
+  .order-lager-note {
+    margin: 16px auto 0; max-width: 560px; padding: 12px 18px;
+    background: #eaf7ef; border: 1.5px solid #9fd6b4; border-radius: 12px;
+    color: #14532d; font-size: 0.9rem; line-height: 1.5; text-align: left;
+  }
+  .stock-note { font-size: 0.78rem; font-weight: 700; color: #15803d; margin-top: 4px; }
+  .stock-note.low  { color: #b45309; }
+  .stock-note.none { color: #b91c1c; }
+  .product-card.sold-out { opacity: .5; }
+  .product-card.sold-out .qty-row { pointer-events: none; }
+  .qty-btn:disabled { color: #bbb; cursor: not-allowed; background: #f3f4f6; }
+  .lager-warn {
+    display: none; margin: 8px 0 14px; padding: 12px 16px; border-radius: 10px;
+    background: #fdecec; border: 1.5px solid #f1a9a9; color: #7f1d1d; font-size: 0.88rem;
+  }
+  .btn-submit:disabled { opacity: .45; cursor: not-allowed; }
+  .mina-period-switch { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 18px; }
+  .mina-period-chip {
+    flex: 1 1 auto; min-width: 120px; padding: 10px 14px; cursor: pointer;
+    border: 1.5px solid #dcdcdc; background: #fff; color: #666;
+    border-radius: 10px; font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem; font-weight: 600; line-height: 1.25;
+    transition: all .15s ease;
+  }
+  .mina-period-chip em { display: block; font-style: normal; font-weight: 500; font-size: 0.72rem; opacity: .7; }
+  .mina-period-chip:hover { border-color: #bbb; }
+  .mina-period-chip.on { background: var(--green, #1b7f4f); border-color: var(--green, #1b7f4f); color: #fff; }
+  .mina-period-chip.on em { opacity: .85; }
 </style>
 </head>
 <body>
@@ -916,6 +959,7 @@
     <img src="hbk-logo.png" class="logo-img-admin" alt="HBK emblem" style="margin-bottom:12px;"><br>
     <h1>HBK F14 – Beställningslänkar</h1>
     <p>Klicka "Kopiera" vid din spelare och dela länken, eller öppna din flyer att dela på sociala medier</p>
+    <div class="admin-period-banner" id="admin-period-banner">Laddar period…</div>
   </div>
   <div class="player-grid" id="player-grid"></div>
 </div>
@@ -927,7 +971,7 @@
   <div class="flyer-card">
     <div class="flyer-top">
       <div style="display:flex;align-items:center;gap:8px;"><img src="hbk-logo.png" class="logo-img-sm" alt="HBK"><span class="flyer-club">HBK F14</span></div>
-      <div class="flyer-year-badge">2026</div>
+      <div class="flyer-year-badge" id="flyer-period-badge">2026</div>
     </div>
     <div class="flyer-hero">
       <div class="flyer-headline">KÖP TOAPAPPER<br><span>FRÅN TORK</span></div>
@@ -1022,6 +1066,8 @@
       <span>⚽</span>
       <span id="order-player-name">–</span>
     </div>
+    <div class="order-closed-note" id="order-closed-note" style="display:none"></div>
+    <div class="order-lager-note" id="order-lager-note" style="display:none"></div>
   </div>
 
   <div class="order-body">
@@ -1138,6 +1184,7 @@
     </div>
 
     <div class="empty-warn" id="empty-warn">⚠️ Välj minst en produkt för att fortsätta.</div>
+    <div class="lager-warn" id="lager-warn"></div>
 
     <!-- Köparinfo -->
     <div class="order-section-title" style="margin-top: 32px;">👤 Dina uppgifter</div>
@@ -1181,6 +1228,7 @@
       </div>
     </div>
 
+    <div class="lager-warn" id="lager-warn-bottom"></div>
     <button class="btn-submit" id="btn-submit" onclick="submitOrder()">SKICKA BESTÄLLNING →</button>
   </div>
 </div>
@@ -1211,7 +1259,7 @@
 <div id="view-mina" class="view">
   <div class="mina-hero">
     <button class="mina-back" onclick="showView('admin')">← Tillbaka</button>
-    <div class="mina-hero-label">HBK F14 · TOAPAPPER 2026</div>
+    <div class="mina-hero-label" id="mina-period-label">HBK F14 · TOAPAPPER 2026</div>
     <h2>MINA BESTÄLLNINGAR</h2>
     <div class="mina-hero-player">
       <span>⚽</span>
@@ -1219,13 +1267,14 @@
     </div>
   </div>
   <div class="mina-body">
+    <div class="mina-period-switch" id="mina-period-switch"></div>
     <div id="mina-loading" class="mina-spinner">
       <div class="mina-spinner-circle"></div>
       <p>Hämtar dina beställningar…</p>
     </div>
     <div id="mina-empty" class="mina-empty-state">
       <div class="icon">📭</div>
-      <p>Inga beställningar hittades ännu.<br>Dela din länk och börja sälja!</p>
+      <p>Inga beställningar i <strong id="mina-empty-period">den här perioden</strong> ännu.<br>Dela din länk och börja sälja!</p>
     </div>
     <div id="mina-orders-list"></div>
   </div>
@@ -1294,10 +1343,217 @@ const LABELS = {
   p3s:'Premium 3-lag (8-pack)'
 };
 
+// ── LAGERUTFÖRSÄLJNING ────────────────────────────────────────
+// Har perioden rader i fliken "Lager" svarar ?action=lager med
+// begransad:true och vad som finns kvar. Formuläret visar "kvar",
+// maxar antalen och kollar lagret igen precis innan det skickar.
+// Servern kontrollerar också (inne i låset) och avvisar det som inte ryms.
+// Perioder utan lager → begransad:false → formuläret beter sig som förut.
+const LAGER_KEYS = ['adv','p2h','p2s','p3h','p3s'];
+const LAGER_POOL = { adv:'adv', p2h:'p2', p2s:'p2', p3h:'p3', p3s:'p3' };
+const LAGER_PER  = { adv:1, p2h:7, p2s:1, p3h:7, p3s:1 };
+let LAGER = { begransad: false };
+
+async function loadLager() {
+  try {
+    const res = await fetch(APPS_SCRIPT_URL + '?action=lager&period=' +
+                            encodeURIComponent(PERIOD.id) + '&_=' + Date.now());
+    const j = await res.json();
+    if (j && typeof j.begransad === 'boolean') LAGER = j;
+  } catch (e) { /* nätfel: servern spärrar ändå */ }
+  applyLagerNote();
+  return LAGER;
+}
+
+function lagerOn() { return !!(LAGER.begransad && LAGER.produkter && PERIOD.aktiv); }
+
+function qtyOf(k) { return Math.max(0, parseInt(document.getElementById('qty-' + k).value) || 0); }
+
+// Hur många av k som går att välja givet vad som redan valts i samma pool
+function lagerMax(k) {
+  if (!lagerOn()) return Infinity;
+  const pool = LAGER_POOL[k];
+  const kvar = (LAGER.produkter[pool] || {}).kvar || 0;
+  let anvant = 0;
+  LAGER_KEYS.forEach(o => { if (o !== k && LAGER_POOL[o] === pool) anvant += qtyOf(o) * LAGER_PER[o]; });
+  return Math.max(0, Math.floor((kvar - anvant) / LAGER_PER[k]));
+}
+
+// Klipper antalen mot lagret. Returnerar true om något justerades.
+function enforceLager() {
+  if (!lagerOn()) {
+    LAGER_KEYS.forEach(k => {
+      const n = document.getElementById('stock-' + k);
+      if (n) n.style.display = 'none';
+      document.getElementById('card-' + k).classList.remove('sold-out');
+    });
+    return false;
+  }
+  let justerat = false;
+  LAGER_KEYS.forEach(k => {
+    const max = lagerMax(k);
+    if (qtyOf(k) > max) { document.getElementById('qty-' + k).value = max; justerat = true; }
+  });
+  LAGER_KEYS.forEach(k => {
+    const card = document.getElementById('card-' + k);
+    let n = document.getElementById('stock-' + k);
+    if (!n) {
+      n = document.createElement('div');
+      n.id = 'stock-' + k;
+      n.className = 'stock-note';
+      card.querySelector('.product-card-header > div').appendChild(n);
+    }
+    const q      = qtyOf(k);
+    const max    = lagerMax(k);
+    const kvar   = max - q;                 // kvar att välja
+    const helaK  = Math.floor(((LAGER.produkter[LAGER_POOL[k]] || {}).kvar || 0) / LAGER_PER[k]);
+    n.style.display = '';
+    card.classList.toggle('sold-out', helaK === 0 && q === 0);
+    if (helaK === 0 && q === 0) {
+      n.className = 'stock-note none'; n.textContent = 'Slutsåld';
+    } else if (kvar === 0) {
+      n.className = 'stock-note low';
+      n.textContent = q > 0 ? 'Du har valt allt som finns kvar' : 'Inget kvar utöver det du valt';
+    } else {
+      n.className = 'stock-note' + (kvar <= 3 ? ' low' : '');
+      n.textContent = 'Kvar i lager: ' + kvar + ' st';
+    }
+    const plus = card.querySelector('.qty-btn:last-of-type');
+    if (plus) plus.disabled = kvar <= 0;
+  });
+  return justerat;
+}
+
+function applyLagerNote() {
+  const el = document.getElementById('order-lager-note');
+  if (!el) return;
+  if (!lagerOn()) { el.style.display = 'none'; return; }
+  const p = LAGER.produkter;
+  const slut = Object.values(p).every(x => x.kvar <= 0);
+  el.style.display = 'block';
+  el.innerHTML = slut
+    ? '📦 <strong>Allt är slutsålt.</strong> Tack för stödet!'
+    : '📦 <strong>Lagerutförsäljning</strong> – vi säljer bara det som finns kvar i lager. ' +
+      'Först till kvarn, så länge lagret räcker.';
+  const btn = document.getElementById('btn-submit');
+  if (btn && slut) { btn.disabled = true; btn.textContent = 'SLUTSÅLT'; }
+}
+
+function showLagerWarn(msg) {
+  ['lager-warn','lager-warn-bottom'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = msg || '';
+    el.style.display = msg ? 'block' : 'none';
+  });
+}
+
 // ── Apps Script URL (global) ──────────────────────────────────
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwtUDMA1oc2aRJA30D4pDCUs0J-mBgU0ka6eM0LEEYNaeuur9WYjfYatQT3H-i7HtnQ/exec';
 
 let currentPlayer = null;
+
+// ── PERIODER ──────────────────────────────────────────────────
+// Håller isär försäljningsomgångar. Spelarlänkarna ändras inte:
+// utan ?period= visas alltid den period som är markerad aktiv i arket.
+const PERIOD_FALLBACK = { id:'2026-HOST', namn:'Höst 2026', badge:'HÖST 2026', aktiv:true };
+let PERIODS = [PERIOD_FALLBACK];
+let PERIOD  = PERIOD_FALLBACK;
+
+function getUrlPeriod() {
+  return new URLSearchParams(window.location.search).get('period');
+}
+
+async function loadPeriods() {
+  const KEY = 'hbk_perioder';
+  let data = null;
+  try {
+    const raw = sessionStorage.getItem(KEY);
+    if (raw) {
+      const { d, t } = JSON.parse(raw);
+      if (Date.now() - t < 10 * 60 * 1000) data = d;
+    }
+  } catch (e) {}
+  if (!data) {
+    try {
+      const res = await fetch(APPS_SCRIPT_URL + '?action=perioder');
+      const j   = await res.json();
+      if (j && Array.isArray(j.perioder) && j.perioder.length) {
+        data = j;
+        try { sessionStorage.setItem(KEY, JSON.stringify({ d: j, t: Date.now() })); } catch (e) {}
+      }
+    } catch (e) {}
+  }
+  if (data) {
+    PERIODS = data.perioder;
+    const wanted = (getUrlPeriod() || '').toLowerCase();
+    PERIOD = PERIODS.find(x => wanted && x.id.toLowerCase() === wanted)
+          || PERIODS.find(x => x.id === data.aktiv)
+          || PERIODS.find(x => x.aktiv)
+          || PERIODS[PERIODS.length - 1];
+  }
+  applyPeriodLabels();
+}
+
+function periodBadge() {
+  return PERIOD.badge || String(PERIOD.namn || PERIOD.id || '').toUpperCase();
+}
+
+function applyPeriodLabels() {
+  const b   = periodBadge();
+  const el1 = document.getElementById('flyer-period-badge');
+  if (el1) el1.textContent = b;
+  const el2 = document.getElementById('mina-period-label');
+  if (el2) el2.textContent = 'HBK F14 · TOAPAPPER ' + b;
+  const el3 = document.getElementById('admin-period-banner');
+  if (el3) {
+    el3.innerHTML = PERIOD.aktiv
+      ? '🟢 Pågående försäljning: <strong>' + esc(PERIOD.namn) + '</strong>'
+      : '🔒 Avslutad period: <strong>' + esc(PERIOD.namn) + '</strong>';
+    el3.classList.toggle('closed', !PERIOD.aktiv);
+  }
+  const note = document.getElementById('order-closed-note');
+  const btn  = document.getElementById('btn-submit');
+  if (note) {
+    if (PERIOD.aktiv) {
+      note.style.display = 'none';
+    } else {
+      note.style.display = 'block';
+      note.innerHTML = '🔒 <strong>' + esc(PERIOD.namn) + ' är avslutad.</strong> ' +
+        'Du tittar på en gammal försäljningsomgång, så det går inte att beställa här. ' +
+        'Använd spelarens vanliga länk för att komma till den försäljning som pågår nu.';
+    }
+  }
+  if (btn) {
+    btn.disabled = !PERIOD.aktiv;
+    if (!PERIOD.aktiv) btn.textContent = 'FÖRSÄLJNINGEN ÄR AVSLUTAD';
+  }
+  document.title = 'HBK F14 – Toalettpapper ' + (PERIOD.namn || '');
+}
+
+function renderPeriodSwitch() {
+  const host = document.getElementById('mina-period-switch');
+  if (!host) return;
+  if (!PERIODS || PERIODS.length < 2) { host.innerHTML = ''; return; }
+  host.innerHTML = PERIODS.map(x => {
+    const on = x.id === PERIOD.id;
+    return '<button class="mina-period-chip' + (on ? ' on' : '') + '" ' +
+           'onclick="switchPeriod(\'' + esc(x.id) + '\')">' + esc(x.namn) +
+           (x.aktiv ? '<em>pågår nu</em>' : '<em>avslutad</em>') + '</button>';
+  }).join('');
+}
+
+function switchPeriod(id) {
+  if (id === PERIOD.id) return;
+  const p = PERIODS.find(x => x.id === id);
+  if (!p) return;
+  PERIOD = p;
+  applyPeriodLabels();
+  const params = new URLSearchParams(window.location.search);
+  params.set('period', id);
+  history.replaceState(null, '', getBaseUrl() + '?' + params.toString());
+  if (minaCurrentPlayer) openMinaView(minaCurrentPlayer.id);
+}
 
 // ── ROUTING ───────────────────────────────────────────────────
 function getUrlPlayer() {
@@ -1430,6 +1686,7 @@ function openOrderForm(id) {
   document.getElementById('buyer-email').value = '';
   document.getElementById('buyer-msg').value = '';
   document.getElementById('empty-warn').style.display = 'none';
+  showLagerWarn('');
   updateTotals();
   showView('order');
   document.getElementById('view-flyer').classList.add('active');
@@ -1443,11 +1700,12 @@ function openOrderForm(id) {
 function changeQty(key, delta) {
   const input = document.getElementById('qty-' + key);
   const val = Math.max(0, (parseInt(input.value) || 0) + delta);
-  input.value = val;
+  input.value = Math.min(val, lagerMax(key));
   updateTotals();
 }
 
 function updateTotals() {
+  enforceLager();
   let total = 0;
   let hasAny = false;
   ['adv','p2h','p2s','p3h','p3s'].forEach(k => {
@@ -1508,8 +1766,27 @@ function validate() {
   return ok;
 }
 
-function submitOrder() {
+async function submitOrder() {
+  // En avslutad period får inte ta emot nya beställningar. Servern
+  // stämplar alltid aktiv period, så en order här hade hamnat i fel omgång.
+  if (!PERIOD.aktiv) return;
   if (!validate()) return;
+  showLagerWarn('');
+
+  // Lagerutförsäljning: hämta färskt saldo precis innan vi skickar
+  if (lagerOn()) {
+    const b0 = document.getElementById('btn-submit');
+    b0.disabled = true; b0.textContent = 'KONTROLLERAR LAGER…';
+    await loadLager();
+    b0.disabled = false; b0.textContent = 'SKICKA BESTÄLLNING →';
+    if (enforceLager()) {
+      updateTotals();
+      showLagerWarn('⚠️ Någon hann före – lagret har ändrats och antalen är justerade. ' +
+                    'Kontrollera och skicka igen.');
+      return;
+    }
+    if (!validate()) return;
+  }
 
   const order = {
     ref: 'HBK-' + Date.now().toString(36).toUpperCase().slice(-6),
@@ -1522,6 +1799,7 @@ function submitOrder() {
     },
     items: {},
     total: 0,
+    period: PERIOD.id,
     timestamp: new Date().toISOString()
   };
 
@@ -1562,14 +1840,46 @@ function submitOrder() {
     localStorage.setItem('hbk_orders', JSON.stringify(_orders));
     clearDraft();
 
-    fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(order)
-    })
-    .then(() => showConfirmation())
-    .catch(() => showConfirmation());
+    if (!lagerOn()) {
+      fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(order)
+      })
+      .then(() => showConfirmation())
+      .catch(() => showConfirmation());
+    } else {
+      // Läsbart svar (text/plain = ingen preflight) så att en lagerspärr
+      // från servern kan visas. Går svaret inte att läsa beter vi oss som förut.
+      fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(order)
+      })
+      .then(r => r.json())
+      .then(j => {
+        if (j && j.code === 'LAGER_SLUT') {
+          try {
+            const arr = JSON.parse(localStorage.getItem('hbk_orders') || '[]')
+                          .filter(o => o.ref !== order.ref);
+            localStorage.setItem('hbk_orders', JSON.stringify(arr));
+          } catch (e) {}
+          if (j.lager) LAGER = j.lager;
+          updateTotals();
+          applyLagerNote();
+          showLagerWarn('⚠️ ' + esc(j.message || 'Det finns inte tillräckligt kvar i lager.') +
+                        ' Antalen är justerade – kontrollera och skicka igen.');
+          if (!Object.values(LAGER.produkter || {}).every(x => x.kvar <= 0)) {
+            btn.disabled = false; btn.textContent = 'SKICKA BESTÄLLNING →';
+          }
+          return;
+        }
+        loadLager();
+        showConfirmation();
+      })
+      .catch(() => showConfirmation());
+    }
   } else {
     // Innan URL är konfigurerad – spara lokalt
     const orders = JSON.parse(localStorage.getItem('hbk_orders') || '[]');
@@ -1612,21 +1922,47 @@ function minaOrderKey(o) {
     .replace(/\s+/g,'').toLowerCase();
 }
 
+function minaStatusKey(playerId, key) {
+  return MINA_STATUS_PREFIX + PERIOD.id + '_' + playerId + '_' + key;
+}
+
 function getMinaStatus(playerId, key) {
-  const raw = localStorage.getItem(MINA_STATUS_PREFIX + playerId + '_' + key);
-  return raw ? JSON.parse(raw) : { levererat: false, betalt: false };
+  const k = minaStatusKey(playerId, key);
+  let raw = localStorage.getItem(k);
+  if (raw === null) {
+    // Nycklar sparade innan perioder fanns tillhör den första perioden
+    const legacy = localStorage.getItem(MINA_STATUS_PREFIX + playerId + '_' + key);
+    if (legacy !== null && PERIODS.length && PERIOD.id === PERIODS[0].id) {
+      localStorage.setItem(k, legacy);
+      raw = legacy;
+    }
+  }
+  try { return raw ? JSON.parse(raw) : { levererat: false, betalt: false }; }
+  catch (e) { return { levererat: false, betalt: false }; }
 }
 
 function saveMinaStatus(playerId, key, status) {
-  localStorage.setItem(MINA_STATUS_PREFIX + playerId + '_' + key, JSON.stringify(status));
+  localStorage.setItem(minaStatusKey(playerId, key), JSON.stringify(status));
+}
+
+// Felmeddelandet nedan skriver över tomt-lägets markup – därför byggs den om här
+function resetMinaEmptyState() {
+  const el = document.getElementById('mina-empty');
+  if (!el) return;
+  el.innerHTML =
+    '<div class="icon">📭</div>' +
+    '<p>Inga beställningar i <strong>' + esc(PERIOD.namn || 'den här perioden') + '</strong> ännu.<br>' +
+    'Dela din länk och börja sälja!</p>';
 }
 
 function openMinaView(playerId) {
   const p = PLAYERS.find(x => x.id === playerId);
   if (!p) return;
   minaCurrentPlayer = p;
+  renderPeriodSwitch();
   document.getElementById('mina-player-name').textContent = p.fn + ' ' + p.ln;
   document.getElementById('mina-loading').style.display = 'block';
+  resetMinaEmptyState();
   document.getElementById('mina-empty').style.display   = 'none';
   document.getElementById('mina-orders-list').innerHTML  = '';
   minaLoadedOrders = [];
@@ -1636,7 +1972,9 @@ function openMinaView(playerId) {
 
 async function fetchMinaOrders(playerName, playerId) {
   try {
-    const url = APPS_SCRIPT_URL + '?action=orders&player=' + encodeURIComponent(playerName);
+    const url = APPS_SCRIPT_URL + '?action=orders'
+      + '&player=' + encodeURIComponent(playerName)
+      + '&period=' + encodeURIComponent(PERIOD.id);
     const res = await fetch(url);
     let orders = await res.json();
     // Filtrera bort platshållar-poster
@@ -1843,9 +2181,12 @@ function clearDraft() {
   DRAFT_FIELDS.forEach(id => localStorage.removeItem('hbk_draft_' + id));
 }
 
-function init() {
+async function init() {
   buildAdminList();
   loadDraft();
+  await loadPeriods();
+  // Blockerar inte sidan – kvar-siffrorna dyker upp när svaret kommer
+  loadLager().then(() => { try { updateTotals(); } catch (e) {} });
   const pid = getUrlPlayer();
   const vy  = getUrlView();
 
