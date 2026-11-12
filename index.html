@@ -1062,6 +1062,7 @@
     <div class="order-hero-tag" style="display:inline-flex;align-items:center;gap:6px;"><img src="hbk-logo.png" style="width:18px;height:18px;object-fit:contain;" alt="HBK"> HBK F14 · Fotboll</div>
     <h2>BESTÄLL TOAPAPPER</h2>
     <p class="order-hero-sub">Stöd laget & få prisvärt kvalitetspapper hem</p>
+    <p class="order-hero-sub" id="order-lagkassa-note" style="display:none">🎄 Hela vinsten går till lagkassan – till en extra rolig julavslutning för laget!</p>
     <div class="order-hero-player">
       <span>⚽</span>
       <span id="order-player-name">–</span>
@@ -1459,6 +1460,8 @@ let currentPlayer = null;
 const PERIOD_FALLBACK = { id:'2026-HOST', namn:'Höst 2026', badge:'HÖST 2026', aktiv:true };
 let PERIODS = [PERIOD_FALLBACK];
 let PERIOD  = PERIOD_FALLBACK;
+// Perioder där hela vinsten går till lagkassan (ingen spelarandel). Samma lista som i dashboard.html.
+const LAGKASSA_PERIODER = ['2026-HOST', '2026-LAGER'];
 
 function getUrlPeriod() {
   return new URLSearchParams(window.location.search).get('period');
@@ -1512,6 +1515,8 @@ function applyPeriodLabels() {
       : '🔒 Avslutad period: <strong>' + esc(PERIOD.namn) + '</strong>';
     el3.classList.toggle('closed', !PERIOD.aktiv);
   }
+  const lk = document.getElementById('order-lagkassa-note');
+  if (lk) lk.style.display = LAGKASSA_PERIODER.indexOf(PERIOD.id) !== -1 ? 'block' : 'none';
   const note = document.getElementById('order-closed-note');
   const btn  = document.getElementById('btn-submit');
   if (note) {
