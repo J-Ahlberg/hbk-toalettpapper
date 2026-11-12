@@ -1678,6 +1678,7 @@ function openOrderForm(id) {
   const p = PLAYERS.find(x => x.id === id);
   if (!p) return;
   currentPlayer = p;
+  document.getElementById('flyer-player-name').textContent = p.fn + ' ' + p.ln;
   document.getElementById('order-player-name').textContent = p.fn + ' ' + p.ln;
   document.getElementById('swish-player-name-1').textContent = p.fn + ' ' + p.ln;
   document.getElementById('swish-player-name-2').textContent = p.fn + ' ' + p.ln;
