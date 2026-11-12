@@ -124,7 +124,10 @@ Ladda om hårt (Ctrl/Cmd + Shift + R) första gången.
 
 ## Starta nästa omgång
 
-1. Duplicera **båda** flikarna, döp om, töm siffrorna.
+1. Duplicera **båda** flikarna och döp om dem. Skriv det nya period-id:t i
+   cell **Z2** i båda flikarna. Antal sålda/beställda räknas automatiskt från
+   "Inkomna beställningar" för den perioden. Töm bara Betald summa (J) och
+   Levererat (F–H, S, U).
 2. Fyll i `NASTA_PERIOD` högst upp i den inklistrade koden:
 
 ```js
@@ -172,3 +175,21 @@ siffror kan inte råka ändras.
   synlig nolla är bättre än fel siffror som ser rätt ut.
 - **Servern bestämmer perioden.** Frontend skickar med ett `period`-fält i
   beställningen, men `doPost` ignorerar det och använder alltid aktiv period.
+
+## Vad som fylls i för hand
+
+Från Lagerutförsäljning H26 räknas antalen automatiskt (`SUMIFS` mot
+"Inkomna beställningar", filtrerat på spelare och period-id i Z2):
+
+| Flik | Automatiskt | För hand |
+|---|---|---|
+| Försäljning … | Sålda (C–G), totaler, kvar att swisha (K) | **Betald summa (J)** |
+| Beställning … | Beställt (C–E, O, Q), kvar att leverera | **Levererat (F–H, S, U)** |
+
+Manuell order (papper, kontant): lägg in en rad i "Inkomna beställningar"
+med rätt spelare och period-id i kolumnen Period. Ändrad/avbokad order:
+ändra eller ta bort raden där.
+
+Höstens vinst (Höst 2026 och Lagerutförsäljning H26) går till 100 % till
+lagkassan, se `SPELARANDEL_PER_PERIOD` i `dashboard.html` och
+`LAGKASSA_PERIODER` i `index.html`.

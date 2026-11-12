@@ -54,6 +54,8 @@ Test:
 - **Ändra lagret** (hittad kartong, skadad frp): ändra siffran i fliken
   **Lager**. Slår igenom inom 20 s. Ingen deploy.
 - **Status i loggen**: kör `lagerLogga`.
-- **Manuell order**: lägg in i Beställning Lager som vanligt – räknas av
-  automatiskt.
+- **Manuell order**: lägg in en rad i "Inkomna beställningar" med Period
+  `2026-LAGER` – räknas av automatiskt. Beställt/sålda i flikarna är formler.
+- **Fyll i för hand**: bara Betald summa (Försäljning Lager J) och Levererat
+  (Beställning Lager F–H, S, U).
 - **Avvisade beställningar**: kontakta köparen och erbjud det som finns kvar.
